@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AZURA — Меню</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #c8c5bc; color: #2c3e50; overscroll-behavior: none; }
+
+  /* ── HEADER ── */
+  .app-header {
+    background: #2d4a6d;
+    color: #fff;
+    text-align: center;
+    padding: 16px 16px 12px;
+  }
+  .app-header h1 { font-size: 1.6rem; letter-spacing: 8px; font-weight: 300; }
+  .app-header p  { font-size: 0.65rem; letter-spacing: 3px; opacity: 0.65; margin-top: 2px; }
+
+
+  /* ── LANG TOGGLE ── */
+  .lang-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 2px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 20px;
+    padding: 3px;
+  }
+  .lang-btn {
+    padding: 4px 10px;
+    border: none;
+    border-radius: 16px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    color: rgba(255,255,255,0.6);
+    background: transparent;
+    transition: all 0.2s;
+  }
+  .lang-btn.active {
+    background: #fff;
+    color: #2d4a6d;
+  }
+  .app-header { position: relative; }
+
+  /* ── SECTION TABS ── */
+  .section-tabs {
+    display: flex;
+    background: #1e3550;
+    border-bottom: 2px solid #0f2035;
+  }
+  .section-tab {
+    flex: 1;
+    padding: 13px 4px;
+    text-align: center;
+    font-size: 0.78rem;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.55);
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+    text-transform: uppercase;
+    user-select: none;
+    border: none;
+    background: transparent;
+  }
+  .section-tab.active {
+    color: #fff;
+    background: #2d4a6d;
+    border-bottom: 3px solid #7fb3e8;
+    margin-bottom: -2px;
+  }
+
+  /* ── SECTION PANELS ── */
+  .section-panel { display: none; }
+  .section-panel.active { display: block; }
+
+  /* ── LIGHTBOX ── */
+  #lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,0.92);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  #lightbox.open { display: flex; }
+  #lightbox img {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+  }
+  #lightbox-close {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    font-size: 2rem;
+    color: #fff;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.8;
+  }
+
+  /* ── CONTROLS (search + category filter) ── */
+  #fixed-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+  }
+  .controls {
+    background: #b8b5ac;
+    padding: 10px 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  #page-content {
+    padding-top: 0; /* set by JS */
+  }
+  .search-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .search-row input {
+    flex: 1;
+    padding: 9px 14px;
+    border: none;
+    border-radius: 22px;
+    font-size: 0.9rem;
+    background: #f5f3ef;
+    outline: none;
+    min-width: 0;
+  }
+  .count-badge {
+    font-size: 0.72rem;
+    color: #555;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .cat-scroll {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+  .cat-scroll::-webkit-scrollbar { display: none; }
+  .cat-btn {
+    padding: 6px 12px;
+    border: 1.5px solid #2d4a6d;
+    border-radius: 16px;
+    background: transparent;
+    color: #2d4a6d;
+    cursor: pointer;
+    font-size: 0.72rem;
+    letter-spacing: 0.4px;
+    transition: all 0.18s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .cat-btn.active, .cat-btn:active { background: #2d4a6d; color: #fff; }
+
+  /* ── GRID ── */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 12px;
+  }
+  @media (max-width: 360px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: #f0ede7;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    active-transform: scale(0.98);
+  }
+  .card:active { transform: scale(0.97); }
+  .card img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    background: #d5d2cb;
+    display: block;
+  }
+  .card-body {
+    padding: 9px 10px 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .card-cat  { font-size: 0.58rem; letter-spacing: 1.2px; color: #2d4a6d; font-weight: 700; text-transform: uppercase; }
+  .card-name { font-size: 0.84rem; font-weight: 700; color: #1a2b3c; line-height: 1.3; }
+  .card-meta { font-size: 0.78rem; color: #2d4a6d; font-weight: 600; display: flex; align-items: baseline; gap: 4px; }
+  .card-vol  { font-size: 0.65rem; color: #888; font-weight: 400; }
+  .card-grapes {
+    font-size: 0.68rem;
+    color: #7a5c2e;
+    font-style: italic;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .card-desc {
+    font-size: 0.72rem;
+    color: #555;
+    margin-top: 5px;
+    line-height: 1.5;
+    border-top: 1px solid #ddd;
+    padding-top: 5px;
+    flex: 1;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #888;
+    font-size: 0.95rem;
+  }
+  .empty-icon { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.4; }
+
+  /* ── WINE SECTION extras ── */
+  .wine-card .card img { height: 160px; object-fit: contain; padding: 8px; background: #f5f2ea; }
+
+  /* ── KITCHEN / WINE placeholder ── */
+  .coming-soon {
+    text-align: center;
+    padding: 60px 24px;
+    color: #666;
+  }
+  .coming-soon .icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.35; }
+  .coming-soon h3 { font-size: 1rem; font-weight: 600; color: #2d4a6d; margin-bottom: 8px; }
+  .coming-soon p  { font-size: 0.82rem; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div id="fixed-header">
+  <div class="app-header">
+    <h1>AZURA</h1>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-ru" onclick="setLang('ru')">RU</button>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+    <p id="header-subtitle">СПРАВОЧНИК ДЛЯ ОФИЦИАНТОВ</p>
+  </div>
+  <div class="section-tabs">
+    <button class="section-tab" id="tab-kitchen" data-section="kitchen" onclick="switchSection('kitchen')">🍽 Кухня</button>
+    <button class="section-tab active" id="tab-bar" data-section="bar" onclick="switchSection('bar')">🍹 Бар</button>
+    <button class="section-tab" id="tab-wine" data-section="wine" onclick="switchSection('wine')">🍷 Вино</button>
+    <button class="section-tab" id="tab-cocktails" data-section="cocktails" onclick="switchSection('cocktails')">🍸 Коктейли</button>
+  </div>
+  <div class="controls" id="ctrl-kitchen" style="display:none">
+    <div class="search-row">
+      <input type="search" id="search-kitchen" placeholder="🔍 Поиск по блюдам..." oninput="renderSection('kitchen', this.value)" autocomplete="off">
+      <span class="count-badge" id="count-kitchen"></span>
+    </div>
+    <div class="cat-scroll" id="cats-kitchen"></div>
+  </div>
+  <div class="controls" id="ctrl-bar">
+    <div class="search-row">
+      <input type="search" id="search-bar" placeholder="🔍 Поиск по напиткам..." oninput="renderSection('bar', this.value)" autocomplete="off">
+      <span class="count-badge" id="count-bar"></span>
+    </div>
+    <div class="cat-scroll" id="cats-bar"></div>
+  </div>
+  <div class="controls" id="ctrl-wine" style="display:none">
+    <div class="search-row">
+      <input type="search" id="search-wine" placeholder="🔍 Поиск по вину..." oninput="renderSection('wine', this.value)" autocomplete="off">
+      <span class="count-badge" id="count-wine"></span>
+    </div>
+    <div class="cat-scroll" id="cats-wine"></div>
+  </div>
+  <div class="controls" id="ctrl-cocktails" style="display:none">
+    <div class="search-row">
+      <input type="search" id="search-cocktails" placeholder="🔍 Поиск по коктейлям..." oninput="renderSection('cocktails', this.value)" autocomplete="off">
+      <span class="count-badge" id="count-cocktails"></span>
+    </div>
+    <div class="cat-scroll" id="cats-cocktails"></div>
+  </div>
+</div><!-- /fixed-header -->
+
+<div id="page-content">
+  <div class="section-panel" id="panel-kitchen">
+    <div class="grid" id="grid-kitchen"></div>
+  </div>
+  <div class="section-panel active" id="panel-bar">
+    <div class="grid" id="grid-bar"></div>
+  </div>
+  <div class="section-panel" id="panel-wine">
+    <div class="grid" id="grid-wine"></div>
+  </div>
+  <div class="section-panel" id="panel-cocktails">
+    <div class="grid" id="grid-cocktails"></div>
+  </div>
+</div>
+
+<script>
+
+// ── Language ──────────────────────────────────────────────
+let LANG = 'ru';
+const CAT_EN = {
+  // Kitchen
+  'Закуски':'Starters','Сырые и холодные блюда':'Raw & Cold',
+  'Салаты':'Salads','Паста и ризотто':'Pasta & Risotto',
+  'Из моря':'From the Sea','Мясо и огонь':'Meat & Fire',
+  'Супы':'Soups','Гарниры':'Sides','Десерты':'Desserts',
+  // Bar
+  'Лимонады':'Lemonades','Вода и напитки':'Water & Drinks',
+  'Джин':'Gin','Водка':'Vodka','Виски':'Whisky',
+  'Текила и мескаль':'Tequila & Mezcal','Ром':'Rum',
+  'Граппа и марк':'Grappa & Marc','Конъяк и бренди':'Cognac & Brandy',
+  'Ликёры':'Liqueurs','Аперитив':'Aperitif','Вермут':'Vermouth','Пиво':'Beer',
+  // Wine
+  'По бокалам — Игристые':'By Glass — Sparkling',
+  'По бокалам — Красные':'By Glass — Red',
+  'По бокалам — Белые':'By Glass — White',
+  'Полбутылки — Шампанское':'Half Bottle — Champagne',
+  'Полбутылки — Красные':'Half Bottle — Red',
+  'Полбутылки — Белые':'Half Bottle — White',
+  'Игристые':'Sparkling','Шампанское':'Champagne',
+  'Белые вина — Кипр & Греция':'White Wine — Cyprus & Greece',
+  'Белые вина — Австрия & Германия':'White Wine — Austria & Germany',
+  'Белые вина — Новый Свет':'White Wine — New World',
+  'Белые вина — Италия':'White Wine — Italy',
+  'Белые вина — Франция':'White Wine — France',
+  'Розовые и оранжевые — Европа':'Rosé & Orange — Europe',
+  'Розовые и оранжевые — Кипр & Греция':'Rosé & Orange — Cyprus & Greece',
+  'Красные вина — Кипр & Греция':'Red Wine — Cyprus & Greece',
+  'Красные вина — Франция':'Red Wine — France',
+  'Красные вина — Италия & Испания':'Red Wine — Italy & Spain',
+  'Красные вина — Новый Свет':'Red Wine — New World',
+  // Cocktails
+  'Коктейли':'Cocktails',
+};
+function catLabel(cat) { if (cat === 'all') return LANG==='en' ? 'All' : 'Все'; return (LANG==='en' && CAT_EN[cat]) ? CAT_EN[cat] : cat; }
+// Extract grape variety from end of description: "...text. (Chardonnay, Pinot Noir)"
+function extractGrapes(desc) {
+  if (!desc) return '';
+  const m = desc.match(/\(([^)]+)\)\s*$/);
+  return m ? m[1] : '';
+}
+function stripGrapes(desc) {
+  if (!desc) return '';
+  return desc.replace(/\s*\([^)]+\)\s*$/, '').trim();
+}
+function itemName(i)  {
+  if (LANG==='en') return i.name_en || i.name;   // kitchen→name_en, cocktails→name(EN), bar/wine→name
+  return i.name_ru || i.name;                     // cocktails→name_ru, kitchen/bar/wine→name(RU)
+}
+function itemDesc(i)  {
+  if (LANG==='en') return i.desc_en || i.desc;   // kitchen/wine→desc_en, cocktails→desc(EN)
+  return i.desc_ru || i.desc;                     // cocktails→desc_ru, kitchen/wine→desc(RU)
+}
+
+const TAB_LABELS = {
+  kitchen:   { ru: '🍽 Кухня',    en: '🍽 Kitchen' },
+  bar:       { ru: '🍹 Бар',      en: '🍹 Bar' },
+  wine:      { ru: '🍷 Вино',     en: '🍷 Wine' },
+  cocktails: { ru: '🍸 Коктейли', en: '🍸 Cocktails' },
+};
+const SEARCH_PH = {
+  kitchen:   { ru: '🔍 Поиск по блюдам...',    en: '🔍 Search dishes...' },
+  bar:       { ru: '🔍 Поиск по напиткам...',  en: '🔍 Search drinks...' },
+  wine:      { ru: '🔍 Поиск по вину...',       en: '🔍 Search wines...' },
+  cocktails: { ru: '🔍 Поиск по коктейлям...', en: '🔍 Search cocktails...' },
+};
+function updateTabLabels() {
+  ['kitchen','bar','wine','cocktails'].forEach(sec => {
+    const tab = document.getElementById('tab-' + sec);
+    if (tab) tab.textContent = TAB_LABELS[sec][LANG] || TAB_LABELS[sec].ru;
+    const inp = document.getElementById('search-' + sec);
+    if (inp) inp.placeholder = SEARCH_PH[sec][LANG] || SEARCH_PH[sec].ru;
+  });
+}
+function setLang(lang) {
+  LANG = lang;
+  document.getElementById('btn-ru').classList.toggle('active', lang==='ru');
+  document.getElementById('btn-en').classList.toggle('active', lang==='en');
+  const sub = document.getElementById('header-subtitle');
+  if (sub) sub.textContent = lang==='en' ? "WAITER'S GUIDE" : 'СПРАВОЧНИК ДЛЯ ОФИЦИАНТОВ';
+  updateTabLabels();
+  // re-render ALL sections so switching tabs always shows correct language
+  ['kitchen', 'bar', 'wine', 'cocktails'].forEach(sec => renderSection(sec));
+}
+
+// ── CDN helpers ──
+const US = id => `https://s3.us-west-2.amazonaws.com/images.unsplash.com/small/${id}`;
+const FALLBACK = "https://images.unsplash.com/photo-1574096079513-d8259312b785?w=400&q=80&auto=format&fit=crop";
+
+// ════════════════════════════════════════════
+//  КУХНЯ — данные
+// ════════════════════════════════════════════
+const kitchenItems = [
+  // ─── ЗАКУСКИ ───
+  { cat:"Закуски", name:"Тунец с авокадо", name_en:"Tuna & Avocado", price:"", img:"Tuna & Avocado.jpg",
+    desc:"Консервированный тунец с запечённым перцем, авокадо, луком, каперсами и лимонно-тунцовым соусом. Подаётся с поджаренным хлебом.", desc_en:"Canned tuna with roasted peppers, avocado, onion, capers and lemon-tuna dressing. Served with toasted bread." },
+  { cat:"Закуски", name:"Фета Cloud", name_en:"Feta Cloud", price:"", img:"Feta Cloud.jpg",
+    desc:"Нежный мусс из взбитой феты с вялеными томатами в травах, оливками Kalamata и хрустящим миндалём. Свежая мята добавляет лёгкий освежающий акцент.", desc_en:"Light whipped feta mousse with herb-marinated sun-dried tomatoes, Kalamata olives and crunchy almonds. Fresh mint adds a refreshing touch." },
+  { cat:"Закуски", name:"Копчёный баклажан", name_en:"Smoked Eggplant", price:"", img:"Eggplant carpaccio.jpg",
+    desc:"Баклажан, запечённый на углях, с кунжутным кремом из тахини и греческого йогурта, гремолатой из свежих трав и апельсиновой цедры, а также лёгкой остротой хариссы с розовой водой.", desc_en:"Coal-roasted eggplant with tahini-yogurt sesame cream, herb and orange zest gremolata, and a gentle kick of rose water harissa." },
+  { cat:"Закуски", name:"Болгарский перец с анчоусами", name_en:"Roasted Peppers & Anchovies", price:"", img:"Bell Peppers.jpg",
+    desc:"Перцы Florina, запечённые на углях, с каперсами и нежным кремом из сливочного сыра и анчоусов. Вкус: дымный, сливочный, пикантный и слегка умами.", desc_en:"Coal-roasted Florina peppers with capers and a silky cream cheese-anchovy spread. Smoky, creamy, savory and umami." },
+
+  // ─── СЫРЫЕ И ХОЛОДНЫЕ БЛЮДА ───
+  { cat:"Сырые и холодные блюда", name:"Трио крудо", name_en:"Crudo Trio", price:"", img:"",
+    desc:"Гамберо россо, тартар из лангустина и желтопёрый тунец, заправленные оливковым маслом.", desc_en:"Gambero rosso, langoustine tartare and yellowfin tuna, dressed with olive oil." },
+  { cat:"Сырые и холодные блюда", name:"Тартар из тунца", name_en:"Tuna Tartare", price:"", img:"",
+    desc:"Тартар из желтопёрого тунца со спелым авокадо для нежной кремовой текстуры, заправкой из манго и маракуйи и свежей малиной.", desc_en:"Yellowfin tuna tartare with ripe avocado, mango-passion fruit dressing and fresh raspberries." },
+  { cat:"Сырые и холодные блюда", name:"Карпаччо из гребешка", name_en:"Scallop Carpaccio", price:"", img:"Scallop carpaccio.jpg",
+    desc:"Карпаччо из нежных охлаждённых гребешков с заправкой из маракуйи, мякотью маракуйи и тонко нарезанным чили для лёгкой кислотности, фруктовости и деликатной остроты.", desc_en:"Thinly sliced chilled scallops with passion fruit dressing, passion fruit pulp and sliced chili — delicate acidity, fruitiness and subtle heat." },
+  { cat:"Сырые и холодные блюда", name:"Тартар из говядины", name_en:"Beef Tartare", price:"", img:"Beef Tartare.jpg",
+    desc:"Тартар из говяжьей вырезки, нарезанной вручную, с желтком, анчоусами, каперсами, шалотом, дижонской горчицей, чёрным перцем, паприкой и чили-соусом. Дополняется пармезаном, вяленым желтком, майонезом с зелёным луком и шнитт-луком. Подаётся с поджаренным хлебом.", desc_en:"Hand-cut beef tenderloin with egg yolk, anchovies, capers, shallot, Dijon mustard, black pepper, paprika and chili sauce. Topped with Parmesan, cured yolk, spring onion aioli and chives. Served with toasted bread." },
+
+  // ─── САЛАТЫ ───
+  { cat:"Салаты", name:"Садовая зелень", name_en:"Garden Greens", price:"", img:"Garden Greens.jpg",
+    desc:"Лёгкий зелёный салат с миксом листьев, зелёным яблоком и виноградом для сладости, спелым авокадо для кремовости и заправкой из фундука, горчицы, мёда и сока юдзу.", desc_en:"Light green salad with mixed leaves, green apple and grapes, creamy avocado and a hazelnut, mustard, honey and yuzu dressing." },
+  { cat:"Салаты", name:"Салат с бурратой", name_en:"Burrata Salad", price:"", img:"Buratta Salad.jpg",
+    desc:"Фермерские томаты с кремовой бурратой и соусом песто — классический итальянский вкусовой профиль.", desc_en:"Farm tomatoes with creamy burrata and pesto — a classic Italian flavor profile." },
+  { cat:"Салаты", name:"Табуле", name_en:"Tabbouleh", price:"", img:"Tabbouleh.jpg",
+    desc:"Свежий салат из мелко нарезанных трав и булгура с вяленой сливой, которая даёт кисло-сладкий вкус. Завершается домашним айраном.", desc_en:"Freshly chopped herb and bulgur salad with dried plum for sweet-sour notes, finished with homemade ayran." },
+  { cat:"Салаты", name:"Средиземноморский деревенский салат", name_en:"Mediterranean Village Salad", price:"", img:"Mediterranean Village .jpg",
+    desc:"Классический греческий деревенский салат с отборными томатами, огурцом, оливками, маринованной фетой и кремом из феты.", desc_en:"Classic Greek salad with select tomatoes, cucumber, olives, marinated feta and feta cream." },
+
+  // ─── ПАСТА И РИЗОТТО ───
+  { cat:"Паста и ризотто", name:"Ньокки с говяжьим ребром", name_en:"Gnocchi with Beef Short Rib", price:"", img:"",
+    desc:"Картофельные ньокки в насыщенном соусе из томлёного ребра Black Angus, подаются с глазированным говяжьим ребром.", desc_en:"Potato gnocchi in a rich Black Angus braised rib sauce, served with glazed beef rib." },
+  { cat:"Паста и ризотто", name:"Спагетти качо-э-пепе с трюфелем", name_en:"Spaghetti Cacio e Pepe & Truffle", price:"", img:"Spaghetti cacio e pepe.jpg",
+    desc:"Спагетти с сыром Pecorino Romano, чёрным перцем, трюфелем и трюфельным маслом.", desc_en:"Spaghetti with Pecorino Romano, black pepper, truffle and truffle oil." },
+  { cat:"Паста и ризотто", name:"Томатные феттучине с бурратой", name_en:"Tomato Fettuccine & Burrata", price:"", img:"Tomato Fettucine.jpg",
+    desc:"Томатные феттучине с бурратой, томатами и базиликом.", desc_en:"Tomato fettuccine with burrata, tomatoes and basil." },
+  { cat:"Паста и ризотто", name:"Лингвини с чернилами кальмара", name_en:"Squid Ink Linguini", price:"", img:"Squid-ink linguini.jpg",
+    desc:"Изысканная паста с чернилами кальмара и морепродуктами в кремовом томатном соусе на основе рыбного бульона и бульона из моллюсков.", desc_en:"Squid ink pasta with seafood in a creamy tomato sauce based on fish and shellfish stock." },
+  { cat:"Паста и ризотто", name:"Ризотто с грибами", name_en:"Mushroom Risotto", price:"", img:"",
+    desc:"Кремовое грибное ризотто с вешенками и трюфельным маслом.", desc_en:"Creamy mushroom risotto with oyster mushrooms and truffle oil." },
+
+  // ─── ИЗ МОРЯ ───
+  { cat:"Из моря", name:"Целая дорада", name_en:"Whole Sea Bream", price:"", img:"Whole sea bream.jpg",
+    desc:"Целая дорада, раскрытая «бабочкой», смазанная перечным соусом и обжаренная кожей вниз до хрустящей корочки. Подаётся с классическим beurre blanc и гремолатой из кинзы и эстрагона.", desc_en:"Butterfly-opened sea bream glazed with pepper sauce and grilled skin-side down until crispy. Served with beurre blanc and coriander-tarragon gremolata." },
+  { cat:"Из моря", name:"Лосось", name_en:"Salmon", price:"", img:"Salmon.jpg",
+    desc:"Нежный стейк из лосося в глазури из понзу и апельсиновой цедры, подаётся на брокколини с соусом буйабес.", desc_en:"Salmon steak glazed with ponzu and orange zest, served on broccolini with bouillabaisse sauce." },
+  { cat:"Из моря", name:"Сибас в соляной корке", name_en:"Salt-Crusted Sea Bass", price:"", img:"",
+    desc:"Целый сибас, запечённый в соляной корке и открываемый у стола.", desc_en:"Whole sea bass baked in a salt crust, carved tableside." },
+  { cat:"Из моря", name:"Морской гриль на углях", name_en:"Charcoal Seafood Grill", price:"", img:"Charcoal Grill Seafood.jpg",
+    desc:"Ассорти морепродуктов на гриле: осьминог, гребешок, молодой кальмар и королевская креветка.", desc_en:"Assorted grilled seafood: octopus, scallop, baby squid and king prawn." },
+  { cat:"Из моря", name:"Креветки саганаки", name_en:"Saganaki Shrimp", price:"", img:"Saganaki Shrimp.jpg",
+    desc:"Традиционная греческая закуска из креветок в ярком томатном соусе с фетой и свежими травами. Подаётся с питой.", desc_en:"Traditional Greek shrimp in a vibrant tomato sauce with feta and fresh herbs. Served with pita." },
+  { cat:"Из моря", name:"Средиземноморский осьминог", name_en:"Mediterranean Octopus", price:"", img:"Octopus.jpg",
+    desc:"Осьминог в сладкой глазури с молодым картофелем и томатами кимчи.", desc_en:"Octopus in a sweet glaze with new potatoes and kimchi tomatoes." },
+
+  // ─── МЯСО И ОГОНЬ ───
+  { cat:"Мясо и огонь", name:"Курица на углях", name_en:"Coal-Grilled Chicken", price:"", img:"Coal Chicken.jpg",
+    desc:"Сочный шашлык из куриного бедра с кукурузой, молодым картофелем, луком с сумахом, свежими травами и ярким красным соусом.", desc_en:"Juicy chicken thigh skewers with corn, new potatoes, sumac onion, fresh herbs and a bright red sauce." },
+  { cat:"Мясо и огонь", name:"Телятина на углях", name_en:"Coal-Grilled Veal", price:"", img:"Coal Veal.jpg",
+    desc:"Телятина на гриле с кукурузой, молодым картофелем и свежими травами.", desc_en:"Grilled veal with corn, new potatoes and fresh herbs." },
+  { cat:"Мясо и огонь", name:"Шашлычки из ягнёнка", name_en:"Lamb Brochettes", price:"", img:"Lamb Brochettes.jpg",
+    desc:"Кебаб из ягнёнка с травами и перцем чили. Подаётся с кукурузой, молодым картофелем, луком с сумахом, свежими травами и ярким красным соусом.", desc_en:"Herb and chili lamb kebab. Served with corn, new potatoes, sumac onion, fresh herbs and bright red sauce." },
+  { cat:"Мясо и огонь", name:"Цыплёнок", name_en:"Baby Chicken", price:"", img:"",
+    desc:"Французский цыплёнок coquelet, приготовленный в Josper с острой аджикой и цитрусовой глазурью из понзу, мёда, лимона и апельсина. Подаётся с насыщенным куриным соусом с лимонным акцентом.", desc_en:"French coquelet prepared in the Josper with spicy adjika and a citrus ponzu-honey-lemon-orange glaze. Served with rich lemon chicken jus." },
+  { cat:"Мясо и огонь", name:"Турнедо Россини", name_en:"Tournedos Rossini", price:"", img:"Turnedos Rossini.jpg",
+    desc:"Филе миньон из центральной части говяжьей вырезки с трюфельным картофельным пюре и королевской вешенкой в соусе демиглас. Сверху — обжаренный фуа-гра.", desc_en:"Centre-cut beef tenderloin with truffle mashed potato and royal oyster mushroom in demi-glace. Topped with seared foie gras." },
+  { cat:"Мясо и огонь", name:"Каре молодого ягнёнка", name_en:"Rack of Lamb", price:"", img:"Rack of Lamb.jpg",
+    desc:"Каре ягнёнка на гриле с картофелем и запечённым BBQ-соусом.", desc_en:"Grilled rack of lamb with potatoes and roasted BBQ sauce." },
+  { cat:"Мясо и огонь", name:"Мусака от шефа", name_en:"Chef\'s Moussaka", price:"", img:"Moussaka.jpg",
+    desc:"Авторская версия классической греческой мусаки: баклажаны, перцы, томаты и лук, запечённые на углях, томлёная голень ягнёнка, соус бешамель и тёртая моцарелла.", desc_en:"Coal-roasted eggplant, peppers, tomatoes and onion with braised lamb shank, béchamel sauce and grated mozzarella." },
+  { cat:"Мясо и огонь", name:"Фланк-стейк", name_en:"Flank Steak", price:"", img:"Flank Steak.jpg",
+    desc:"Постный и насыщенный по вкусу flank steak с соусом из чёрного и розового перца на основе демигласа и сливочного масла, подаётся с кукурузой и молодым картофелем.", desc_en:"Lean, flavor-rich flank steak with a black and pink pepper demi-glace butter sauce. Served with corn and new potatoes." },
+  { cat:"Мясо и огонь", name:"Рибай", name_en:"Ribeye", price:"", img:"RIBEYE.jpg",
+    desc:"Рибай из рёберной части, известный мраморностью, сочностью и насыщенным говяжьим вкусом. Подаётся с BBQ-соусом, кукурузой и молодым картофелем.", desc_en:"Rib-section ribeye prized for its marbling, juiciness and deep beef flavor. Served with BBQ sauce, corn and new potatoes." },
+  { cat:"Мясо и огонь", name:"Томлёная голяшка ягнёнка", name_en:"Braised Lamb Shank", price:"", img:"Lamb Shank.jpg",
+    desc:"Медленно томлёная голень ягнёнка с нутом в ярком томатном соусе и насыщенным ягнячьим jus. Подаётся с молодым картофелем и свежим шнитт-луком.", desc_en:"Slow-braised lamb shank with chickpeas in a bright tomato sauce and rich lamb jus. Served with new potatoes and chives." },
+
+  // ─── СУПЫ ───
+  { cat:"Супы", name:"Гаспачо", name_en:"Gazpacho", price:"", img:"Gazpacho.jpg",
+    desc:"Лёгкий освежающий летний томатный суп со свежей овощной сальсой и итальянской бурратой.", desc_en:"Light chilled tomato soup with fresh vegetable salsa and Italian burrata." },
+  { cat:"Супы", name:"Буйабес", name_en:"Bouillabaisse", price:"", img:"Buoillabaisse.jpg",
+    desc:"Классический марсельский суп из морепродуктов, приготовленный из средиземноморской рыбы, моллюсков и ракообразных. Насыщенный, пряный и ароматный, с нотами аниса, фенхеля и цитруса. Подаётся с чесночным крутоном.", desc_en:"Classic Marseille seafood soup: Mediterranean fish, shellfish and crustaceans. Rich, spiced and aromatic with anise, fennel and citrus. Served with garlic crouton." },
+  { cat:"Супы", name:"Лимонный суп с орзо", name_en:"Lemon Orzo Soup", price:"", img:"Lemon & Orzo.jpg",
+    desc:"Насыщенный куриный суп с орзо, лимоном и травами.", desc_en:"Rich chicken soup with orzo, lemon and herbs." },
+
+  // ─── ГАРНИРЫ ───
+  { cat:"Гарниры", name:"Брокколини", name_en:"Broccolini", price:"", img:"",
+    desc:"Брокколини tenderstem с критским сыром Graviera.", desc_en:"Tenderstem broccolini with Cretan Graviera cheese." },
+  { cat:"Гарниры", name:"Хрустящая батата", name_en:"Crispy Sweet Potato", price:"", img:"",
+    desc:"Батат фри во фритюре с цитрусовым айоли.", desc_en:"Deep-fried sweet potato fries with citrus aioli." },
+  { cat:"Гарниры", name:"Картофель из углей", name_en:"Coal-Roasted Potatoes", price:"", img:"",
+    desc:"Молодой картофель, приготовленный методом конфи и запечённый в дровяной печи. Подаётся со сметанным соусом с травами.", desc_en:"New potatoes confit and roasted in the wood-fired oven. Served with herb sour cream." },
+  { cat:"Гарниры", name:"Овощи гриль", name_en:"Grilled Vegetables", price:"", img:"",
+    desc:"Сезонные овощи, приготовленные на углях и заправленные оливковым маслом.", desc_en:"Seasonal vegetables grilled over charcoal, dressed with olive oil." },
+  { cat:"Гарниры", name:"Кукуруза гриль", name_en:"Grilled Corn", price:"", img:"",
+    desc:"Сладкая кукуруза, запечённая в угольной печи.", desc_en:"Sweet corn roasted in the charcoal oven." },
+  { cat:"Гарниры", name:"Набор дипов для компании", name_en:"Dip Platter", price:"", img:"Set of Dips.jpg",
+    desc:"Сет для компании: дзадзики, хумус, лабне, баба гануш и мухаммара, подаётся с питой.", desc_en:"Tzatziki, hummus, labneh, baba ganoush and muhammara. Served with pita." },
+
+  // ─── ДЕСЕРТЫ ───
+  { cat:"Десерты", name:"Павлова", name_en:"Pavlova", price:"", img:"Pavlova.jpg",
+    desc:"Заварной крем, клубника с ягодным соусом кули и меренга.", desc_en:"Custard cream, strawberries with berry coulis and meringue." },
+  { cat:"Десерты", name:"Чизкейк Azura", name_en:"Azura Cheesecake", price:"", img:"Cheescake.jpg",
+    desc:"Чизкейк на фисташковой основе с кремом из сыра Philadelphia и натуральной ванилью.", desc_en:"Cheesecake on a pistachio base with Philadelphia cream cheese and natural vanilla." },
+  { cat:"Десерты", name:"Крем-брюле в стиле тирамису", name_en:"Tiramisu Crème Brûlée", price:"", img:"Tiramisu Brule.jpg",
+    desc:"Нестандартное сочетание двух классических десертов: савоярди, пропитанные кофейным сиропом, с крем-брюле и карамелизированной сахарной корочкой перед подачей.", desc_en:"Coffee syrup-soaked ladyfingers with crème brûlée and a caramelized sugar crust — an unconventional pairing of two classics." },
+  { cat:"Десерты", name:"Апельсин и лемонграсс", name_en:"Orange & Lemongrass", price:"", img:"Orange Lemongrass.jpg",
+    desc:"Влажный апельсиновый бисквит, пропитанный цитрусовым сиропом и дополненный кремом Montre.", desc_en:"Moist orange sponge soaked in citrus syrup and topped with Montre cream." },
+  { cat:"Десерты", name:"Ассорти мини-канноли", name_en:"Mini Cannoli Selection", price:"", img:"Cannoli.jpg",
+    desc:"Классические сицилийские канноли: хрустящие обжаренные трубочки с нежным сладким кремом из рикотты.", desc_en:"Classic Sicilian cannoli: crispy fried tubes filled with smooth sweet ricotta cream." },
+  { cat:"Десерты", name:"Шоколадный тарт", name_en:"Chocolate Tart", price:"", img:"",
+    desc:"Классический шоколадный десерт из шоколада VALRHONA.", desc_en:"Classic VALRHONA chocolate dessert." },
+];
+
+// ════════════════════════════════════════════
+//  БАР — данные
+// ════════════════════════════════════════════
+const barItems = [
+  // ─── ЛИМОНАДЫ ───
+  { cat:"Лимонады", name:"Ginger & Mango", price:"8€", vol:"",
+    img: "Ginger Mango.png",
+    desc:"Имбирный сироп + манговая вода + кислотный микс + манговый лимонад. Экзотический, пряный.", desc_en:"Ginger syrup + mango water + acid mix + mango lemonade. Exotic, spiced." },
+  { cat:"Лимонады", name:"Grapefruit & Passion Fruit", price:"8€", vol:"",
+    img: "Grapefruit Lemonade.png",
+    desc:"Пюре маракуйи + мандарин + кислотный микс + розовый грейпфрутовый лимонад. Тропический.", desc_en:"Passion fruit purée + mandarin + acid mix + pink grapefruit lemonade. Tropical." },
+  { cat:"Лимонады", name:"Classic Lemonade", price:"8€", vol:"",
+    img: "Classic Lemonade.png",
+    desc:"Мятный кордиал + кислотный микс + простой сироп. Классический освежающий лимонад с мятой.", desc_en:"Mint cordial + acid mix + simple syrup. Classic refreshing lemonade with mint." },
+  { cat:"Лимонады", name:"Basil & Elderflower", price:"8€", vol:"",
+    img: "Basil Elderflower.png",
+    desc:"Сироп бузины + свежий базилик + кислотный микс + инжирный лимонад. Цветочный, травяной.", desc_en:"Elderflower syrup + fresh basil + acid mix + fig lemonade. Floral, herbal." },
+
+  // ─── ВОДА И БЕЗАЛКОГОЛЬНЫЕ ───
+  { cat:"Вода и напитки", name:"Acqua Panna", price:"3.5 / 5.5€", vol:"250 / 750 мл",
+    img: "Acqua Panna.png",
+    desc:"Негазированная минеральная вода (Тоскана, Италия). Мягкий вкус, низкая минерализация.", desc_en:"Still mineral water (Tuscany, Italy). Soft taste, low mineralization." },
+  { cat:"Вода и напитки", name:"San Pellegrino", price:"3.5 / 5.5€", vol:"250 / 750 мл",
+    img: "San Pellegrino.png",
+    desc:"Газированная минеральная вода (Ломбардия, Италия). Мелкие пузырьки, нейтральный вкус.", desc_en:"Sparkling mineral water (Lombardy, Italy). Fine bubbles, neutral mineral taste." },
+  { cat:"Вода и напитки", name:"Cola / Cola Zero / Sprite / Sprite Zero", price:"3.5€", vol:"250 мл",
+    img: "Cola : Cola Zero : Sprite : Sprite Zero.png",
+    desc:"Coca-Cola, Cola Zero, Sprite, Sprite Zero. Zero — без сахара. Sprite — лимон-лайм.", desc_en:"Coca-Cola, Cola Zero, Sprite, Sprite Zero. Zero — sugar-free. Sprite — lemon-lime." },
+  { cat:"Вода и напитки", name:"Thomas Henry Mango Soda", price:"4.5€", vol:"200 мл",
+    img: "Thomas Henry Mango Soda.png",
+    desc:"Немецкая премиальная газировка со вкусом манго. Хорошо с ромом или водкой.", desc_en:"German premium soda with mango flavour. Great with rum or vodka." },
+  { cat:"Вода и напитки", name:"Three Cents Pink Grapefruit", price:"4.5€", vol:"200 мл",
+    img: "Three Cents Pink Grapefruit.png",
+    desc:"Греческая газировка — розовый грейпфрут. Горьковатая, освежающая. Популярна с джином.", desc_en:"Greek soda — pink grapefruit. Bitter, refreshing. Popular with gin." },
+  { cat:"Вода и напитки", name:"Three Cents Fig Leaf", price:"4.5€", vol:"200 мл",
+    img: "Three Cents Fig Leaf.png",
+    desc:"Греческая газировка — листья инжира. Зеленоватый, растительный вкус. Миксер к джину.", desc_en:"Greek soda — fig leaf. Botanical, greenish taste. Mixer for gin." },
+  { cat:"Вода и напитки", name:"Three Cents Tonic Water", price:"4.5€", vol:"200 мл",
+    img: "Three Cents Tonic Water.png",
+    desc:"Классический тоник. Горьковатый хинный вкус. Базовый миксер для G&T.", desc_en:"Classic tonic. Bitter quinine taste. Essential mixer for G&T." },
+  { cat:"Вода и напитки", name:"Three Cents Dry Tonic", price:"4.5€", vol:"200 мл",
+    img: "Three Cents Dry Tonic.png",
+    desc:"Сухой тоник — менее сладкий, более горький. Подчёркивает вкус джина.", desc_en:"Dry tonic — less sweet, more bitter. Highlights the flavour of gin." },
+  { cat:"Вода и напитки", name:"Three Cents Aegean Tonic", price:"4.5€", vol:"200 мл",
+    img: "Three Cents Aegean Tonic.png",
+    desc:"Эгейский тоник с нотами морских трав. Хорош с Gin Mare и средиземноморскими джинами.", desc_en:"Aegean tonic with sea herb notes. Great with Gin Mare and Mediterranean gins." },
+
+  // ─── ПИВО ───
+  { cat:"Пиво", name:"Dinkelacker Privat", price:"4.5€", vol:"330 мл",
+    img: "Dinkelacker Privat.png",
+    desc:"Немецкое светлое пиво. Сбалансированное, с хмелевой горчинкой. Штутгарт, Германия.", desc_en:"German lager. Balanced, with a hoppy bitterness. Stuttgart, Germany." },
+  { cat:"Пиво", name:"Schwaben Brau Das Helle", price:"5.5€", vol:"500 мл",
+    img: "Schwaben Brau Das Helle.png",
+    desc:"Немецкое светлое (helles) пиво. Мягкое, зерновое, лёгкая горечь. Классика Швабии.", desc_en:"German helles lager. Smooth, malty, light bitterness. Swabian classic." },
+  { cat:"Пиво", name:"Sanwald Hefeweizen", price:"5.5€", vol:"500 мл",
+    img: "Sanwald Hefeweizen.png",
+    desc:"Немецкое пшеничное пиво (нефильтрованное). Нотки банана и гвоздики. Мутное, светлое.", desc_en:"German wheat beer (unfiltered). Notes of banana and clove. Hazy, golden." },
+  { cat:"Пиво", name:"Schwaben Brau Das Schwarze", price:"5.5€", vol:"500 мл",
+    img: "Schwaben Brau Das Schwarze.png",
+    desc:"Немецкое тёмное пиво. Нотки шоколада и карамели. Мягкое, не горькое.", desc_en:"German dark beer. Notes of chocolate and caramel. Smooth, not bitter." },
+
+  // ─── ВОДКА ───
+  { cat:"Водка", name:"Ketel One", price:"12€", vol:"50 мл",
+    img: "Ketel One.png",
+    desc:"Голландская водка из семейной дистиллерии 1691 г. Чистая, зерновая, с нотками лимона и мёда.", desc_en:"Dutch vodka from a family distillery est. 1691. Clean, grainy, hints of citrus." },
+  { cat:"Водка", name:"Belvedere", price:"13€", vol:"50 мл",
+    img: "Belvedere.png",
+    desc:"Польская люкс-водка из ржи. Кремовая текстура, мягкая горечь, ванильный финал.", desc_en:"Polish luxury rye vodka. Creamy texture, soft bitterness, vanilla finish." },
+  { cat:"Водка", name:"Cîroc", price:"13€", vol:"50 мл",
+    img: "Cîroc.png",
+    desc:"Французская водка из винограда (не зерна). Фруктовая, цветочная, лёгкая.", desc_en:"French vodka made from grapes (not grain). Fruity, floral, light." },
+
+  // ─── ДЖИН ───
+  { cat:"Джин", name:"Gin Mare", price:"12€", vol:"50 мл",
+    img: "Gin Mare.png",
+    desc:"Испанский средиземноморский джин. Оливки, тимьян, базилик, розмарин. Идеален с Aegean Tonic.", desc_en:"Spanish Mediterranean gin. Olives, thyme, basil, rosemary. Perfect with Aegean Tonic." },
+  { cat:"Джин", name:"Nordes", price:"12€", vol:"50 мл",
+    img: "Nordes.png",
+    desc:"Галисийский (Испания) джин на основе альбариньо. Цветочный, лёгкий, морские нотки.", desc_en:"Galician (Spain) gin based on Albariño. Floral, light, with sea notes." },
+  { cat:"Джин", name:"Hendrick's", price:"13€", vol:"50 мл",
+    img: "Hendrick's.png",
+    desc:"Шотландский джин с огурцом и розой. Необычный, флоральный. Подавать с долькой огурца.", desc_en:"Scottish gin with cucumber and rose. Unusual, floral. Serve with a cucumber slice." },
+  { cat:"Джин", name:"Roku Gin", price:"13€", vol:"50 мл",
+    img: "Roku Gin.png",
+    desc:"Японский джин House of Suntory — 6 ботаников (сакура, юзу, зелёный чай). Деликатный.", desc_en:"Japanese gin by House of Suntory — 6 botanicals (sakura, yuzu, green tea). Delicate." },
+  { cat:"Джин", name:"The Botanist", price:"13€", vol:"50 мл",
+    img: "The Botanist.png",
+    desc:"Шотландский джин с о.Айлей — 22 ботаника. Цитрусовый, травяной, сложный.", desc_en:"Scottish gin from Islay — 22 botanicals. Citrusy, herbal, complex." },
+  { cat:"Джин", name:"Tanqueray No. Ten", price:"14€", vol:"50 мл",
+    img: "Tanqueray No. Ten.png",
+    desc:"Премиальный лондонский джин с цитрусами (грейпфрут, апельсин, лайм). Идеален в Martini.", desc_en:"Premium London gin with fresh citrus (grapefruit, orange, lime). Perfect in Martini." },
+  { cat:"Джин", name:"Monkey 47", price:"15€", vol:"50 мл",
+    img: "Monkey 47.png",
+    desc:"Немецкий джин Чёрного Леса — 47 ботаников, 47%. Сложный, пряный, с клюквой.", desc_en:"German Black Forest gin — 47 botanicals, 47% ABV. Complex, spiced, with lingonberry." },
+  { cat:"Джин", name:"Portofino Dry Gin", price:"16€", vol:"50 мл",
+    img: "Portofino Dry Gin.png",
+    desc:"Итальянский джин с лигурийскими ботаниками (роза, чабрец, базилик). Премиум.", desc_en:"Italian gin with Ligurian botanicals (rose, thyme, basil). Premium." },
+
+  // ─── РОМ ───
+  { cat:"Ром", name:"Capucana Handcrafted Cachaça", price:"12€", vol:"50 мл",
+    img: "Capucana Handcrafted Cachaça.png",
+    desc:"Бразильская кашаса (тростниковый дистиллят). Травяная, фруктовая. База для Caipirinha.", desc_en:"Brazilian cachaça (sugarcane distillate). Herbal, fruity. Base for Caipirinha." },
+  { cat:"Ром", name:"Plantation Original Dark", price:"12€", vol:"50 мл",
+    img: "Plantation Original Dark.png",
+    desc:"Тёмный ром Барбадос + Тринидад. Карамель, ваниль, специи. Для тёмных коктейлей.", desc_en:"Dark rum Barbados + Trinidad. Caramel, vanilla, spices. For dark cocktails." },
+  { cat:"Ром", name:"Plantation Pineapple", price:"12€", vol:"50 мл",
+    img: "Plantation Pineapple.png",
+    desc:"Ром Plantation, настоянный на ананасе. Тропический, сладкий. Piña Colada, Daiquiri.", desc_en:"Plantation rum infused with pineapple. Tropical, sweet. Piña Colada, Daiquiri." },
+  { cat:"Ром", name:"Plantation Xaymaca Special Dry", price:"14€", vol:"50 мл",
+    img: "Plantation Xaymaca Special Dry.png",
+    desc:"Ямайский ром с ярким фруктовым характером (банан, кожура). Для знатоков.", desc_en:"Jamaican rum with vivid fruity character (banana, citrus peel). For connoisseurs." },
+  { cat:"Ром", name:"Diplomatico Reserva Exclusiva", price:"13€", vol:"50 мл",
+    img: "Diplomatico Reserva Exclusiva.png",
+    desc:"Венесуэльский тёмный ром 12 лет. Шоколад, сухофрукты, ваниль. Можно пить чисто.", desc_en:"Venezuelan dark rum aged 12 years. Chocolate, dried fruit, vanilla. Great neat." },
+  { cat:"Ром", name:"Zacapa 23", price:"15€", vol:"50 мл",
+    img: "Zacapa 23.png",
+    desc:"Гватемальский ром «система солера». Карамель, специи, шоколад. Сипинг-ром.", desc_en:"Guatemalan rum solera system. Caramel, spices, chocolate. Sipping rum." },
+  { cat:"Ром", name:"Zacapa XO", price:"24€", vol:"50 мл",
+    img: "Zacapa XO.png",
+    desc:"Топ линейки Zacapa — финиш в бочках Cognac XO. Роскошный: шоколад, дуб, ваниль.", desc_en:"Top of the Zacapa range — finished in Cognac XO barrels. Luxurious: chocolate, oak, vanilla." },
+  { cat:"Ром", name:"Don Papa 7 Y.O.", price:"14€", vol:"50 мл",
+    img: "Don Papa 7 Y.O..png",
+    desc:"Филиппинский ром 7 лет. Ваниль, мёд, тростниковый сахар. Популярен как сипинг-ром.", desc_en:"Philippine rum aged 7 years. Vanilla, honey, cane sugar. A great sipper." },
+  { cat:"Ром", name:"Don Papa Masskara", price:"14€", vol:"50 мл",
+    img: "Don Papa Masskara.png",
+    desc:"Don Papa без выдержки — легче и слаще 7-летнего. Праздничная этикетка.", desc_en:"Don Papa unaged — lighter and sweeter than the 7-year. Festive label." },
+
+  // ─── ТЕКИЛА / МЕСКАЛЬ ───
+  { cat:"Текила / Мескаль", name:"Patron Silver", price:"13€", vol:"50 мл",
+    img: "Patron Silver.png",
+    desc:"Мексиканская бланко-текила. Цветочная, цитрусовая, чистая. Идеальна для Margarita.", desc_en:"Mexican blanco tequila. Floral, citrusy, clean. Perfect for Margarita." },
+  { cat:"Текила / Мескаль", name:"Patron Reposado", price:"14€", vol:"50 мл",
+    img: "Patron Reposado.png",
+    desc:"Выдержана 2 месяца в дубе. Ваниль и дуб добавляются к цитрусу. Мягче Blanco.", desc_en:"Aged 2 months in oak. Vanilla and oak complement the citrus. Smoother than Blanco." },
+  { cat:"Текила / Мескаль", name:"Patron Anejo", price:"15€", vol:"50 мл",
+    img: "Patron Anejo.png",
+    desc:"Выдержана более года. Карамель, дуб, тёплые специи. Сипинг-текила — чисто, со льдом.", desc_en:"Aged over a year. Caramel, oak, warm spices. Sipping tequila — neat, with salt." },
+  { cat:"Текила / Мескаль", name:"Montelobos Espadin", price:"14€", vol:"50 мл",
+    img: "Montelobos Espadin.png",
+    desc:"Мексиканский мескаль из агавы Эспадин. Копчёный, дымный — это не текила. Для характера.", desc_en:"Mexican mezcal from Espadín agave. Smoky, peaty — this is not tequila. For adventurers." },
+  { cat:"Текила / Мескаль", name:"Clase Azul Plata", price:"28€", vol:"50 мл",
+    img: "Clase Azul Plata.png",
+    desc:"Люкс-текила Blanco в керамическом флаконе. Цветочная, мягкая, сладкая.", desc_en:"Luxury Blanco tequila in a ceramic bottle. Floral, smooth, sweet." },
+  { cat:"Текила / Мескаль", name:"Clase Azul Reposado", price:"38€", vol:"50 мл",
+    img: "Clase Azul Reposado.png",
+    desc:"Clase Azul выдержанная. Карамель, ваниль, дуб. Одна из самых популярных премиальных текил.", desc_en:"Clase Azul aged. Caramel, vanilla, oak. One of the most popular premium tequilas." },
+  { cat:"Текила / Мескаль", name:"Clase Azul Mezcal Durango", price:"50€", vol:"50 мл",
+    img: "Clase Azul Mezcal Durango.png",
+    desc:"Мескаль из редкой агавы Дуранго. Дымный, цветочный, землистый. Для истинных ценителей.", desc_en:"Mezcal from rare Durango agave. Smoky, floral, earthy. For true connoisseurs." },
+
+  // ─── БРЕНДИ / КОНЬЯК / ГРАППА ───
+  { cat:"Бренди / Коньяк / Граппа", name:"Poli Grappa Sarpa Oro", price:"10€", vol:"50 мл",
+    img: "Poli Grappa Sarpa Oro.png",
+    desc:"Итальянская граппа из Бордо + Мерло. Золотистая, выдержанная в дубе. Нежная для граппы.", desc_en:"Italian grappa from Bordeaux + Merlot pomace. Golden, oak-aged. Gentle for grappa." },
+  { cat:"Бренди / Коньяк / Граппа", name:"Nonino Grappa Moscato", price:"10€", vol:"50 мл",
+    img: "Nonino Grappa Moscato.png",
+    desc:"Граппа из выжимок Муската. Цветочный, виноградный аромат. Мягче типичной граппы.", desc_en:"Grappa from Muscat pomace. Floral, grapey aroma. Softer than typical grappa." },
+  { cat:"Бренди / Коньяк / Граппа", name:"Pisco Barsol Primero Quebranta", price:"10€", vol:"50 мл",
+    img: "Pisco Barsol Primero Quebranta.png",
+    desc:"Перуанский писко из винограда Кебранта. Фруктовый, без выдержки. База для Pisco Sour.", desc_en:"Peruvian pisco from Quebranta grapes. Fruity, unaged. Base for Pisco Sour." },
+  { cat:"Бренди / Коньяк / Граппа", name:"Courvoisier VSOP", price:"14€", vol:"50 мл",
+    img: "Courvoisier VSOP.png",
+    desc:"Французский коньяк VSOP (4–10 лет). Сухофрукты, ваниль, дуб. Для Sidecar, Old Fashioned.", desc_en:"French cognac VSOP (4–10 years). Dried fruit, vanilla, oak. For Sidecar, Old Fashioned." },
+  { cat:"Бренди / Коньяк / Граппа", name:"Metaxa Grande Fine", price:"20€", vol:"50 мл",
+    img: "Metaxa Grande Fine.png",
+    desc:"Греческий бренди — смесь бренди и мускатного вина. Сладковатый, фруктовый. Не коньяк!", desc_en:"Greek brandy — blend of brandy and muscat wine. Slightly sweet, fruity. Not a cognac." },
+  { cat:"Бренди / Коньяк / Граппа", name:"Hennessy XO", price:"30€", vol:"50 мл",
+    img: "Hennessy XO.png",
+    desc:"Легендарный коньяк XO (10+ лет). Шоколад, специи, сухофрукты, долгий финал. Люкс.", desc_en:"Legendary XO cognac (10+ years). Chocolate, spice, dried fruit, long finish. Luxury." },
+  { cat:"Бренди / Коньяк / Граппа", name:"Martell Cordon Bleu", price:"32€", vol:"50 мл",
+    img: "Martell Cordon Bleu.png",
+    desc:"Культовый коньяк Grande Champagne. Цветочный, орехи, тонкий дуб.", desc_en:"Iconic Grande Champagne cognac. Floral, nuts, delicate oak." },
+
+  // ─── ВЕРМУТ / БИТТЕР / АМАРО ───
+  { cat:"Вермут / Биттер / Амаро", name:"Aperol", price:"6€", vol:"50 мл",
+    img: "Aperol.png",
+    desc:"Итальянский горько-сладкий аперитив. Апельсин, ревень. База Aperol Spritz. 11% алк.", desc_en:"Italian bittersweet aperitif. Orange, rhubarb. Base of Aperol Spritz. 11% ABV." },
+  { cat:"Вермут / Биттер / Амаро", name:"Carpano Antica Formula", price:"9€", vol:"50 мл",
+    img: "Carpano Antica Formula.png",
+    desc:"Итальянский сладкий вермут (rosso). Ваниль, корица, горечь. Для Negroni и Manhattan.", desc_en:"Italian sweet vermouth (rosso). Vanilla, cinnamon, bitterness. For Negroni and Manhattan." },
+  { cat:"Вермут / Биттер / Амаро", name:"Dolin Rouge / Dry / Blanc", price:"7€", vol:"50 мл",
+    img: "Dolin Rouge : Dry : Blanc.png",
+    desc:"Французский вермут из Шамбери. Rouge — сладкий, Dry — сухой, Blanc — белый сладкий.", desc_en:"French vermouth from Chambéry. Rouge — sweet, Dry — dry, Blanc — sweet white." },
+  { cat:"Вермут / Биттер / Амаро", name:"Noilly Prat Original Dry", price:"7€", vol:"50 мл",
+    img: "Noilly Prat Original Dry.png",
+    desc:"Классический французский сухой вермут. Незаменим в Dry Martini.", desc_en:"Classic French dry vermouth. Essential in Dry Martini." },
+  { cat:"Вермут / Биттер / Амаро", name:"Campari", price:"6€", vol:"50 мл",
+    img: "Campari.png",
+    desc:"Итальянский красный биттер. Горький, цитрусово-травяной. База Negroni, Americano.", desc_en:"Italian red bitter. Bitter, citrusy-herbal. Base of Negroni, Americano, Spritz." },
+  { cat:"Вермут / Биттер / Амаро", name:"Cocchi Storico Vermouth di Torino", price:"7€", vol:"50 мл",
+    img: "Cocchi Storico Vermouth di Torino.png",
+    desc:"Туринский сладкий вермут с хинином и розами. Насыщенный. Идеален в Negroni и Manhattan.", desc_en:"Turin sweet vermouth with quinine and roses. Rich. Ideal in Negroni and Manhattan." },
+  { cat:"Вермут / Биттер / Амаро", name:"Cocchi Extra Dry", price:"7€", vol:"50 мл",
+    img: "Cocchi Extra Dry.png",
+    desc:"Итальянский экстрасухой вермут. Цитрусовый, минеральный. Для Martini.", desc_en:"Italian extra-dry vermouth. Citrusy, mineral. For Martini." },
+  { cat:"Вермут / Биттер / Амаро", name:"Cynar", price:"8€", vol:"50 мл",
+    img: "Cynar.png",
+    desc:"Итальянский амаро из артишока. Горький, землистый. Пьют со льдом или в коктейлях.", desc_en:"Italian amaro made from artichoke. Bitter, earthy. On the rocks or in cocktails." },
+  { cat:"Вермут / Биттер / Амаро", name:"Punt e Mes", price:"7€", vol:"50 мл",
+    img: "Punt e Mes.png",
+    desc:"Туринский вермут с выраженной горечью. Интенсивный Negroni-партнёр.", desc_en:"Turin vermouth with pronounced bitterness. Intense Negroni partner." },
+  { cat:"Вермут / Биттер / Амаро", name:"Fernet Branca", price:"7€", vol:"50 мл",
+    img: "Fernet Branca.png",
+    desc:"Итальянский амаро из 27 трав. Очень горький, ментоловый. Дижестив или от желудка.", desc_en:"Italian amaro from 27 herbs. Very bitter, mentholated. Digestif." },
+  { cat:"Вермут / Биттер / Амаро", name:"Amaro Averna", price:"7€", vol:"50 мл",
+    img: "Amaro Averna.png",
+    desc:"Сицилийский амаро. Карамель, цитрус, травы. Менее горький, чем Fernet. Популярный дижестив.", desc_en:"Sicilian amaro. Caramel, citrus, herbs. Less bitter than Fernet. Popular digestif." },
+  { cat:"Вермут / Биттер / Амаро", name:"Amaro di Angostura", price:"7€", vol:"50 мл",
+    img: "Amaro di Angostura.png",
+    desc:"Карибский амаро (Тринидад). Специи, горечавка, цитрус. Мягче европейских.", desc_en:"Caribbean amaro (Trinidad). Spices, gentian, citrus. Softer than European amari." },
+  { cat:"Вермут / Биттер / Амаро", name:"Vecchio Amaro del Capo", price:"7€", vol:"50 мл",
+    img: "Vecchio Amaro del Capo.png",
+    desc:"Калабрийский амаро из 29 трав. Подают ледяным. Пряный, цитрусовый.", desc_en:"Calabrian amaro from 29 herbs. Served ice-cold. Spiced, citrusy." },
+
+  // ─── ЛИКЁРЫ ───
+  { cat:"Ликёры", name:"Silvia Carta Limoncello", price:"7€", vol:"50 мл",
+    img: "Silvia Carta Limoncello.png",
+    desc:"Сардинский лимончелло из цедры лимонов. Яркий вкус, сладкий. Дижестив, подавать холодным.", desc_en:"Sardinian limoncello from lemon zest. Bright, sweet. Digestif, serve chilled." },
+  { cat:"Ликёры", name:"Amaretto Disaronno", price:"8€", vol:"50 мл",
+    img: "Amaretto Disaronno.png",
+    desc:"Итальянский ликёр миндаля. Сладкий, ореховый. Основа Amaretto Sour.", desc_en:"Italian almond liqueur. Sweet, nutty. Base of Amaretto Sour." },
+  { cat:"Ликёры", name:"Skinos Mastiha", price:"8€", vol:"50 мл",
+    img: "Skinos Mastiha.png",
+    desc:"Греческий ликёр из мастики (смола о.Хиос). Уникальный, смолистый, сосновый вкус.", desc_en:"Greek liqueur from mastic (resin of Chios island). Unique, resinous, piney." },
+  { cat:"Ликёры", name:"Frangelico", price:"8€", vol:"50 мл",
+    img: "Frangelico.png",
+    desc:"Итальянский ликёр из лесных орехов. Ореховый, шоколадный. Флакон в форме монаха.", desc_en:"Italian hazelnut liqueur. Nutty, chocolatey. Bottle shaped like a monk." },
+  { cat:"Ликёры", name:"Crème de Cassis", price:"8€", vol:"50 мл",
+    img: "Crème de Cassis.png",
+    desc:"Французский ликёр из чёрной смородины. Ягодный, сладкий. Используется в Kir Royale.", desc_en:"French blackcurrant liqueur. Berry, sweet. Used in Kir Royal." },
+  { cat:"Ликёры", name:"Bumbu Cream", price:"8€", vol:"50 мл",
+    img: "Bumbu Cream.png",
+    desc:"Ромовый сливочный ликёр (Барбадос). Кокос, ваниль, специи — как пряное мороженое.", desc_en:"Rum cream liqueur (Barbados). Coconut, vanilla, spices — like spiced ice cream." },
+  { cat:"Ликёры", name:"Chambord", price:"8€", vol:"50 мл",
+    img: "Chambord.png",
+    desc:"Французский ликёр малины и ежевики. Насыщенный ягодный. Для Kir и Cosmopolitan.", desc_en:"French raspberry and blackberry liqueur. Rich berry flavour. For Kir and Cosmopolitan." },
+  { cat:"Ликёры", name:"St. Germain", price:"8€", vol:"50 мл",
+    img: "St. Germain.png",
+    desc:"Французский ликёр из цветков бузины. Цветочный, грушевый. Очень модный ингредиент.", desc_en:"French elderflower liqueur. Floral, pear-like. A very fashionable cocktail ingredient." },
+  { cat:"Ликёры", name:"Bénédictine", price:"8€", vol:"50 мл",
+    img: "Bénédictine.png",
+    desc:"Французский травяной ликёр монахов (27 трав). Пряный, медовый, сложный.", desc_en:"French herbal liqueur by monks (27 herbs). Spiced, honeyed, complex." },
+  { cat:"Ликёры", name:"Grand Marnier", price:"7€", vol:"50 мл",
+    img: "Grand Marnier.png",
+    desc:"Французский апельсиновый ликёр на основе коньяка. Для Margarita, Cosmopolitan, Sidecar.", desc_en:"French orange liqueur on cognac base. For Margarita, Cosmopolitan, Sidecar." },
+  { cat:"Ликёры", name:"Absente Van Gogh", price:"10€", vol:"50 мл",
+    img: "Absente Van Gogh.png",
+    desc:"Французский абсент с полынью. Анисовый, травяной. Подавать с сахаром и холодной водой.", desc_en:"French absinthe with wormwood. Anise, herbal. Serve with sugar and cold water." },
+
+  // ─── ВИСКИ — ШОТЛАНДСКИЙ ───
+  { cat:"Виски — Шотландский", name:"Chivas Regal 18 YO", price:"16€", vol:"50 мл",
+    img: "Chivas Regal 18 YO.png",
+    desc:"Купажированный скотч 18 лет. Сухофрукты, тёмный шоколад, дуб. Классический подарочный.", desc_en:"Blended Scotch aged 18 years. Dried fruit, dark chocolate, oak. Classic gift." },
+  { cat:"Виски — Шотландский", name:"Chivas Regal 21 YO Royal Salute", price:"20€", vol:"50 мл",
+    img: "Chivas Regal 21 YO Royal Salute.png",
+    desc:"Роскошный купаж 21 год. Кремовая текстура, специи, сухофрукты. Люкс-уровень.", desc_en:"Luxurious 21-year blend. Creamy texture, spices, dried fruit. Luxury level." },
+  { cat:"Виски — Шотландский", name:"Chivas Regal 25 YO", price:"40€", vol:"50 мл",
+    img: "Chivas Regal 25 YO.png",
+    desc:"Вершина линейки Chivas. Шоколад, орехи, кожа, долгий финал. Экстра-класс.", desc_en:"The pinnacle of Chivas. Chocolate, nuts, leather, long finish. Extra class." },
+
+  // ─── ВИСКИ — SINGLE MALT ───
+  { cat:"Виски — Single Malt", name:"Glenfiddich 12 YO", price:"13€", vol:"50 мл",
+    img: "Glenfiddich 12 YO.png",
+    desc:"Культовый спейсайд single malt. Груша, дуб, ваниль. Лучший вход в мир single malt.", desc_en:"Iconic Speyside single malt. Pear, oak, vanilla. The best entry into single malts." },
+  { cat:"Виски — Single Malt", name:"Glenfiddich 18 YO", price:"20€", vol:"50 мл",
+    img: "Glenfiddich 18 YO.png",
+    desc:"Выдержан в испанских и американских бочках. Инжир, дуб, тропические фрукты.", desc_en:"Aged in Spanish and American casks. Fig, oak, tropical fruit." },
+  { cat:"Виски — Single Malt", name:"The Balvenie 18 YO Pedro Ximenez Cask", price:"26€", vol:"50 мл",
+    img: "The Balvenie 18 YO Pedro Ximenez Cask.png",
+    desc:"Спейсайд, финиш в бочках PX-хереса. Изюм, инжир, мёд, шоколад. Сладкий и насыщенный.", desc_en:"Speyside, finished in PX sherry casks. Raisin, fig, honey, chocolate. Sweet and rich." },
+  { cat:"Виски — Single Malt", name:"The Balvenie 21 YO Port Wood", price:"32€", vol:"50 мл",
+    img: "The Balvenie 21 YO Port Wood.png",
+    desc:"Финиш в бочках Порто. Красные ягоды, ваниль, корица. Изысканный, долгий финал.", desc_en:"Finished in Port casks. Red berries, vanilla, cinnamon. Refined, long finish." },
+  { cat:"Виски — Single Malt", name:"Macallan 12 YO Double Cask", price:"20€", vol:"50 мл",
+    img: "Macallan 12 YO Double Cask.png",
+    desc:"Спейсайд — американский + испанский дуб. Ваниль, карамель, сухофрукты. Входной Macallan.", desc_en:"Speyside — American + Spanish oak. Vanilla, caramel, dried fruit. Entry Macallan." },
+  { cat:"Виски — Single Malt", name:"Macallan 15 YO Double Cask", price:"24€", vol:"50 мл",
+    img: "Macallan 15 YO Double Cask.png",
+    desc:"Богаче 12-летнего. Шоколад, имбирь, лимон, дуб. Превосходный сипинг.", desc_en:"Richer than the 12-year. Chocolate, ginger, lemon, oak. Superb sipping." },
+  { cat:"Виски — Single Malt", name:"Macallan 18 YO Double Cask", price:"45€", vol:"50 мл",
+    img: "Macallan 18 YO Double Cask.png",
+    desc:"Флагман Double Cask. Специи, сухофрукты, дуб, шоколад. Только чисто.", desc_en:"Double Cask flagship. Spice, dried fruit, oak, chocolate. Drink neat only." },
+
+  // ─── ВИСКИ — АЙЛЕЙ ───
+  { cat:"Виски — Айлей (Islay)", name:"Laphroaig Select", price:"14€", vol:"50 мл",
+    img: "Laphroaig Select.png",
+    desc:"Айлейский виски. Торф, дым, морская соль, ваниль. Мягче 10-летнего для новичков.", desc_en:"Islay whisky. Peat, smoke, sea salt, vanilla. Milder than 10-year for newcomers." },
+  { cat:"Виски — Айлей (Islay)", name:"Ardbeg 10", price:"16€", vol:"50 мл",
+    img: "Ardbeg 10.png",
+    desc:"Мощный дым + кофе + лимон. Один из лучших торфяных односолодовых в мире.", desc_en:"Powerful smoke + coffee + lemon. One of the world's best peated single malts." },
+  { cat:"Виски — Айлей (Islay)", name:"Bruichladdich Octomore 14.1", price:"35€", vol:"50 мл",
+    img: "Bruichladdich Octomore 14.1.png",
+    desc:"Самый торфяной виски в мире. Экстремальный дым + сложность и многогранность. Для ценителей.", desc_en:"The world's most heavily peated whisky. Extreme smoke + complexity. For enthusiasts." },
+
+  // ─── ИРЛАНДСКИЙ ВИСКИ ───
+  { cat:"Ирландский виски", name:"West Cork Bog Oak", price:"12€", vol:"50 мл",
+    img: "West Cork Bog Oak.png",
+    desc:"Ирландский купаж, выдержан в бочках болотного дуба. Мягкий, с намёком торфа. Необычный.", desc_en:"Irish blend, aged in bog oak casks. Smooth, with a hint of peat. Unusual." },
+  { cat:"Ирландский виски", name:"Redbreast 12 YO", price:"14€", vol:"50 мл",
+    img: "Redbreast 12 YO.png",
+    desc:"Лучший ирландский pot still виски. Фрукты, специи, ореховость. Без торфа, очень мягкий.", desc_en:"The finest Irish pot still whiskey. Fruit, spice, nuttiness. No peat, very smooth." },
+
+  // ─── БУРБОН И РАЙ ───
+  { cat:"Бурбон и Rye", name:"Woodford Reserve Bourbon", price:"12€", vol:"50 мл",
+    img: "Woodford Reserve Bourbon.png",
+    desc:"Кентуккийский премиум-бурбон. Ваниль, карамель, вишня, специи. Хорош в Old Fashioned.", desc_en:"Kentucky premium bourbon. Vanilla, caramel, cherry, spice. Great in Old Fashioned." },
+  { cat:"Бурбон и Rye", name:"Rittenhouse Straight Rye", price:"12€", vol:"50 мл",
+    img: "Rittenhouse Straight Rye.png",
+    desc:"Американский ржаной виски. Пряный, перечный. Классика для Manhattan и Whiskey Sour.", desc_en:"American rye whiskey. Spiced, peppery. Classic for Manhattan and Whiskey Sour." },
+  { cat:"Бурбон и Rye", name:"Jim Beam Single Barrel", price:"14€", vol:"50 мл",
+    img: "Jim Beam Single Barrel.png",
+    desc:"Single barrel бурбон — каждая бочка уникальна. Сложнее и богаче стандартного Jim Beam.", desc_en:"Single barrel bourbon — every cask is unique. More complex than standard Jim Beam." },
+
+  // ─── ТЕННЕССИ ───
+  { cat:"Теннесси виски", name:"Gentleman Jack", price:"12€", vol:"50 мл",
+    img: "Gentleman Jack.png",
+    desc:"Jack Daniel's с двойной угольной фильтрацией. Мягче и слаще обычного JD.", desc_en:"Jack Daniel's with double charcoal filtering. Smoother and sweeter than regular JD." },
+  { cat:"Теннесси виски", name:"Jack Daniel's Single Barrel", price:"14€", vol:"50 мл",
+    img: "Jack Daniel's Single Barrel.png",
+    desc:"Лучший Jack Daniel's — из одной бочки. Дуб, ваниль, карамель, дым. Разливается вручную.", desc_en:"The best Jack Daniel's — from a single barrel. Oak, vanilla, caramel, smoke." },
+
+  // ─── ЯПОНСКИЙ ВИСКИ ───
+  { cat:"Японский виски", name:"Nikka From The Barrel", price:"16€", vol:"50 мл",
+    img: "Nikka From The Barrel.png",
+    desc:"Японский купаж прямо из бочки (51.4%). Насыщенный, дуб, шоколад, специи. Иконический.", desc_en:"Japanese blend straight from the cask (51.4%). Rich, oak, chocolate, spice. Iconic." },
+  { cat:"Японский виски", name:"Hibiki Japanese Harmony", price:"20€", vol:"50 мл",
+    img: "Hibiki Japanese Harmony.png",
+    desc:"Гармоничный японский купаж Suntory. Цветочный, медовый, апельсин, дуб. Элегантный.", desc_en:"Harmonious Japanese blend by Suntory. Floral, honeyed, orange peel, oak. Elegant." },
+];
+
+// ════════════════════════════════════════════
+//  ВИНО — данные
+// ════════════════════════════════════════════
+const wineItems = [
+  // ─── ПО БОКАЛАМ 150 МЛ ───
+  { cat:'По бокалам — Игристые', name:'Merotto Bareta Valdobbiadene Prosecco Superiore Brut', price:'9€', vol:'150 мл', img:'Merotto Bareta Valdobbiadene Prosecco Superiore Brut.png',
+    desc:'Легкое сухое игристое, свежее и понятное, отлично подходит для начала ужина. 🍽 аперитив, морепродукты, легкие закуски. (Glera)', desc_en:'Light, dry sparkling — fresh and approachable, perfect to start the evening. 🍽 aperitif, seafood, light snacks. (Glera)' },
+  { cat:'По бокалам — Игристые', name:'Vlassides Eddial Brut Traditional Method', price:'11€', vol:'150 мл', img:'Vlassides Eddial Brut Traditional Method — Cyprus.png',
+    desc:'Сухое игристое с более сложным и кремовым вкусом, ближе по стилю к шампанскому. 🍽 oysters, fish, seafood, aperitif. (Chardonnay, Sauvignon Blanc)', desc_en:'Dry sparkling with a richer, creamier profile, closer in style to Champagne. 🍽 oysters, fish, seafood, aperitif. (Chardonnay, Sauvignon Blanc)' },
+  { cat:'По бокалам — Красные', name:'Vlassides Oroman', price:'9€', vol:'150 мл', img:'Vlassides Oroman — Cyprus.png',
+    desc:'Сухое красное с ягодными нотами, хорошей свежестью и гастрономичным стилем. 🍽 мясо, паста, сыры. (Yiannoudi)', desc_en:'Dry red with berry notes, good freshness and a food-friendly style. 🍽 meat, pasta, cheese. (Yiannoudi)' },
+  { cat:'По бокалам — Красные', name:'Bogle Cabernet Sauvignon', price:'10€', vol:'150 мл', img:'Bogle Cabernet Sauvignon.png',
+    desc:'Насыщенное красное с темными ягодами, дубом и структурой. 🍽 мясо, стейк, барбекю. (Cabernet Sauvignon)', desc_en:'Full-bodied red with dark berries, oak and firm structure. 🍽 meat, steak, BBQ. (Cabernet Sauvignon)' },
+  { cat:'По бокалам — Красные', name:'Tenute Ugolini Valpolicella Magna Mora', price:'11€', vol:'150 мл', img:'Tenute Ugolini Valpolicella Magna Mora.png',
+    desc:'Сухое красное с ягодными нотами, хорошей свежестью и гастрономичным стилем. 🍽 мясо, паста, сыры. (Corvina, Corvinone, Rondinella, Molinara)', desc_en:'Dry red with berry notes, good freshness and a food-friendly style. 🍽 meat, pasta, cheese. (Corvina, Corvinone, Rondinella, Molinara)' },
+  { cat:'По бокалам — Красные', name:'Apostolos Thymiopoulos Earth and Sky', price:'12€', vol:'150 мл', img:'Apostolos Thymiopoulos Earth and Sky.png',
+    desc:'Сухое красное с ягодными нотами, хорошей свежестью и гастрономичным стилем. 🍽 мясо, паста, сыры. (Xinomavro)', desc_en:'Dry red with berry notes, good freshness and a food-friendly style. 🍽 meat, pasta, cheese. (Xinomavro)' },
+  { cat:'По бокалам — Белые', name:'Vlassides Alates', price:'9€', vol:'150 мл', img:'Vlassides Alates — Cyprus; Xynisteri.png',
+    desc:'Легкое сухое белое, свежее и гастрономичное, без тяжелого вкуса. 🍽 рыба, морепродукты, салаты. (Xynisteri)', desc_en:'Light, dry white — fresh and food-friendly, never heavy. 🍽 fish, seafood, salads. (Xynisteri)' },
+  { cat:'По бокалам — Белые', name:'Domaine Zafeirakis Malagouzia', price:'9€', vol:'150 мл', img:'Domaine Zafeirakis Malagouzia.png',
+    desc:'Ароматное белое с цветочными и фруктовыми нотами, мягкое и приятное. 🍽 салаты, рыба, легкие закуски. (Malagouzia)', desc_en:'Aromatic white with floral and fruity notes, soft and pleasant. 🍽 salads, fish, light snacks. (Malagouzia)' },
+  { cat:'По бокалам — Белые', name:'St. Michael-Eppan Pinot Grigio', price:'10€', vol:'150 мл', img:'St. Michael-Eppan Pinot Grigio.png',
+    desc:'Light, dry white — neutral and very approachable. 🍽 салаты, рыба, легкие закуски. (Pinot Grigio)', desc_en:'Light, dry white — neutral and very approachable. 🍽 salads, fish, light snacks. (Pinot Grigio)' },
+  { cat:'По бокалам — Белые', name:'Bogle Chardonnay', price:'10€', vol:'150 мл', img:'Bogle Chardonnay.png',
+    desc:'Сухое белое с более округлым вкусом: яблоко, цитрус, иногда сливочная текстура. 🍽 рыба, курица, паста со сливочным соусом. (Chardonnay)', desc_en:'Dry white with a rounder profile: apple, citrus, occasionally creamy texture. 🍽 fish, chicken, creamy pasta. (Chardonnay)' },
+  { cat:'По бокалам — Белые', name:'Montes Outer Limits Sauvignon Blanc', price:'12€', vol:'150 мл', img:'Montes Outer Limits Sauvignon Blanc.png',
+    desc:'Свежее сухое белое с яркой кислотностью, цитрусом и травяными нотами. 🍽 рыба, салаты, козий сыр, морепродукты. (Sauvignon Blanc)', desc_en:'Fresh, dry white with vibrant acidity, citrus and herbaceous notes. 🍽 fish, salads, goat cheese, seafood. (Sauvignon Blanc)' },
+
+  // ─── ПОЛБУТЫЛКИ 375 МЛ ───
+  { cat:'Полбутылки — Шампанское', name:'Champagne Billecart Salmon Brut Reserve N.V.', price:'85€', vol:'375 мл', img:'HALF BOTTLE Billecart Salmon Brut Reserve.png',
+    desc:'Сухое, элегантное шампанское с тонкими пузырьками и свежим послевкусием. 🍽 устрицы, морепродукты, рыба, праздничный аперитив. (Pinot Meunier, Pinot Noir, Chardonnay)', desc_en:'Dry, elegant Champagne with fine bubbles and a crisp finish. 🍽 oysters, seafood, fish, festive aperitif. (Pinot Meunier, Pinot Noir, Chardonnay)' },
+  { cat:'Полбутылки — Шампанское', name:'Champagne Billecart Salmon Brut Rose N.V.', price:'95€', vol:'375 мл', img:'HALF BOTTLE Billecart Salmon Brut Rose N.V..png',
+    desc:'Сухое, элегантное шампанское с тонкими пузырьками и свежим послевкусием. 🍽 устрицы, морепродукты, рыба, праздничный аперитив. (Pinot Meunier, Pinot Noir, Chardonnay)', desc_en:'Dry, elegant Champagne with fine bubbles and a crisp finish. 🍽 oysters, seafood, fish, festive aperitif. (Pinot Meunier, Pinot Noir, Chardonnay)' },
+  { cat:'Полбутылки — Шампанское', name:'Champagne Ruinart Blanc de Blancs Brut N.V.', price:'105€', vol:'375 мл', img:'Champagne Ruinart Blanc de Blancs N.V..png',
+    desc:'Сухое, элегантное шампанское с тонкими пузырьками и свежим послевкусием. 🍽 устрицы, морепродукты, рыба, праздничный аперитив. (Chardonnay)', desc_en:'Dry, elegant Champagne with fine bubbles and a crisp finish. 🍽 oysters, seafood, fish, festive aperitif. (Chardonnay)' },
+  { cat:'Полбутылки — Красные', name:'Zenato Amarone della Valpolicella Classico', price:'85€', vol:'375 мл', img:'HALF BOTTLE  Zenato Amarone della Valpolicella Classico.png',
+    desc:'Сухое красное с ягодными нотами, хорошей свежестью и гастрономичным стилем. 🍽 мясо, паста, сыры. (Corvina, Rondinella, Oseleta)', desc_en:'Dry red with berry notes, good freshness and a food-friendly style. 🍽 meat, pasta, cheese. (Corvina, Rondinella, Oseleta)' },
+  { cat:'Полбутылки — Красные', name:'Casanova di Neri Brunello di Montalcino', price:'100€', vol:'375 мл', img:'Casanova di Neri Brunello di Montalcino.png',
+    desc:'Итальянское красное средней плотности с вишней, кислотностью и гастрономичным финишем. 🍽 паста, мясо, томатные соусы. (Sangiovese Grosso)', desc_en:'Medium-bodied Italian red with cherry, bright acidity and a food-friendly finish. 🍽 pasta, meat, tomato-based sauces. (Sangiovese Grosso)' },
+  { cat:'Полбутылки — Красные', name:'Chateau Talbot Grand Cru Classe, St. Julien', price:'110€', vol:'375 мл', img:'HALF BOTTLE  Chateau Talbot Grand Cru Classe, St. Julien.png',
+    desc:'Классическое бордо с элегантной структурой, черной смородиной и дубом. 🍽 meat, lamb, grilled dishes. (Cabernet Sauvignon, Merlot, Petit Verdot)', desc_en:'Classic Bordeaux blend: elegant structure, blackcurrant and oak. 🍽 meat, lamb, grilled dishes. (Cabernet Sauvignon, Merlot, Petit Verdot)' },
+  { cat:'Полбутылки — Белые', name:'Louis Jadot Pouilly Fuisse', price:'45€', vol:'375 мл', img:'HALF BOTTLE Louis Jadot Pouilly Fuisse.png',
+    desc:'Сухое белое с более округлым вкусом: яблоко, цитрус, иногда сливочная текстура. 🍽 рыба, курица, паста со сливочным соусом. (Chardonnay)', desc_en:'Dry white with a rounder profile: apple, citrus, occasionally creamy texture. 🍽 fish, chicken, creamy pasta. (Chardonnay)' },
+  { cat:'Полбутылки — Белые', name:'Henri Bourgeois Sancerre Les Baronnes', price:'40€', vol:'375 мл', img:'HALF BOTTLE Henri Bourgeois Sancerre Les Baronnes.png',
+    desc:'Свежее сухое белое с яркой кислотностью, цитрусом и травяными нотами. 🍽 рыба, салаты, козий сыр, морепродукты. (Sauvignon Blanc)', desc_en:'Fresh, dry white with vibrant acidity, citrus and herbaceous notes. 🍽 fish, salads, goat cheese, seafood. (Sauvignon Blanc)' },
+  { cat:'Полбутылки — Белые', name:'Gaja Rossi Bass', price:'100€', vol:'375 мл', img:'Gaja Rossj Bass.png',
+    desc:'Сухое белое с более округлым вкусом: яблоко, цитрус, иногда сливочная текстура. 🍽 рыба, курица, паста со сливочным соусом. (Chardonnay)', desc_en:'Dry white with a rounder profile: apple, citrus, occasionally creamy texture. 🍽 fish, chicken, creamy pasta. (Chardonnay)' },
+  { cat:'Полбутылки — Белые', name:'Olivier Leflaive Puligny Montrachet', price:'140€', vol:'375 мл', img:'HALF BOTTLE Olivier Leflaive Puligny Montrachet.png',
+    desc:'Сухое белое с более округлым вкусом: яблоко, цитрус, иногда сливочная текстура. 🍽 рыба, курица, паста со сливочным соусом. (Chardonnay)', desc_en:'Dry white with a rounder profile: apple, citrus, occasionally creamy texture. 🍽 fish, chicken, creamy pasta. (Chardonnay)' },
+
+  // ─── ИГРИСТЫЕ 75 МЛ ───
+  { cat:'Игристые', name:'Merotto Bareta Valdobbiadene Prosecco Superiore Brut', price:'45€', vol:'75 мл', img:'Merotto Bareta Valdobbiadene Prosecco Superiore Brut.png',
+    desc:'Легкое сухое игристое, свежее и понятное, отлично подходит для начала ужина. 🍽 аперитив, морепродукты, легкие закуски. (Glera)', desc_en:'Light, dry sparkling — fresh and approachable, perfect to start the evening. 🍽 aperitif, seafood, light snacks. (Glera)' },
+  { cat:'Игристые', name:'Merotto La Primavera di Barbara Valdobbiadene Prosecco Superiore', price:'45€', vol:'75 мл', img:'Merotto La Primavera di Barbara Valdobbiadene Prosecco Superiore.png',
+    desc:'Легкое сухое игристое, свежее и понятное, отлично подходит для начала ужина. 🍽 аперитив, морепродукты, легкие закуски. (Glera)', desc_en:'Light, dry sparkling — fresh and approachable, perfect to start the evening. 🍽 aperitif, seafood, light snacks. (Glera)' },
+  { cat:'Игристые', name:'Merotto Graziano Merotto Cuvée del Fondatore Brut', price:'55€', vol:'75 мл', img:'Merotto Graziano Merotto Cuvée del Fondatore Brut.png',
+    desc:'Легкое сухое игристое, свежее и понятное, отлично подходит для начала ужина. 🍽 аперитив, морепродукты, легкие закуски. (Glera)', desc_en:'Light, dry sparkling — fresh and approachable, perfect to start the evening. 🍽 aperitif, seafood, light snacks. (Glera)' },
+  { cat:'Игристые', name:'Merotto Grani di Nero Rosé Brut', price:'45€', vol:'75 мл', img:'Merotto Grani di Nero Rosé Brut.png',
+    desc:'Легкое сухое игристое, свежее и понятное, отлично подходит для начала ужина. 🍽 аперитив, морепродукты, легкие закуски. (Pinot Noir)', desc_en:'Light, dry sparkling — fresh and approachable, perfect to start the evening. 🍽 aperitif, seafood, light snacks. (Pinot Noir)' },
+  { cat:'Игристые', name:'Meinklang Epic Pet Nat', price:'40€', vol:'75 мл', img:'Meinklang Epic Pet Nat.png',
+    desc:'Натуральное игристое: более живое, фруктовое и необычное, с легкой дрожжевой нотой. 🍽 aperitif, light snacks, cheese. (Welschriesling, Muscat, Grüner Veltliner)', desc_en:'Natural sparkling (pét-nat): lively, fruity and funky with a light yeasty note. 🍽 aperitif, light snacks, cheese. (Welschriesling, Muscat, Grüner Veltliner)' },
+  { cat:'Игристые', name:'Matías Riccitelli Kungfu Pet Nat Rosé', price:'60€', vol:'75 мл', img:'Matías Riccitelli Kungfu Pet Nat Rosé.png',
+    desc:'Натуральное игристое: более живое, фруктовое и необычное, с легкой дрожжевой нотой. 🍽 aperitif, light snacks, cheese. (Malbec, Pinot Noir)', desc_en:'Natural sparkling (pét-nat): lively, fruity and funky with a light yeasty note. 🍽 aperitif, light snacks, cheese. (Malbec, Pinot Noir)' },
+  { cat:'Игристые', name:'Vlassides Eddial Brut Traditional Method', price:'55€', vol:'75 мл', img:'Vlassides Eddial Brut Traditional Method — Cyprus.png',
+    desc:'Сухое игристое с более сложным и кремовым вкусом, ближе по стилю к шампанскому. 🍽 oysters, fish, seafood, aperitif. (Chardonnay, Sauvignon Blanc)', desc_en:'Dry sparkling with a richer, creamier profile, closer in style to Champagne. 🍽 oysters, fish, seafood, aperitif. (Chardonnay, Sauvignon Blanc)' },
+  { cat:'Игристые', name:'Antica Fratta Franciacorta Essence Saten Brut', price:'110€', vol:'75 мл', img:'Antica Fratta Franciacorta Essence Saten Brut.png',
+    desc:'Сухое игристое с более сложным и кремовым вкусом, ближе по стилю к шампанскому. 🍽 oysters, fish, seafood, aperitif. (Pinot Noir, Chardonnay)', desc_en:'Dry sparkling with a richer, creamier profile, closer in style to Champagne. 🍽 oysters, fish, seafood, aperitif. (Pinot Noir, Chardonnay)' },
+  { cat:'Игристые', name:'Ca del Bosco Franciacorta Brut', price:'110€', vol:'75 мл', img:'Ca del Bosco Franciacorta Brut.png',
+    desc:'Сухое игристое с более сложным и кремовым вкусом, ближе по стилю к шампанскому. 🍽 oysters, fish, seafood, aperitif. (Chardonnay, Pinot Bianco, Pinot Noir)', desc_en:'Dry sparkling with a richer, creamier profile, closer in style to Champagne. 🍽 oysters, fish, seafood, aperitif. (Chardonnay, Pinot Bianco, Pinot Noir)' },
+  { cat:'Игристые', name:'Ca del Bosco Franciacorta Brut Rosé', price:'135€', vol:'75 мл', img:'Ca del Bosco Franciacorta Brut Rosé.png',
+    desc:'Сухое игристое с более сложным и кремовым вкусом, ближе по стилю к шампанскому. 🍽 oysters, fish, seafood, aperitif. (Pinot Noir, Chardonnay)', desc_en:'Dry sparkling with a richer, creamier profile, closer in style to Champagne. 🍽 oysters, fish, seafood, aperitif. (Pinot Noir, Chardonnay)' },
+
+  // ─── ШАМПАНСКОЕ ───
+  { cat:'Шампанское', name:'Champagne Ruinart Brut N.V.', price:'140€', vol:'75 мл', img:'Champagne Ruinart Brut N.V..png',
+    desc:'Сухое, элегантное шампанское с тонкими пузырьками и свежим послевкусием. 🍽 устрицы, морепродукты, рыба, праздничный аперитив. (Pinot Noir, Chardonnay, Meunier)', desc_en:'Dry, elegant Champagne with fine bubbles and a crisp finish. 🍽 oysters, seafood, fish, festive aperitif. (Pinot Noir, Chardonnay, Meunier)' },
+  { cat:'Шампанское', name:'Champagne Ruinart Rosé N.V.', price:'165€', vol:'75 мл', img:'Champagne Ruinart Rosé N.V..png',
+    desc:'Сухое, элегантное шампанское с тонкими пузырьками и свежим послевкусием. 🍽 устрицы, морепродукты, рыба, праздничный аперитив. (Pinot Noir, Chardonnay)', desc_en:'Dry, elegant Champagne with fine bubbles and a crisp finish. 🍽 oysters, seafood, fish, festive aperitif. (Pinot Noir, Chardonnay)' },
+  { cat:'Шампанское', name:'Champagne Ruinart Blanc de Blancs N.V.', price:'190€', vol:'75 мл', img:'Champagne Ruinart Blanc de Blancs N.V..png',
+    desc:'Сухое, элегантное шампанское с тонкими пузырьками и свежим послевкусием. 🍽 устрицы, морепродукты, рыба, праздничный аперитив. (Chardonnay)', desc_en:'Dry, elegant Champagne with fine bubbles and a crisp finish. 🍽 oysters, seafood, fish, festive aperitif. (Chardonnay)' },
+  { cat:'Шампанское', name:'Billecart Salmon Brut Reserve N.V.', price:'130€', vol:'75 мл', img:'Billecart Salmon Brut Reserve N.V..png',
+    desc:'Сухое, элегантное шампанское с тонкими пузырьками и свежим послевкусием. 🍽 устрицы, морепродукты, рыба, праздничный аперитив. (Pinot Noir, Chardonnay, Meunier)', desc_en:'Dry, elegant Champagne with fine bubbles and a crisp finish. 🍽 oysters, seafood, fish, festive aperitif. (Pinot Noir, Chardonnay, Meunier)' },
+  { cat:'Шампанское', name:'Billecart Salmon Rosé N.V.', price:'165€', vol:'75 мл', img:'Billecart Salmon Rosé N.V..png',
+    desc:'Сухое, элегантное шампанское с тонкими пузырьками и свежим послевкусием. 🍽 устрицы, морепродукты, рыба, праздничный аперитив. (Pinot Noir, Chardonnay)', desc_en:'Dry, elegant Champagne with fine bubbles and a crisp finish. 🍽 oysters, seafood, fish, festive aperitif. (Pinot Noir, Chardonnay)' },
+
+  // ─── БЕЛЫЕ — КИПР & ГРЕЦИЯ ───
+  { cat:'Белые вина — Кипр & Греция', name:'Aes Ambelis Morokanella', price:'40€', vol:'75 мл', img:'Aes Ambelis Morokanella.png',
+    desc:'Легкое сухое белое, свежее и гастрономичное, без тяжелого вкуса. 🍽 рыба, морепродукты, салаты. (Promara)', desc_en:'Light, dry white — fresh and food-friendly, never heavy. 🍽 fish, seafood, salads. (Promara)' },
+  { cat:'Белые вина — Кипр & Греция', name:'Tsiakkas Promara', price:'40€', vol:'75 мл', img:'Tsiakkas Promara.png',
+    desc:'Легкое сухое белое, свежее и гастрономичное, без тяжелого вкуса. 🍽 рыба, морепродукты, салаты. (Promara)', desc_en:'Light, dry white — fresh and food-friendly, never heavy. 🍽 fish, seafood, salads. (Promara)' },
+  { cat:'Белые вина — Кипр & Греция', name:'Wine Art Estate Malagouzia Plano Techni Oinou', price:'40€', vol:'75 мл', img:'Wine Art Estate Malagouzia Plano Techni Oinou.png',
+    desc:'Ароматное белое с цветочными и фруктовыми нотами, мягкое и приятное. 🍽 салаты, рыба, легкие закуски. (Malagouzia)', desc_en:'Aromatic white with floral and fruity notes, soft and pleasant. 🍽 salads, fish, light snacks. (Malagouzia)' },
+  { cat:'Белые вина — Кипр & Греция', name:'Vlassides Alates', price:'45€', vol:'75 мл', img:'Vlassides Alates — Cyprus; Xynisteri.png',
+    desc:'Легкое сухое белое, свежее и гастрономичное, без тяжелого вкуса. 🍽 рыба, морепродукты, салаты. (Xynisteri)', desc_en:'Light, dry white — fresh and food-friendly, never heavy. 🍽 fish, seafood, salads. (Xynisteri)' },
+  { cat:'Белые вина — Кипр & Греция', name:'Domaine Sergiou Atypon 2', price:'45€', vol:'75 мл', img:'Domaine Sergiou Atypon 2.png',
+    desc:'Очень свежее минеральное белое с сухим вкусом и морским характером. 🍽 морепродукты, рыба, устрицы. (Xynisteri, Assyrtiko)', desc_en:'Crisp, mineral-driven white with a dry, sea-salt character. 🍽 seafood, fish, oysters. (Xynisteri, Assyrtiko)' },
+  { cat:'Белые вина — Кипр & Греция', name:'Novus Leonidas Nassiakos Optimum', price:'45€', vol:'75 мл', img:'Novus Leonidas Nassiakos Optimum.png',
+    desc:'Ароматное белое с цветочными и фруктовыми нотами, мягкое и приятное. 🍽 салаты, рыба, легкие закуски. (Moschofilero)', desc_en:'Aromatic white with floral and fruity notes, soft and pleasant. 🍽 salads, fish, light snacks. (Moschofilero)' },
+  { cat:'Белые вина — Кипр & Греция', name:'Wine Art Estate Sauvignon Blanc Techni Alipias', price:'45€', vol:'75 мл', img:'Wine Art Estate Sauvignon Blanc Techni Alipias.png',
+    desc:'Свежее сухое белое с яркой кислотностью, цитрусом и травяными нотами. 🍽 рыба, салаты, козий сыр, морепродукты. (Sauvignon Blanc)', desc_en:'Fresh, dry white with vibrant acidity, citrus and herbaceous notes. 🍽 fish, salads, goat cheese, seafood. (Sauvignon Blanc)' },
+  { cat:'Белые вина — Кипр & Греция', name:'Domaine Zafeirakis Malagouzia', price:'45€', vol:'75 мл', img:'Domaine Zafeirakis Malagouzia.png',
+    desc:'Ароматное белое с цветочными и фруктовыми нотами, мягкое и приятное. 🍽 салаты, рыба, легкие закуски. (Malagouzia)', desc_en:'Aromatic white with floral and fruity notes, soft and pleasant. 🍽 salads, fish, light snacks. (Malagouzia)' },
+  { cat:'Белые вина — Кипр & Греция', name:'Arktos Elavation Vineyards Pnoe', price:'45€', vol:'75 мл', img:'Arktos Elavation Vineyards Pnoe.png',
+    desc:'Свежее сухое белое с яркой кислотностью, цитрусом и травяными нотами. 🍽 рыба, салаты, козий сыр, морепродукты. (Assyrtiko, Sauvignon Blanc, Xinomavro)', desc_en:'Fresh, dry white with vibrant acidity, citrus and herbaceous notes. 🍽 fish, salads, goat cheese, seafood. (Assyrtiko, Sauvignon Blanc, Xinomavro)' },
+  { cat:'Белые вина — Кипр & Греция', name:'Alpha Estate Chardonnay Tramonto', price:'75€', vol:'75 мл', img:'Alpha Estate Chardonnay Tramonto.png',
+    desc:'Сухое белое с более округлым вкусом: яблоко, цитрус, иногда сливочная текстура. 🍽 рыба, курица, паста со сливочным соусом. (Chardonnay)', desc_en:'Dry white with a rounder profile: apple, citrus, occasionally creamy texture. 🍽 fish, chicken, creamy pasta. (Chardonnay)' },
+  { cat:'Белые вина — Кипр & Греция', name:'Estate Argyros Santorini Cuvée Palatia', price:'110€', vol:'75 мл', img:'Estate Argyros Santorini Cuvée Palatia.png',
+    desc:'Очень свежее минеральное белое с сухим вкусом и морским характером. 🍽 морепродукты, рыба, устрицы. (Assyrtiko)', desc_en:'Crisp, mineral-driven white with a dry, sea-salt character. 🍽 seafood, fish, oysters. (Assyrtiko)' },
+
+  // ─── БЕЛЫЕ — АВСТРИЯ & ГЕРМАНИЯ ───
+  { cat:'Белые вина — Австрия & Германия', name:'Gritsch Grüner Veltliner Kirchpoint', price:'45€', vol:'75 мл', img:'Gritsch Grüner Veltliner Kirchpoint.png',
+    desc:'Свежее сухое белое с цитрусом, зелеными нотами и легкой пряностью. 🍽 fish, vegetables, salads. (Grüner Veltliner)', desc_en:'Fresh, dry white with citrus, green notes and a gentle spice. 🍽 fish, vegetables, salads. (Grüner Veltliner)' },
+  { cat:'Белые вина — Австрия & Германия', name:'Gritsch Riesling Steinterrassen', price:'50€', vol:'75 мл', img:'Gritsch Riesling Steinterrassen.png',
+    desc:'Ароматное белое с высокой свежестью; может ощущаться чуть мягче и фруктовее. 🍽 азиатская кухня, пряные блюда, рыба. (Riesling)', desc_en:'Aromatic white with vibrant freshness; can feel slightly softer and fruitier. 🍽 Asian cuisine, spicy dishes, fish. (Riesling)' },
+  { cat:'Белые вина — Австрия & Германия', name:'Grassl Chardonnay Hoeflein', price:'50€', vol:'75 мл', img:'Grassl Chardonnay Hoeflein.png',
+    desc:'Сухое белое с более округлым вкусом: яблоко, цитрус, иногда сливочная текстура. 🍽 рыба, курица, паста со сливочным соусом. (Chardonnay)', desc_en:'Dry white with a rounder profile: apple, citrus, occasionally creamy texture. 🍽 fish, chicken, creamy pasta. (Chardonnay)' },
+  { cat:'Белые вина — Австрия & Германия', name:'Joh. Jos. Prüm Riesling Bernkasteler Badstube Kabinett', price:'120€', vol:'75 мл', img:'Joh. Jos. Prüm Riesling Bernkasteler Badstube Kabinett.png',
+    desc:'Ароматное белое с высокой свежестью; может ощущаться чуть мягче и фруктовее. 🍽 азиатская кухня, пряные блюда, рыба. (Riesling)', desc_en:'Aromatic white with vibrant freshness; can feel slightly softer and fruitier. 🍽 Asian cuisine, spicy dishes, fish. (Riesling)' },
+
+  // ─── БЕЛЫЕ — НОВЫЙ СВЕТ ───
+  { cat:'Белые вина — Новый Свет', name:'Bogle Chardonnay', price:'50€', vol:'75 мл', img:'Bogle Chardonnay.png',
+    desc:'Сухое белое с более округлым вкусом: яблоко, цитрус, иногда сливочная текстура. 🍽 рыба, курица, паста со сливочным соусом. (Chardonnay)', desc_en:'Dry white with a rounder profile: apple, citrus, occasionally creamy texture. 🍽 fish, chicken, creamy pasta. (Chardonnay)' },
+  { cat:'Белые вина — Новый Свет', name:'Villa Maria Sauvignon Blanc Reserve Wairau Valley', price:'50€', vol:'75 мл', img:'Villa Maria Sauvignon Blanc Reserve Wairau Valley.png',
+    desc:'Свежее сухое белое с яркой кислотностью, цитрусом и травяными нотами. 🍽 рыба, салаты, козий сыр, морепродукты. (Sauvignon Blanc)', desc_en:'Fresh, dry white with vibrant acidity, citrus and herbaceous notes. 🍽 fish, salads, goat cheese, seafood. (Sauvignon Blanc)' },
+  { cat:'Белые вина — Новый Свет', name:'El Enemigo Chardonnay Mendoza', price:'60€', vol:'75 мл', img:'El Enemigo Chardonnay Mendoza.png',
+    desc:'Сухое белое с более округлым вкусом: яблоко, цитрус, иногда сливочная текстура. 🍽 рыба, курица, паста со сливочным соусом. (Chardonnay)', desc_en:'Dry white with a rounder profile: apple, citrus, occasionally creamy texture. 🍽 fish, chicken, creamy pasta. (Chardonnay)' },
+  { cat:'Белые вина — Новый Свет', name:'Montes Outer Limits Sauvignon Blanc', price:'60€', vol:'75 мл', img:'Montes Outer Limits Sauvignon Blanc.png',
+    desc:'Свежее сухое белое с яркой кислотностью, цитрусом и травяными нотами. 🍽 рыба, салаты, козий сыр, морепродукты. (Sauvignon Blanc)', desc_en:'Fresh, dry white with vibrant acidity, citrus and herbaceous notes. 🍽 fish, salads, goat cheese, seafood. (Sauvignon Blanc)' },
+  { cat:'Белые вина — Новый Свет', name:'La Crema Chardonnay Russian River Valley', price:'90€', vol:'75 мл', img:'La Crema Chardonnay Russian River Valley.png',
+    desc:'Сухое белое с более округлым вкусом: яблоко, цитрус, иногда сливочная текстура. 🍽 рыба, курица, паста со сливочным соусом. (Chardonnay)', desc_en:'Dry white with a rounder profile: apple, citrus, occasionally creamy texture. 🍽 fish, chicken, creamy pasta. (Chardonnay)' },
+
+  // ─── БЕЛЫЕ — ИТАЛИЯ ───
+  { cat:'Белые вина — Италия', name:'Colterenzio Pfefferer', price:'40€', vol:'75 мл', img:'Colterenzio Pfefferer.png',
+    desc:'Ароматное белое с цветочными и фруктовыми нотами, мягкое и приятное. 🍽 салаты, рыба, легкие закуски. (Moscato)', desc_en:'Aromatic white with floral and fruity notes, soft and pleasant. 🍽 salads, fish, light snacks. (Moscato)' },
+  { cat:'Белые вина — Италия', name:'Pieropan Soave Classico', price:'45€', vol:'75 мл', img:'Pieropan Soave Classico.png',
+    desc:'Легкое сухое белое, свежее и гастрономичное, без тяжелого вкуса. 🍽 рыба, морепродукты, салаты. (Garganega)', desc_en:'Light, dry white — fresh and food-friendly, never heavy. 🍽 fish, seafood, salads. (Garganega)' },
+  { cat:'Белые вина — Италия', name:'St. Michael-Eppan Pinot Grigio', price:'50€', vol:'75 мл', img:'St. Michael-Eppan Pinot Grigio.png',
+    desc:'Light, dry white — neutral and very approachable. 🍽 салаты, рыба, легкие закуски. (Pinot Grigio)', desc_en:'Light, dry white — neutral and very approachable. 🍽 salads, fish, light snacks. (Pinot Grigio)' },
+  { cat:'Белые вина — Италия', name:'St. Michael-Eppan Chardonnay', price:'50€', vol:'75 мл', img:'St. Michael-Eppan Chardonnay.png',
+    desc:'Сухое белое с более округлым вкусом: яблоко, цитрус, иногда сливочная текстура. 🍽 рыба, курица, паста со сливочным соусом. (Chardonnay)', desc_en:'Dry white with a rounder profile: apple, citrus, occasionally creamy texture. 🍽 fish, chicken, creamy pasta. (Chardonnay)' },
+  { cat:'Белые вина — Италия', name:'Broglia La Meirana Gavi di Gavi', price:'55€', vol:'75 мл', img:'Broglia La Meirana Gavi di Gavi.png',
+    desc:'Легкое сухое белое, свежее и гастрономичное, без тяжелого вкуса. 🍽 рыба, морепродукты, салаты. (Cortese)', desc_en:'Light, dry white — fresh and food-friendly, never heavy. 🍽 fish, seafood, salads. (Cortese)' },
+  { cat:'Белые вина — Италия', name:'Ca dei Fratti Lugana Brolettino', price:'55€', vol:'75 мл', img:'Ca dei Fratti Lugana Brolettino.png',
+    desc:'Легкое сухое белое, свежее и гастрономичное, без тяжелого вкуса. 🍽 рыба, морепродукты, салаты. (Turbiana)', desc_en:'Light, dry white — fresh and food-friendly, never heavy. 🍽 fish, seafood, salads. (Turbiana)' },
+  { cat:'Белые вина — Италия', name:'Antinori Guado al Tasso Vermentino', price:'75€', vol:'75 мл', img:'Antinori Guado al Tasso Vermentino.png',
+    desc:'Легкое сухое белое, свежее и гастрономичное, без тяжелого вкуса. 🍽 рыба, морепродукты, салаты. (Vermentino)', desc_en:'Light, dry white — fresh and food-friendly, never heavy. 🍽 fish, seafood, salads. (Vermentino)' },
+  { cat:'Белые вина — Италия', name:'Jermann Vintage Tunina', price:'145€', vol:'75 мл', img:'Jermann Vintage Tunina.png',
+    desc:'Свежее сухое белое с яркой кислотностью, цитрусом и травяными нотами. 🍽 рыба, салаты, козий сыр, морепродукты. (Chardonnay, Sauvignon Blanc, Ribolla Gialla)', desc_en:'Fresh, dry white with vibrant acidity, citrus and herbaceous notes. 🍽 fish, salads, goat cheese, seafood. (Chardonnay, Sauvignon Blanc, Ribolla Gialla)' },
+  { cat:'Белые вина — Италия', name:'Gaja Rossj Bass', price:'170€', vol:'75 мл', img:'Gaja Rossj Bass.png',
+    desc:'Сухое белое с более округлым вкусом: яблоко, цитрус, иногда сливочная текстура. 🍽 рыба, курица, паста со сливочным соусом. (Chardonnay)', desc_en:'Dry white with a rounder profile: apple, citrus, occasionally creamy texture. 🍽 fish, chicken, creamy pasta. (Chardonnay)' },
+  { cat:'Белые вина — Италия', name:'Antinori Cervaro della Sala', price:'170€', vol:'75 мл', img:'Antinori Cervaro della Sala.png',
+    desc:'Сухое белое с более округлым вкусом: яблоко, цитрус, иногда сливочная текстура. 🍽 рыба, курица, паста со сливочным соусом. (Chardonnay)', desc_en:'Dry white with a rounder profile: apple, citrus, occasionally creamy texture. 🍽 fish, chicken, creamy pasta. (Chardonnay)' },
+
+  // ─── БЕЛЫЕ — ФРАНЦИЯ ───
+  { cat:'Белые вина — Франция', name:'Domaine Malandes Chablis', price:'65€', vol:'75 мл', img:'Domaine Malandes Chablis.png',
+    desc:'Сухое белое с более округлым вкусом: яблоко, цитрус, иногда сливочная текстура. 🍽 рыба, курица, паста со сливочным соусом. (Chardonnay)', desc_en:'Dry white with a rounder profile: apple, citrus, occasionally creamy texture. 🍽 fish, chicken, creamy pasta. (Chardonnay)' },
+  { cat:'Белые вина — Франция', name:'Domaine Serge Laloue Sancerre Silex', price:'75€', vol:'75 мл', img:'Domaine Serge Laloue Sancerre Silex.png',
+    desc:'Свежее сухое белое с яркой кислотностью, цитрусом и травяными нотами. 🍽 рыба, салаты, козий сыр, морепродукты. (Sauvignon Blanc)', desc_en:'Fresh, dry white with vibrant acidity, citrus and herbaceous notes. 🍽 fish, salads, goat cheese, seafood. (Sauvignon Blanc)' },
+  { cat:'Белые вина — Франция', name:'Denis Carre Bourgogne Hautes Cotes de Beaune Blanc', price:'90€', vol:'75 мл', img:'Denis Carre Bourgogne Hautes Cotes de Beaune Blanc.png',
+    desc:'Сухое белое с более округлым вкусом: яблоко, цитрус, иногда сливочная текстура. 🍽 рыба, курица, паста со сливочным соусом. (Chardonnay)', desc_en:'Dry white with a rounder profile: apple, citrus, occasionally creamy texture. 🍽 fish, chicken, creamy pasta. (Chardonnay)' },
+  { cat:'Белые вина — Франция', name:'Domaine Malandes Chablis Premier Cru Fourchaume', price:'110€', vol:'75 мл', img:'Domaine Malandes Chablis Premier Cru Fourchaume.png',
+    desc:'Сухое белое с более округлым вкусом: яблоко, цитрус, иногда сливочная текстура. 🍽 рыба, курица, паста со сливочным соусом. (Chardonnay)', desc_en:'Dry white with a rounder profile: apple, citrus, occasionally creamy texture. 🍽 fish, chicken, creamy pasta. (Chardonnay)' },
+  { cat:'Белые вина — Франция', name:"Henri Bourgeois Sancerre Blanc d'Antan", price:'120€', vol:'75 мл', img:"Henri Bourgeois Sancerre Blanc d'Antan.png",
+    desc:'Свежее сухое белое с яркой кислотностью, цитрусом и травяными нотами. 🍽 рыба, салаты, козий сыр, морепродукты. (Sauvignon Blanc)', desc_en:'Fresh, dry white with vibrant acidity, citrus and herbaceous notes. 🍽 fish, salads, goat cheese, seafood. (Sauvignon Blanc)' },
+  { cat:'Белые вина — Франция', name:'Domaine Coste Caumartin Saint Romain Le Clos du Chateau Monopole', price:'120€', vol:'75 мл', img:'Domaine Coste Caumartin Saint Romain Le Clos du Chateau Monopole.png',
+    desc:'Сухое белое с более округлым вкусом: яблоко, цитрус, иногда сливочная текстура. 🍽 рыба, курица, паста со сливочным соусом. (Chardonnay)', desc_en:'Dry white with a rounder profile: apple, citrus, occasionally creamy texture. 🍽 fish, chicken, creamy pasta. (Chardonnay)' },
+  { cat:'Белые вина — Франция', name:'Michel Redde Barre à Mine Blanc Fumé de Pouilly', price:'140€', vol:'75 мл', img:'Michel Redde Barre à Mine Blanc Fumé de Pouilly.png',
+    desc:'Свежее сухое белое с яркой кислотностью, цитрусом и травяными нотами. 🍽 рыба, салаты, козий сыр, морепродукты. (Sauvignon Blanc)', desc_en:'Fresh, dry white with vibrant acidity, citrus and herbaceous notes. 🍽 fish, salads, goat cheese, seafood. (Sauvignon Blanc)' },
+  { cat:'Белые вина — Франция', name:'Michel & Stéphane Ogier La Combe de Malleval Condrieu', price:'145€', vol:'75 мл', img:'Michel & Stéphane Ogier La Combe de Malleval Condrieu.png',
+    desc:'Сухое вино в гастрономичном стиле; хороший вариант под еду. 🍽 рыба/мясо по категории блюда, закуски. (Viognier)', desc_en:'Gastronomic-style wine — a great match for food. 🍽 fish or meat depending on dish, snacks. (Viognier)' },
+  { cat:'Белые вина — Франция', name:'Domaine Denis Carre Meursault Les Tillets', price:'160€', vol:'75 мл', img:'Domaine Denis Carre Meursault Les Tillets.png',
+    desc:'Сухое белое с более округлым вкусом: яблоко, цитрус, иногда сливочная текстура. 🍽 рыба, курица, паста со сливочным соусом. (Chardonnay)', desc_en:'Dry white with a rounder profile: apple, citrus, occasionally creamy texture. 🍽 fish, chicken, creamy pasta. (Chardonnay)' },
+
+  // ─── РОЗОВЫЕ И ОРАНЖЕВЫЕ ───
+  { cat:'Розовые и оранжевые — Европа', name:'Colterenzio Pfefferer Pink', price:'40€', vol:'75 мл', img:'Colterenzio Pfefferer Pink.png',
+    desc:'Свежее розовое вино: легкое, фруктовое, с ягодными нотами и сухим финишем. 🍽 салаты, рыба, морепродукты, легкие блюда. (Merlot, Müller Thurgau, Pinot Noir, Sauvignon Blanc)', desc_en:'Fresh, dry rosé: light, fruity with berry notes and a dry finish. 🍽 salads, fish, seafood, light dishes. (Merlot, Müller Thurgau, Pinot Noir, Sauvignon Blanc)' },
+  { cat:'Розовые и оранжевые — Европа', name:'Torre Mora Scalunera Etna Rosato', price:'50€', vol:'75 мл', img:'Torre Mora Scalunera Etna Rosato.png',
+    desc:'Свежее розовое вино: легкое, фруктовое, с ягодными нотами и сухим финишем. 🍽 салаты, рыба, морепродукты, легкие блюда. (Nerello Mascalese)', desc_en:'Fresh, dry rosé: light, fruity with berry notes and a dry finish. 🍽 salads, fish, seafood, light dishes. (Nerello Mascalese)' },
+  { cat:'Розовые и оранжевые — Европа', name:'Milan Nestarec OKR Orange', price:'55€', vol:'75 мл', img:'Milan Nestarec OKR Orange.png',
+    desc:'Оранжевое вино с более насыщенным, гастрономичным и слегка танинным вкусом. 🍽 сыры, овощи, специи, блюда с соусами. (Chardonnay, Palava, Traminer, Sauvignon Blanc)', desc_en:'Orange wine: richer, gastronomic and slightly tannic. 🍽 cheese, vegetables, spices, sauced dishes. (Chardonnay, Palava, Traminer, Sauvignon Blanc)' },
+  { cat:'Розовые и оранжевые — Европа', name:'Minuty Prestige Rosé', price:'60€', vol:'75 мл', img:'Minuty Prestige Rosé.png',
+    desc:'Свежее розовое вино: легкое, фруктовое, с ягодными нотами и сухим финишем. 🍽 салаты, рыба, морепродукты, легкие блюда. (Grenache, Syrah, Rolle, Cinsault)', desc_en:'Fresh, dry rosé: light, fruity with berry notes and a dry finish. 🍽 salads, fish, seafood, light dishes. (Grenache, Syrah, Rolle, Cinsault)' },
+  { cat:'Розовые и оранжевые — Европа', name:'Clos Cibonne Tibouren Tradition Rosé', price:'85€', vol:'75 мл', img:'Clos Cibonne Tibouren Tradition Rosé.png',
+    desc:'Свежее розовое вино: легкое, фруктовое, с ягодными нотами и сухим финишем. 🍽 салаты, рыба, морепродукты, легкие блюда. (Tibouren, Grenache)', desc_en:'Fresh, dry rosé: light, fruity with berry notes and a dry finish. 🍽 salads, fish, seafood, light dishes. (Tibouren, Grenache)' },
+  { cat:'Розовые и оранжевые — Кипр & Греция', name:'Macarounas Minthy Rosé', price:'35€', vol:'75 мл', img:'Macarounas Minthy Rosé.png',
+    desc:'Свежее розовое вино: легкое, фруктовое, с ягодными нотами и сухим финишем. 🍽 салаты, рыба, морепродукты, легкие блюда. (Lefkada)', desc_en:'Fresh, dry rosé: light, fruity with berry notes and a dry finish. 🍽 salads, fish, seafood, light dishes. (Lefkada)' },
+  { cat:'Розовые и оранжевые — Кипр & Греция', name:'Novus Leonidas Nassiakos Acquarella', price:'40€', vol:'75 мл', img:'Novus Leonidas Nassiakos Acquarella.png',
+    desc:'Свежее розовое вино: легкое, фруктовое, с ягодными нотами и сухим финишем. 🍽 салаты, рыба, морепродукты, легкие блюда. (Moschofilero, Assyrtiko, Syrah)', desc_en:'Fresh, dry rosé: light, fruity with berry notes and a dry finish. 🍽 salads, fish, seafood, light dishes. (Moschofilero, Assyrtiko, Syrah)' },
+  { cat:'Розовые и оранжевые — Кипр & Греция', name:'Ieropoulos Family Winery Rose Saint Georges Agiorgitiko', price:'40€', vol:'75 мл', img:'Ieropoulos Family Winery Rose Saint Georges Agiorgitiko.png',
+    desc:'Свежее розовое вино: легкое, фруктовое, с ягодными нотами и сухим финишем. 🍽 салаты, рыба, морепродукты, легкие блюда. (Agiorgitiko)', desc_en:'Fresh, dry rosé: light, fruity with berry notes and a dry finish. 🍽 salads, fish, seafood, light dishes. (Agiorgitiko)' },
+  { cat:'Розовые и оранжевые — Кипр & Греция', name:'Panagiotopoulos Cube Rosé', price:'40€', vol:'75 мл', img:'Panagiotopoulos Cube Rosé.png',
+    desc:'Свежее розовое вино: легкое, фруктовое, с ягодными нотами и сухим финишем. 🍽 салаты, рыба, морепродукты, легкие блюда. (Grenache)', desc_en:'Fresh, dry rosé: light, fruity with berry notes and a dry finish. 🍽 salads, fish, seafood, light dishes. (Grenache)' },
+
+  // ─── КРАСНЫЕ — КИПР & ГРЕЦИЯ ───
+  { cat:'Красные вина — Кипр & Греция', name:'Vlassides Oroman', price:'45€', vol:'75 мл', img:'Vlassides Oroman — Cyprus.png',
+    desc:'Сухое красное с ягодными нотами, хорошей свежестью и гастрономичным стилем. 🍽 мясо, паста, сыры. (Yiannoudi)', desc_en:'Dry red with berry notes, good freshness and a food-friendly style. 🍽 meat, pasta, cheese. (Yiannoudi)' },
+  { cat:'Красные вина — Кипр & Греция', name:'Macarounas Maratheftiko', price:'45€', vol:'75 мл', img:'Makarounas Maratheftiko.png',
+    desc:'Сухое красное с ягодными нотами, хорошей свежестью и гастрономичным стилем. 🍽 мясо, паста, сыры. (Maratheftiko)', desc_en:'Dry red with berry notes, good freshness and a food-friendly style. 🍽 meat, pasta, cheese. (Maratheftiko)' },
+  { cat:'Красные вина — Кипр & Греция', name:'Ktima Zafeirakis Limniona Young Vineyards', price:'45€', vol:'75 мл', img:'Ktima Zafeirakis Limniona Young Vineyards.png',
+    desc:'Сухое красное с ягодными нотами, хорошей свежестью и гастрономичным стилем. 🍽 мясо, паста, сыры. (Limniona)', desc_en:'Dry red with berry notes, good freshness and a food-friendly style. 🍽 meat, pasta, cheese. (Limniona)' },
+  { cat:'Красные вина — Кипр & Греция', name:'Estate Papaioannou Nemea', price:'45€', vol:'75 мл', img:'Estate Papaioannou Nemea.png',
+    desc:'Сухое красное с ягодными нотами, хорошей свежестью и гастрономичным стилем. 🍽 мясо, паста, сыры. (Agiorgitiko)', desc_en:'Dry red with berry notes, good freshness and a food-friendly style. 🍽 meat, pasta, cheese. (Agiorgitiko)' },
+  { cat:'Красные вина — Кипр & Греция', name:"Novus Leonidas Nassiakos The Vintner's Unique Blend Climax", price:'55€', vol:'75 мл', img:"Novus Leonidas Nassiakos The Vintner's Unique Blend Climax.png",
+    desc:'Сухое красное с ягодными нотами, хорошей свежестью и гастрономичным стилем. 🍽 мясо, паста, сыры. (Agiorgitiko, Mavrotragano, Mavrodaphne)', desc_en:'Dry red with berry notes, good freshness and a food-friendly style. 🍽 meat, pasta, cheese. (Agiorgitiko, Mavrotragano, Mavrodaphne)' },
+  { cat:'Красные вина — Кипр & Греция', name:'Apostolos Thymiopoulos Earth and Sky', price:'60€', vol:'75 мл', img:'Apostolos Thymiopoulos Earth and Sky.png',
+    desc:'Сухое красное с ягодными нотами, хорошей свежестью и гастрономичным стилем. 🍽 мясо, паста, сыры. (Xinomavro)', desc_en:'Dry red with berry notes, good freshness and a food-friendly style. 🍽 meat, pasta, cheese. (Xinomavro)' },
+  { cat:'Красные вина — Кипр & Греция', name:'Vlassides Artion', price:'70€', vol:'75 мл', img:'Vlassides Artion.png',
+    desc:'Full-bodied red with dark berries, spice and firm structure. 🍽 мясо на гриле, ягнёнок, выдержанные сыры. (Syrah, Merlot, Cabernet Sauvignon)', desc_en:'Full-bodied red with dark berries, spice and firm structure. 🍽 grilled meat, lamb, aged cheeses. (Syrah, Merlot, Cabernet Sauvignon)' },
+  { cat:'Красные вина — Кипр & Греция', name:'Anatolikos M Fine Mavroudi', price:'75€', vol:'75 мл', img:'Anatolikos M Fine Mavroudi.png',
+    desc:'Сухое красное с ягодными нотами, хорошей свежестью и гастрономичным стилем. 🍽 мясо, паста, сыры. (Mavroudi)', desc_en:'Dry red with berry notes, good freshness and a food-friendly style. 🍽 meat, pasta, cheese. (Mavroudi)' },
+  { cat:'Красные вина — Кипр & Греция', name:'Papargyriou Le Roi des Montagnes Syrah', price:'80€', vol:'75 мл', img:'Papargyriou Le Roi des Montagnes Syrah.png',
+    desc:'Пряное красное средней/полной плотности с темными ягодами и специями. 🍽 баранина, мясо, блюда на гриле. (Syrah)', desc_en:'Spiced medium-to-full-bodied red with dark berries and peppery notes. 🍽 lamb, meat, grilled dishes. (Syrah)' },
+
+  // ─── КРАСНЫЕ — ФРАНЦИЯ ───
+  { cat:'Красные вина — Франция', name:'Domaine St. Patrice Cotes du Rhone', price:'50€', vol:'75 мл', img:'Domaine St. Patrice Cotes du Rhone.png',
+    desc:'Пряное красное средней/полной плотности с темными ягодами и специями. 🍽 баранина, мясо, блюда на гриле. (Grenache, Mourvèdre)', desc_en:'Spiced medium-to-full-bodied red with dark berries and peppery notes. 🍽 lamb, meat, grilled dishes. (Grenache, Mourvèdre)' },
+  { cat:'Красные вина — Франция', name:'Chateau Citran Haut-Médoc', price:'60€', vol:'75 мл', img:'Chateau Citran Haut-Médoc.png',
+    desc:'Классическое бордо с элегантной структурой, черной смородиной и дубом. 🍽 meat, lamb, grilled dishes. (Cabernet Sauvignon, Merlot)', desc_en:'Classic Bordeaux blend: elegant structure, blackcurrant and oak. 🍽 meat, lamb, grilled dishes. (Cabernet Sauvignon, Merlot)' },
+  { cat:'Красные вина — Франция', name:'Jean Paul Dubost Moulin à Vent Les Burdelines', price:'75€', vol:'75 мл', img:'Jean Paul Dubost Moulin à Vent Les Burdelines.png',
+    desc:'Легкое красное с ягодными нотами, мягкими танинами и элегантным вкусом. 🍽 утка, тунец, курица, легкое мясо. (Gamay)', desc_en:'Light-bodied red with soft tannins, berry notes and elegant character. 🍽 duck, tuna, chicken, light meat. (Gamay)' },
+  { cat:'Красные вина — Франция', name:'Vincent Paris Granit 30 Cornas', price:'85€', vol:'75 мл', img:'Vincent Paris Granit 30 Cornas.png',
+    desc:'Пряное красное средней/полной плотности с темными ягодами и специями. 🍽 баранина, мясо, блюда на гриле. (Syrah)', desc_en:'Spiced medium-to-full-bodied red with dark berries and peppery notes. 🍽 lamb, meat, grilled dishes. (Syrah)' },
+  { cat:'Красные вина — Франция', name:'Denis Carre Bourgogne Hautes Cotes de Beaune Rouge', price:'95€', vol:'75 мл', img:'Denis Carre Bourgogne Hautes Cotes de Beaune Rouge.png',
+    desc:'Легкое красное с ягодными нотами, мягкими танинами и элегантным вкусом. 🍽 утка, тунец, курица, легкое мясо. (Pinot Noir)', desc_en:'Light-bodied red with soft tannins, berry notes and elegant character. 🍽 duck, tuna, chicken, light meat. (Pinot Noir)' },
+  { cat:'Красные вина — Франция', name:'Domaine Michel Sarrazin Givry Premier Cru La Grande Berge', price:'130€', vol:'75 мл', img:'Domaine Michel Sarrazin Givry Premier Cru La Grande Berge.png',
+    desc:'Легкое красное с ягодными нотами, мягкими танинами и элегантным вкусом. 🍽 утка, тунец, курица, легкое мясо. (Pinot Noir)', desc_en:'Light-bodied red with soft tannins, berry notes and elegant character. 🍽 duck, tuna, chicken, light meat. (Pinot Noir)' },
+  { cat:'Красные вина — Франция', name:'Chateau de Chamirey Mercurey Premier Cru Clos Les Ruelles Monopole', price:'140€', vol:'75 мл', img:'Chateau de Chamirey Mercurey Premier Cru Clos Les Ruelles Monopole.png',
+    desc:'Легкое красное с ягодными нотами, мягкими танинами и элегантным вкусом. 🍽 утка, тунец, курица, легкое мясо. (Pinot Noir)', desc_en:'Light-bodied red with soft tannins, berry notes and elegant character. 🍽 duck, tuna, chicken, light meat. (Pinot Noir)' },
+  { cat:'Красные вина — Франция', name:'Domaine du Pegau Chateauneuf du Pape Cuvée Réservée', price:'160€', vol:'75 мл', img:'Domaine du Pegau Chateauneuf du Pape Cuvée Réservée.png',
+    desc:'Пряное красное средней/полной плотности с темными ягодами и специями. 🍽 баранина, мясо, блюда на гриле. (Grenache, Syrah, Mourvèdre)', desc_en:'Spiced medium-to-full-bodied red with dark berries and peppery notes. 🍽 lamb, meat, grilled dishes. (Grenache, Syrah, Mourvèdre)' },
+
+  // ─── КРАСНЫЕ — ИТАЛИЯ & ИСПАНИЯ ───
+  { cat:'Красные вина — Италия & Испания', name:'Tenute Ugolini Valpolicella Magna Mora', price:'55€', vol:'75 мл', img:'Tenute Ugolini Valpolicella Magna Mora.png',
+    desc:'Сухое красное с ягодными нотами, хорошей свежестью и гастрономичным стилем. 🍽 мясо, паста, сыры. (Corvina, Corvinone, Rondinella, Molinara)', desc_en:'Dry red with berry notes, good freshness and a food-friendly style. 🍽 meat, pasta, cheese. (Corvina, Corvinone, Rondinella, Molinara)' },
+  { cat:'Красные вина — Италия & Испания', name:'Castellare di Castellina Chianti Classico', price:'55€', vol:'75 мл', img:'Castellare di Castellina Chianti Classico.png',
+    desc:'Итальянское красное средней плотности с вишней, кислотностью и гастрономичным финишем. 🍽 паста, мясо, томатные соусы. (Sangiovese)', desc_en:'Medium-bodied Italian red with cherry, bright acidity and a food-friendly finish. 🍽 pasta, meat, tomato-based sauces. (Sangiovese)' },
+  { cat:'Красные вина — Италия & Испания', name:'Castellare di Castellina Chianti Classico Riserva', price:'75€', vol:'75 мл', img:'Castellare di Castellina Chianti Classico Riserva.png',
+    desc:'Итальянское красное средней плотности с вишней, кислотностью и гастрономичным финишем. 🍽 паста, мясо, томатные соусы. (Sangiovese)', desc_en:'Medium-bodied Italian red with cherry, bright acidity and a food-friendly finish. 🍽 pasta, meat, tomato-based sauces. (Sangiovese)' },
+  { cat:'Красные вина — Италия & Испания', name:'Avignonesi Vino Nobile di Montepulciano', price:'75€', vol:'75 мл', img:'Avignonesi Vino Nobile di Montepulciano.png',
+    desc:'Итальянское красное средней плотности с вишней, кислотностью и гастрономичным финишем. 🍽 паста, мясо, томатные соусы. (Sangiovese)', desc_en:'Medium-bodied Italian red with cherry, bright acidity and a food-friendly finish. 🍽 pasta, meat, tomato-based sauces. (Sangiovese)' },
+  { cat:'Красные вина — Италия & Испания', name:'José Gil Viñedos en San Vicente de la Sonsierra', price:'75€', vol:'75 мл', img:'José Gil Viñedos en San Vicente de la Sonsierra.png',
+    desc:'Сухое вино в гастрономичном стиле; хороший вариант под еду. 🍽 рыба/мясо по категории блюда, закуски. (Tempranillo, Garnacha)', desc_en:'Gastronomic-style wine — a great match for food. 🍽 fish or meat depending on dish, snacks. (Tempranillo, Garnacha)' },
+  { cat:'Красные вина — Италия & Испания', name:"Rivetto Barbera d'Alba Zio Nando", price:'80€', vol:'75 мл', img:"Rivetto Barbera d'Alba Zio Nando.png",
+    desc:'Сухое красное с ягодными нотами, хорошей свежестью и гастрономичным стилем. 🍽 мясо, паста, сыры. (Barbera)', desc_en:'Dry red with berry notes, good freshness and a food-friendly style. 🍽 meat, pasta, cheese. (Barbera)' },
+  { cat:'Красные вина — Италия & Испания', name:'Domenico Clerico Barolo', price:'110€', vol:'75 мл', img:'Domenico Clerico Barolo.png',
+    desc:'Сложное красное: сухое, танинное, с ароматами вишни, специй и выдержки. 🍽 трюфель, мясо, выдержанные сыры. (Nebbiolo)', desc_en:'Complex red: dry, tannic, with aromas of cherry, spice and oak aging. 🍽 truffle, meat, aged cheeses. (Nebbiolo)' },
+  { cat:'Красные вина — Италия & Испания', name:'R. López de Heredia Viña Tondonia Reserva Rioja', price:'110€', vol:'75 мл', img:'R. López de Heredia Viña Tondonia Reserva Rioja.png',
+    desc:'Сухое вино в гастрономичном стиле; хороший вариант под еду. 🍽 рыба/мясо по категории блюда, закуски. (Tempranillo)', desc_en:'Gastronomic-style wine — a great match for food. 🍽 fish or meat depending on dish, snacks. (Tempranillo)' },
+  { cat:'Красные вина — Италия & Испания', name:'Marchesi di Gresy Barbaresco Martinenga', price:'120€', vol:'75 мл', img:'Marchesi di Gresy Barbaresco Martinenga.png',
+    desc:'Сложное красное: сухое, танинное, с ароматами вишни, специй и выдержки. 🍽 трюфель, мясо, выдержанные сыры. (Nebbiolo)', desc_en:'Complex red: dry, tannic, with aromas of cherry, spice and oak aging. 🍽 truffle, meat, aged cheeses. (Nebbiolo)' },
+  { cat:'Красные вина — Италия & Испания', name:'Casanova di Neri Brunello di Montalcino', price:'150€', vol:'75 мл', img:'Casanova di Neri Brunello di Montalcino.png',
+    desc:'Итальянское красное средней плотности с вишней, кислотностью и гастрономичным финишем. 🍽 паста, мясо, томатные соусы. (Sangiovese Grosso)', desc_en:'Medium-bodied Italian red with cherry, bright acidity and a food-friendly finish. 🍽 pasta, meat, tomato-based sauces. (Sangiovese Grosso)' },
+
+  // ─── КРАСНЫЕ — НОВЫЙ СВЕТ ───
+  { cat:'Красные вина — Новый Свет', name:'Bogle Cabernet Sauvignon', price:'50€', vol:'75 мл', img:'Bogle Cabernet Sauvignon.png',
+    desc:'Насыщенное красное с темными ягодами, дубом и структурой. 🍽 мясо, стейк, барбекю. (Cabernet Sauvignon)', desc_en:'Full-bodied red with dark berries, oak and firm structure. 🍽 meat, steak, BBQ. (Cabernet Sauvignon)' },
+  { cat:'Красные вина — Новый Свет', name:'Lapis Luna Zinfandel', price:'55€', vol:'75 мл', img:'Lapis Luna Zinfandel.png',
+    desc:'Насыщенное фруктовое красное с мягкой текстурой и спелыми ягодами. 🍽 стейк, BBQ, мясо на гриле. (Zinfandel)', desc_en:'Fruit-forward, full-bodied red with a soft texture and ripe berries. 🍽 steak, BBQ, grilled meat. (Zinfandel)' },
+  { cat:'Красные вина — Новый Свет', name:'El Enemigo Bonarda', price:'60€', vol:'75 мл', img:'El Enemigo Bonarda.png',
+    desc:'Насыщенное фруктовое красное с мягкой текстурой и спелыми ягодами. 🍽 стейк, BBQ, мясо на гриле. (Bonarda)', desc_en:'Fruit-forward, full-bodied red with a soft texture and ripe berries. 🍽 steak, BBQ, grilled meat. (Bonarda)' },
+  { cat:'Красные вина — Новый Свет', name:'El Enemigo Malbec', price:'60€', vol:'75 мл', img:'El Enemigo Malbec.png',
+    desc:'Насыщенное фруктовое красное с мягкой текстурой и спелыми ягодами. 🍽 стейк, BBQ, мясо на гриле. (Malbec)', desc_en:'Fruit-forward, full-bodied red with a soft texture and ripe berries. 🍽 steak, BBQ, grilled meat. (Malbec)' },
+  { cat:'Красные вина — Новый Свет', name:'La Crema Sonoma Coast Pinot Noir', price:'90€', vol:'75 мл', img:'La Crema Sonoma Coast Pinot Noir.png',
+    desc:'Легкое красное с ягодными нотами, мягкими танинами и элегантным вкусом. 🍽 утка, тунец, курица, легкое мясо. (Pinot Noir)', desc_en:'Light-bodied red with soft tannins, berry notes and elegant character. 🍽 duck, tuna, chicken, light meat. (Pinot Noir)' },
+  { cat:'Красные вина — Новый Свет', name:'Catena Zapata Nicasia Vineyard Malbec', price:'135€', vol:'75 мл', img:'Catena Zapata Nicasia Vineyard Malbec.png',
+    desc:'Насыщенное фруктовое красное с мягкой текстурой и спелыми ягодами. 🍽 стейк, BBQ, мясо на гриле. (Malbec)', desc_en:'Fruit-forward, full-bodied red with a soft texture and ripe berries. 🍽 steak, BBQ, grilled meat. (Malbec)' },
+  { cat:'Красные вина — Новый Свет', name:'Silver Oak Cabernet Sauvignon Alexander Valley', price:'200€', vol:'75 мл', img:'Silver Oak Cabernet Sauvignon Alexander Valley.png',
+    desc:'Насыщенное красное с темными ягодами, дубом и структурой. 🍽 мясо, стейк, барбекю. (Cabernet Sauvignon)', desc_en:'Full-bodied red with dark berries, oak and firm structure. 🍽 meat, steak, BBQ. (Cabernet Sauvignon)' },
+];
+
+// ════════════════════════════════════════════
+//  ENGINE
+// ════════════════════════════════════════════
+// ════════════════════════════════════════════
+//  КОКТЕЙЛИ — данные
+// ════════════════════════════════════════════
+const cocktailItems = [
+  { cat:'Коктейли', name:'Mimosa', name_ru:'Мимоза', price:'', vol:'', img:'',
+    desc:'Light and refreshing sparkling cocktail with citrus notes and a subtle bittersweet finish.\n🍶 HM Citrus Marmalade · Campari · Prosecco', desc_ru:'Лёгкий и освежающий игристый коктейль с цитрусовыми нотами и тонкой горько-сладкой гаммой.\n🍶 HM Citrus Marmalade · Campari · Prosecco' },
+  { cat:'Коктейли', name:'French 75', name_ru:'Французский 75', price:'', vol:'', img:'',
+    desc:'Elegant and crisp — gin, fresh lemon, and sugar topped with bubbles for a bright, refreshing taste.\n🍶 Nordes Gin · HM Sugar Syrup · HM Lemon juice · Prosecco', desc_ru:'Элегантный и свежий — джин, лимон и сахар с игристым для яркого освежающего вкуса.\n🍶 Nordes Gin · HM Sugar Syrup · HM Lemon juice · Prosecco' },
+  { cat:'Коктейли', name:'Negroni', name_ru:'Негрони', price:'', vol:'', img:'',
+    desc:'Bold and perfectly balanced with bitter, sweet, and herbal notes — an iconic aperitif.\n🍶 Tanqueray London Dry · Campari · Martini Rosso · Dolin Rouge · Carpano Antica Formula', desc_ru:'Насыщенный и идеально сбалансированный с горькими, сладкими и травяными нотами — культовый аперитив.\n🍶 Tanqueray London Dry · Campari · Martini Rosso · Dolin Rouge · Carpano Antica Formula' },
+  { cat:'Коктейли', name:'Porn Star Martini', name_ru:'Порн Стар Мартини', price:'', vol:'', img:'',
+    desc:'Exotic and vibrant — passion fruit, vanilla, and citrus with a sparkle.\n🍶 Absolut Vanilia · Monin Passion Fruit puree · Blend Passion Fruit liqueur · HM Sugar Syrup · HM Lime juice · HM Albumen · Prosecco', desc_ru:'Экзотический и яркий — маракуйя, ваниль и цитрус с игристым акцентом.\n🍶 Absolut Vanilia · Monin Passion Fruit puree · Blend Passion Fruit liqueur · HM Sugar Syrup · HM Lime juice · HM Albumen · Prosecco' },
+  { cat:'Коктейли', name:'Amaretto Sour', name_ru:'Амаретто Сауэр', price:'', vol:'', img:'',
+    desc:'Smooth and slightly sweet with almond notes, balanced by fresh citrus and a silky texture.\n🍶 Disaronno Amaretto · Wenneker Apricot liqueur · Gentleman Jack · HM Lemon juice · HM Sugar Syrup · HM Albumen', desc_ru:'Мягкий и слегка сладкий с миндальными нотами, сбалансированный свежим цитрусом и шелковистой текстурой.\n🍶 Disaronno Amaretto · Wenneker Apricot liqueur · Gentleman Jack · HM Lemon juice · HM Sugar Syrup · HM Albumen' },
+  { cat:'Коктейли', name:'Basil Smash', name_ru:'Базил Смэш', price:'', vol:'', img:'',
+    desc:'Fresh and aromatic — gin, basil, and citrus combined into a bright and herbal cocktail.\n🍶 Hendricks Gin · HM Sugar Syrup · HM Lemon juice · Fresh green basil', desc_ru:'Свежий и ароматный — джин, базилик и цитрус в ярком травяном коктейле.\n🍶 Hendricks Gin · HM Sugar Syrup · HM Lemon juice · Fresh green basil' },
+  { cat:'Коктейли', name:'Penicillin', name_ru:'Пенициллин', price:'', vol:'', img:'',
+    desc:'Rich and warming — smoky whisky, honey, and ginger with a fresh citrus kick.\n🍶 Dewar\'s White Label · HM Ginger Syrup · HM Honey Syrup · HM Lemon juice · Laphroaig Select', desc_ru:'Насыщенный и согревающий — дымный виски, мёд и имбирь с освежающим цитрусовым акцентом.\n🍶 Dewar\'s White Label · HM Ginger Syrup · HM Honey Syrup · HM Lemon juice · Laphroaig Select' },
+  { cat:'Коктейли', name:'Dry Martini (Vodka)', name_ru:'Сухой Мартини (Водка)', price:'', vol:'', img:'',
+    desc:'Clean, sharp, and refined with delicate herbal notes and a smooth finish.\n🍶 Belvedere · Cocchi Extra Dry · Bitter Truth Orange Bitter', desc_ru:'Чистый, чёткий и утончённый с деликатными травяными нотами и гладким финишем.\n🍶 Belvedere · Cocchi Extra Dry · Bitter Truth Orange Bitter' },
+  { cat:'Коктейли', name:'Dry Martini (Gin)', name_ru:'Сухой Мартини (Джин)', price:'', vol:'', img:'',
+    desc:'Classic and aromatic — crisp, botanical, and timelessly sophisticated.\n🍶 Tanqueray TEN · Noilly Prat Original Dry · Bitter Truth Orange Bitter', desc_ru:'Классический и ароматный — свежий, ботанический и неподвластный времени.\n🍶 Tanqueray TEN · Noilly Prat Original Dry · Bitter Truth Orange Bitter' },
+  { cat:'Коктейли', name:'Bloody Mary', name_ru:'Кровавая Мэри', price:'', vol:'', img:'',
+    desc:'Savory and bold — spiced tomato with citrus and vodka, perfect for any time of day.\n🍶 Tomato Juice · Alambra juice · Worcestershire sauce · HM Honey Syrup · Tabasco smoked · Tabasco green · Smoked Salt · Black pepper · Lemon juice', desc_ru:'Пряная и насыщенная — острый томат с цитрусом и водкой, идеальна в любое время дня.\n🍶 Tomato Juice · Alambra juice · Worcestershire sauce · HM Honey Syrup · Tabasco smoked · Tabasco green · Smoked Salt · Black pepper · Lemon juice' },
+  { cat:'Коктейли', name:'Grasshopper', name_ru:'Кузнечик', price:'', vol:'', img:'',
+    desc:'Creamy and indulgent — mint chocolate flavors in a smooth, dessert-style cocktail.\n🍶 Cacao liqueur · Wenneker Creme de Menthe · Branca Menta · Cream', desc_ru:'Кремовый и роскошный — мятный шоколадный вкус в гладком коктейле-десерте.\n🍶 Cacao liqueur · Wenneker Creme de Menthe · Branca Menta · Cream' },
+];
+
+const DATA = { kitchen: kitchenItems, bar: barItems, wine: wineItems, cocktails: cocktailItems };
+const state = {
+  kitchen:   { cat: "all" },
+  bar:       { cat: "all" },
+  wine:      { cat: "all" },
+  cocktails: { cat: "all" },
+};
+let activeSection = "bar";
+
+function switchSection(sec) {
+  activeSection = sec;
+  // toggle panels
+  document.querySelectorAll(".section-panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".section-tab").forEach(t => t.classList.remove("active"));
+  // show only the controls for this section
+  document.querySelectorAll(".controls").forEach(c => c.style.display = "none");
+  document.getElementById("panel-" + sec).classList.add("active");
+  document.querySelector(`[data-section="${sec}"]`).classList.add("active");
+  const ctrl = document.getElementById("ctrl-" + sec);
+  if (ctrl) ctrl.style.display = "block";
+  fixOffsets();
+  // scroll to top
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  renderSection(sec, "");
+  // clear search input for this section
+  const inp = document.getElementById('search-' + sec);
+  if (inp) inp.value = "";
+}
+
+function buildCats(sec) {
+  const items = DATA[sec];
+  const cats = ["all", ...new Set(items.map(i => i.cat))];
+  const el = document.getElementById("cats-" + sec);
+  if (!el) return;
+  el.innerHTML = cats.map(c =>
+    `<button class="cat-btn${c === state[sec].cat ? " active" : ""}"
+      onclick="setcat('${sec}','${c.replace(/'/g, "\\'")}') ">${c}</button>`
+  ).join("");
+}
+
+function setcat(sec, c) {
+  state[sec].cat = c;
+  buildCats(sec);
+  const inp = document.getElementById('search-' + sec);
+  renderSection(sec, inp ? inp.value : "");
+}
+
+function renderSection(sec, filter = "") {
+  const items = DATA[sec];
+  const grid  = document.getElementById("grid-" + sec);
+  const countEl = document.getElementById("count-" + sec);
+  if (!grid) return;
+
+  if (items.length === 0) {
+    grid.innerHTML = `
+      <div class="empty" style="grid-column:1/-1">
+        <div class="empty-icon">${sec === "kitchen" ? "🍽" : "🍷"}</div>
+        <div style="font-weight:600;color:#2d4a6d;margin-bottom:8px">${LANG==='en' ? 'Section coming soon' : 'Раздел в разработке'}</div>
+        <div style="font-size:0.8rem;color:#888">${LANG==='en' ? 'Send us the menu — we\'ll add it!' : 'Пришли список позиций — добавим!'}</div>
+      </div>`;
+    if (countEl) countEl.textContent = "";
+    buildCats(sec);
+    return;
+  }
+
+  const f = filter.toLowerCase();
+  const visible = items.filter(i =>
+    (state[sec].cat === "all" || i.cat === state[sec].cat) &&
+    (i.name.toLowerCase().includes(f) || i.desc.toLowerCase().includes(f) || i.cat.toLowerCase().includes(f) ||
+     (i.name_en||'').toLowerCase().includes(f) || (i.desc_en||'').toLowerCase().includes(f) ||
+     (i.name_ru||'').toLowerCase().includes(f) || (i.desc_ru||'').toLowerCase().includes(f))
+  );
+  if (countEl) countEl.textContent = visible.length + (LANG==='en' ? " items" : " поз.");
+
+  if (!visible.length) {
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🔍</div>${LANG==='en' ? 'Nothing found' : 'Ничего не найдено'}</div>`;
+    return;
+  }
+
+  grid.innerHTML = visible.map(i => `
+    <div class="card${sec === "wine" ? " wine-card" : ""}">
+      ${i.img
+        ? `<img src="${i.img}" alt="${i.name}" loading="lazy" onerror="this.src='${FALLBACK}'" onclick="openLightbox(this.src)" style="cursor:zoom-in">`
+        : `<div style="width:100%;height:130px;background:#dedad4;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:1.6rem;">📷</div>`
+      }
+      <div class="card-body">
+        <div class="card-cat">${catLabel(i.cat)}</div>
+        <div class="card-name">${itemName(i)}</div>
+        <div class="card-meta">${i.price}${i.vol ? `<span class="card-vol">&nbsp;·&nbsp;${i.vol}</span>` : ""}</div>
+        ${sec === 'wine' && extractGrapes(itemDesc(i)) ? `<div class="card-grapes">🍇 ${extractGrapes(itemDesc(i))}</div>` : ''}
+        <div class="card-desc">${sec === 'wine' ? stripGrapes(itemDesc(i)) : itemDesc(i)}</div>
+      </div>
+    </div>
+  `).join("");
+
+  buildCats(sec);
+}
+
+// ── Adjust page-content top padding to match fixed header height ──
+function fixOffsets() {
+  const fh = document.getElementById('fixed-header');
+  const pc = document.getElementById('page-content');
+  if (fh && pc) pc.style.paddingTop = fh.offsetHeight + 'px';
+}
+window.addEventListener('load', fixOffsets);
+window.addEventListener('resize', fixOffsets);
+
+// ── Lightbox ──
+function openLightbox(src) {
+  const lb = document.getElementById('lightbox');
+  document.getElementById('lightbox-img').src = src;
+  lb.classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+// ── Init ──
+["kitchen", "bar", "wine", "cocktails"].forEach(sec => renderSection(sec, ""));
+// Ensure only bar controls visible on start (bar is active by default)
+document.querySelectorAll(".controls").forEach(c => c.style.display = "none");
+const initCtrl = document.getElementById("ctrl-bar");
+if (initCtrl) initCtrl.style.display = "block";
+</script>
+<div id="lightbox" onclick="closeLightbox()">
+  <span id="lightbox-close" onclick="closeLightbox()">✕</span>
+  <img id="lightbox-img" src="" alt="">
+</div>
+</body>
+</html>
