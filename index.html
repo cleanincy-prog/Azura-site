@@ -1237,7 +1237,7 @@ function renderSection(sec, filter = "") {
   grid.innerHTML = visible.map(i => `
     <div class="card${sec === "wine" ? " wine-card" : ""}">
       ${i.img
-        ? `<img src="${encodeURIComponent(i.img)}" alt="${i.name}" loading="lazy" onerror="this.src='${FALLBACK}'" onclick="openLightbox(this.src)" style="cursor:zoom-in">`
+        ? `<img src="${i.img}" alt="${i.name}" loading="lazy" onerror="this.src='${FALLBACK}'" onclick="openLightbox(this.src)" style="cursor:zoom-in">`
         : `<div style="width:100%;height:130px;background:#dedad4;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:1.6rem;">📷</div>`
       }
       <div class="card-body">
