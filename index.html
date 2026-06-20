@@ -273,6 +273,13 @@
     color:rgba(31,47,70,.72);font-family:var(--font-sans);font-size:14px;line-height:1.65;
     display:block;overflow:visible;-webkit-line-clamp:unset;-webkit-box-orient:initial;
   }
+  .card.dish-card .dish-card__allergens{
+    margin-top:12px;color:rgba(31,47,70,.68);font-family:var(--font-sans);font-size:13px;
+    line-height:1.5;overflow-wrap:anywhere;
+  }
+  .card.dish-card .dish-card__allergens strong{
+    color:#9a6a36;font-weight:700;
+  }
   .empty{background:rgba(255,253,249,.65);border:1px solid var(--line);border-radius:var(--radius);padding:50px 20px;text-align:center;color:var(--muted);box-shadow:var(--shadow-soft);}
   .empty-icon{font-size:2rem;margin-bottom:10px;}
 
@@ -545,6 +552,55 @@ function itemDesc(i)  {
   if (LANG==='en') return i.desc_en || i.desc;   // kitchen/wine→desc_en, cocktails→desc(EN)
   return i.desc_ru || i.desc;                     // cocktails→desc_ru, kitchen/wine→desc(RU)
 }
+const KITCHEN_ALLERGENS = {
+  'Tuna & Avocado': { ru:'Рыба', en:'Fish' },
+  'Feta Cloud': { ru:'Молоко, моллюски, кунжут, орехи', en:'Milk, molluscs, sesame, nuts' },
+  'Smoked Eggplant': { ru:'Молоко, кунжут', en:'Milk, sesame' },
+  'Roasted Peppers & Anchovies': { ru:'Молоко, рыба', en:'Milk, fish' },
+  'Crudo Trio': { ru:'Ракообразные, рыба', en:'Crustaceans, fish' },
+  'Tuna Tartare': { ru:'Рыба', en:'Fish' },
+  'Scallop Carpaccio': { ru:'Моллюски', en:'Molluscs' },
+  'Beef Tartare': { ru:'Злаки, содержащие глютен; яйца; молоко; горчица', en:'Cereals containing gluten; eggs; milk; mustard' },
+  'Garden Greens': { ru:'Орехи', en:'Nuts' },
+  'Burrata Salad': { ru:'Молоко, орехи', en:'Milk, nuts' },
+  'Tabbouleh': { ru:'Сельдерей, молоко, кунжут', en:'Celery, milk, sesame' },
+  'Mediterranean Village Salad': { ru:'Молоко, кунжут', en:'Milk, sesame' },
+  'Gnocchi with Beef Short Rib': { ru:'Сельдерей, злаки с глютеном, яйца, молоко, соя, диоксид серы / сульфиты', en:'Celery, cereals containing gluten, eggs, milk, soy, sulphur dioxide / sulphites' },
+  'Spaghetti Cacio e Pepe & Truffle': { ru:'Злаки, содержащие глютен; молоко', en:'Cereals containing gluten; milk' },
+  'Tomato Fettuccine & Burrata': { ru:'Злаки, содержащие глютен; яйца; молоко', en:'Cereals containing gluten; eggs; milk' },
+  'Squid Ink Linguini': { ru:'Сельдерей, злаки с глютеном, ракообразные, яйца, рыба, молоко, моллюски, диоксид серы / сульфиты', en:'Celery, cereals containing gluten, crustaceans, eggs, fish, milk, molluscs, sulphur dioxide / sulphites' },
+  'Mushroom Risotto': { ru:'Сельдерей, злаки с глютеном, молоко, диоксид серы / сульфиты', en:'Celery, cereals containing gluten, milk, sulphur dioxide / sulphites' },
+  'Whole Sea Bream': { ru:'Яйца, рыба, люпин, молоко, моллюски, горчица, кунжут', en:'Eggs, fish, lupin, milk, molluscs, mustard, sesame' },
+  'Salmon': { ru:'Сельдерей, ракообразные, рыба, молоко, моллюски, соя, диоксид серы / сульфиты, чеснок', en:'Celery, crustaceans, fish, milk, molluscs, soy, sulphur dioxide / sulphites, garlic' },
+  'Salt-Crusted Sea Bass': { ru:'Рыба', en:'Fish' },
+  'Charcoal Seafood Grill': { ru:'Ракообразные, моллюски', en:'Crustaceans, molluscs' },
+  'Saganaki Shrimp': { ru:'Злаки с глютеном, яйца, люпин, молоко, горчица, кунжут', en:'Cereals containing gluten, eggs, lupin, milk, mustard, sesame' },
+  'Mediterranean Octopus': { ru:'Сельдерей, ракообразные, рыба, моллюски, соя', en:'Celery, crustaceans, fish, molluscs, soy' },
+  'Coal-Grilled Chicken': { ru:'Сельдерей, молоко, горчица, соя', en:'Celery, milk, mustard, soy' },
+  'Coal-Grilled Veal': { ru:'Сельдерей, молоко, горчица, кунжут', en:'Celery, milk, mustard, sesame' },
+  'Lamb Brochettes': { ru:'Сельдерей, молоко, горчица, орехи, кунжут', en:'Celery, milk, mustard, nuts, sesame' },
+  'Baby Chicken': { ru:'Сельдерей, яйца, люпин, молоко, горчица, кунжут', en:'Celery, eggs, lupin, milk, mustard, sesame' },
+  'Tournedos Rossini': { ru:'Сельдерей, молоко, диоксид серы / сульфиты', en:'Celery, milk, sulphur dioxide / sulphites' },
+  'Rack of Lamb': { ru:'Горчица, соя', en:'Mustard, soy' },
+  "Chef's Moussaka": { ru:'Сельдерей, молоко, моллюски, горчица, кунжут', en:'Celery, milk, molluscs, mustard, sesame' },
+  'Flank Steak': { ru:'Сельдерей, диоксид серы / сульфиты', en:'Celery, sulphur dioxide / sulphites' },
+  'Ribeye': { ru:'Горчица, соя', en:'Mustard, soy' },
+  'Braised Lamb Shank': { ru:'Сельдерей, яйца, люпин, молоко, горчица, кунжут', en:'Celery, eggs, lupin, milk, mustard, sesame' },
+};
+function kitchenAllergenData(i) {
+  return KITCHEN_ALLERGENS[i.name_en] || KITCHEN_ALLERGENS[i.name] || null;
+}
+function kitchenAllergenSearchText(i) {
+  const allergens = kitchenAllergenData(i);
+  return allergens ? `${allergens.ru} ${allergens.en}` : '';
+}
+function renderKitchenAllergens(i) {
+  const allergens = kitchenAllergenData(i);
+  if (!allergens) return '';
+  const label = LANG === 'en' ? 'Allergens:' : 'Алергены :';
+  const value = LANG === 'en' ? (allergens.en || allergens.ru) : allergens.ru;
+  return `<div class="dish-card__allergens"><strong>${label}</strong> ${value}</div>`;
+}
 function normalizeMenuSearch(value) {
   return (value || '')
     .normalize('NFD')
@@ -583,6 +639,9 @@ function itemSearchText(sec, i) {
   ];
   if (sec === 'wine') {
     parts.push(i.img, wineVolumeSearchAliases(i), wineNameSearchAliases(i));
+  }
+  if (sec === 'kitchen') {
+    parts.push(kitchenAllergenSearchText(i));
   }
   return normalizeMenuSearch(parts.filter(Boolean).join(' '));
 }
@@ -1820,6 +1879,7 @@ function renderSection(sec, filter = "") {
           ${i.price || i.vol ? `<div class="card-meta">${i.price || ''}${i.vol ? `<span class="card-vol"> · ${i.vol}</span>` : ""}</div>` : ""}
           ${sec === 'wine' ? renderWineBlend(i, grapes) : (grapes ? `<div class="card-grapes">${grapes}</div>` : '')}
           ${cleanDesc ? `<div class="${descClass}">${cleanDesc}</div>` : ''}
+          ${sec === 'kitchen' ? renderKitchenAllergens(i) : ''}
           ${sec === 'wine' ? renderWineCatalogue(i, desc, grapes, wineContent) : ''}
         </div>
       </article>`;
