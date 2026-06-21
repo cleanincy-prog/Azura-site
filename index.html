@@ -444,19 +444,19 @@
     <p id="header-subtitle">СПРАВОЧНИК ДЛЯ ОФИЦИАНТОВ</p>
   </div>
   <div class="section-tabs">
-    <button class="section-tab" id="tab-kitchen" data-section="kitchen" onclick="switchSection('kitchen')">🍽 Кухня</button>
-    <button class="section-tab active" id="tab-bar" data-section="bar" onclick="switchSection('bar')">🍹 Бар</button>
+    <button class="section-tab active" id="tab-kitchen" data-section="kitchen" onclick="switchSection('kitchen')">🍽 Кухня</button>
+    <button class="section-tab" id="tab-bar" data-section="bar" onclick="switchSection('bar')">🍹 Бар</button>
     <button class="section-tab" id="tab-wine" data-section="wine" onclick="switchSection('wine')">🍷 Вино</button>
     <button class="section-tab" id="tab-cocktails" data-section="cocktails" onclick="switchSection('cocktails')">🍸 Коктейли</button>
   </div>
-  <div class="controls" id="ctrl-kitchen" style="display:none">
+  <div class="controls" id="ctrl-kitchen">
     <div class="search-row">
       <input type="search" id="search-kitchen" placeholder="🔍 Поиск по блюдам..." oninput="renderSection('kitchen', this.value)" autocomplete="off">
       <span class="count-badge" id="count-kitchen"></span>
     </div>
     <div class="cat-scroll" id="cats-kitchen"></div>
   </div>
-  <div class="controls" id="ctrl-bar">
+  <div class="controls" id="ctrl-bar" style="display:none">
     <div class="search-row">
       <input type="search" id="search-bar" placeholder="🔍 Поиск по напиткам..." oninput="renderSection('bar', this.value)" autocomplete="off">
       <span class="count-badge" id="count-bar"></span>
@@ -480,10 +480,10 @@
 </div><!-- /fixed-header -->
 
 <div id="page-content">
-  <div class="section-panel" id="panel-kitchen">
+  <div class="section-panel active" id="panel-kitchen">
     <div class="grid" id="grid-kitchen"></div>
   </div>
-  <div class="section-panel active" id="panel-bar">
+  <div class="section-panel" id="panel-bar">
     <div class="grid" id="grid-bar"></div>
   </div>
   <div class="section-panel" id="panel-wine">
@@ -1782,26 +1782,80 @@ const state = {
   wine:      { cat: "all" },
   cocktails: { cat: "all" },
 };
-let activeSection = "bar";
+let activeSection = "kitchen";
+const DEFAULT_SECTION = "kitchen";
+const START_ROUTE = { azuraGuideRoute: true, section: DEFAULT_SECTION, cat: "all", search: "" };
 
-function switchSection(sec) {
-  activeSection = sec;
-  // toggle panels
+function validSection(sec) {
+  return DATA[sec] ? sec : DEFAULT_SECTION;
+}
+
+function routeState(sec = activeSection) {
+  const section = validSection(sec);
+  const inp = document.getElementById('search-' + section);
+  return {
+    azuraGuideRoute: true,
+    section,
+    cat: state[section] ? state[section].cat : "all",
+    search: inp ? inp.value : ""
+  };
+}
+
+function pushRoute(sec = activeSection) {
+  if (!history || !history.pushState) return;
+  history.pushState(routeState(sec), "", location.href);
+}
+
+function setActiveSection(sec, options = {}) {
+  const section = validSection(sec);
+  activeSection = section;
   document.querySelectorAll(".section-panel").forEach(p => p.classList.remove("active"));
   document.querySelectorAll(".section-tab").forEach(t => t.classList.remove("active"));
-  // show only the controls for this section
   document.querySelectorAll(".controls").forEach(c => c.style.display = "none");
-  document.getElementById("panel-" + sec).classList.add("active");
-  document.querySelector(`[data-section="${sec}"]`).classList.add("active");
-  const ctrl = document.getElementById("ctrl-" + sec);
+  document.getElementById("panel-" + section).classList.add("active");
+  document.querySelector(`[data-section="${section}"]`).classList.add("active");
+  const ctrl = document.getElementById("ctrl-" + section);
   if (ctrl) ctrl.style.display = "block";
+  const inp = document.getElementById('search-' + section);
+  if (options.clearSearch && inp) inp.value = "";
+  renderSection(section, inp ? inp.value : "");
   fixOffsets();
-  // scroll to top
-  window.scrollTo({ top: 0, behavior: "smooth" });
-  renderSection(sec, "");
-  // clear search input for this section
-  const inp = document.getElementById('search-' + sec);
-  if (inp) inp.value = "";
+  if (options.scroll !== false) {
+    window.scrollTo({ top: 0, behavior: options.smooth ? "smooth" : "auto" });
+  }
+}
+
+function applyRoute(route, options = {}) {
+  const section = validSection(route && route.section);
+  if (state[section]) state[section].cat = route && route.cat ? route.cat : "all";
+  const inp = document.getElementById('search-' + section);
+  if (inp) inp.value = route && route.search ? route.search : "";
+  setActiveSection(section, { clearSearch: false, scroll: options.scroll !== false });
+}
+
+function initNavigationHistory() {
+  if (!history || !history.pushState || !history.replaceState) return;
+  const start = { ...START_ROUTE };
+  history.replaceState({ ...start, lockedStart: true }, "", location.href);
+  history.pushState(start, "", location.href);
+  window.addEventListener("popstate", event => {
+    const route = event.state;
+    if (route && route.azuraGuideRoute) {
+      applyRoute(route);
+      if (route.lockedStart) {
+        history.pushState(start, "", location.href);
+      }
+      return;
+    }
+    applyRoute(start);
+    history.pushState(start, "", location.href);
+  });
+}
+
+function switchSection(sec) {
+  const section = validSection(sec);
+  setActiveSection(section, { clearSearch: true, scroll: true, smooth: true });
+  pushRoute(section);
 }
 
 function buildCats(sec) {
@@ -1820,6 +1874,7 @@ function setcat(sec, c) {
   buildCats(sec);
   const inp = document.getElementById('search-' + sec);
   renderSection(sec, inp ? inp.value : "");
+  pushRoute(sec);
 }
 
 function renderSection(sec, filter = "") {
@@ -1914,11 +1969,12 @@ function closeLightbox() {
 
 // ── Init ──
 ["kitchen", "bar", "wine", "cocktails"].forEach(sec => renderSection(sec, ""));
-// Ensure only bar controls visible on start (bar is active by default)
+// Ensure only kitchen controls visible on start (kitchen is active by default)
 document.querySelectorAll(".controls").forEach(c => c.style.display = "none");
-const initCtrl = document.getElementById("ctrl-bar");
+const initCtrl = document.getElementById("ctrl-kitchen");
 if (initCtrl) initCtrl.style.display = "block";
 fixOffsets();
+initNavigationHistory();
 </script>
 <div id="lightbox" onclick="closeLightbox()">
   <span id="lightbox-close" onclick="closeLightbox()">✕</span>
