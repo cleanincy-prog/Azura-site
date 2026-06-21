@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>AZURA Guide v2</title>
+<title>Azura waiters guide</title>
+<meta property="og:title" content="Azura waiters guide">
+<meta name="twitter:title" content="Azura waiters guide">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
@@ -51,7 +53,8 @@
     border-bottom:1px solid rgba(255,255,255,.08);
   }
   .app-header h1{
-    font-family:'Cormorant Garamond',serif;font-size:2.15rem;line-height:.9;letter-spacing:9px;font-weight:600;
+    font-family:'Cormorant Garamond',serif;font-size:2.05rem;line-height:1;letter-spacing:0;font-weight:600;
+    display:inline-block;max-width:calc(100% - 112px);margin:0 auto;
   }
   .app-header p{margin-top:8px;font-size:.68rem;letter-spacing:3.4px;text-transform:uppercase;color:rgba(255,255,255,.66);}
   .app-header:after{content:"";display:block;width:76px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:14px auto 0;}
@@ -290,7 +293,7 @@
 
   @media (max-width:680px){
     .app-header{padding:20px 12px 16px;}
-    .app-header h1{font-size:1.82rem;letter-spacing:7px;}
+    .app-header h1{font-size:1.74rem;letter-spacing:0;}
     .app-header p{font-size:.6rem;letter-spacing:2.7px;}
     .section-tabs{gap:7px;padding:9px 10px;}
     .section-tab{flex:0 0 auto;padding:9px 12px;font-size:.68rem;}
@@ -320,7 +323,7 @@
   @media (max-width:430px){
     body{overflow-x:hidden;}
     .app-header{padding:11px 10px 9px;padding-top:max(11px,env(safe-area-inset-top));}
-    .app-header h1{font-size:1.55rem;letter-spacing:6px;}
+    .app-header h1{font-size:1.34rem;letter-spacing:0;}
     .app-header p,.app-header:after{display:none;}
     .lang-toggle{right:8px;top:max(8px,env(safe-area-inset-top));padding:3px;}
     .lang-btn{min-width:34px;min-height:30px;padding:5px 8px;font-size:.62rem;}
@@ -379,7 +382,7 @@
   }
 
   @media (max-width:360px){
-    .app-header h1{font-size:1.42rem;letter-spacing:5px;}
+    .app-header h1{font-size:1.24rem;letter-spacing:0;}
     .section-tab{padding:8px 10px;font-size:.6rem;}
     .wine-card .card-media{height:380px;}
     .wine-card .card-name{font-size:1.82rem;}
@@ -433,7 +436,7 @@
 
 <div id="fixed-header">
   <div class="app-header">
-    <h1>AZURA</h1>
+    <h1>Azura waiters guide</h1>
     <div class="lang-toggle">
       <button class="lang-btn active" id="btn-ru" onclick="setLang('ru')">RU</button>
       <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
@@ -1038,9 +1041,9 @@ const kitchenItems = [
     desc:"Копчёные сладкие перцы Florina с маринованными анчоусами и каперсами. Подаются с соусом тоннато на основе горчицы, каперсов, анчоусов и йогурта. Завершается зелёным маслом и шнитт-луком.", desc_en:"Smoked sweet Florina peppers with marinated anchovies and capers. Served with tonnato sauce made with mustard, capers, anchovies and yogurt. Finished with herb oil and chives." },
 
   // ─── СЫРЫЕ И ХОЛОДНЫЕ БЛЮДА ───
-  { cat:"Сырые и холодные блюда", name:"Трио крудо", name_en:"Crudo Trio", price:"", img:"",
+  { cat:"Сырые и холодные блюда", name:"Трио крудо", name_en:"Crudo Trio", price:"", img:"Trio crudo.jpg",
     desc:"Три вида морепродуктов: лангустин, жёлтый тунец и gambero rosso. Подаются с оливковым маслом, гуакамоле, лаймом и солью.", desc_en:"Three seafood preparations: langoustine, yellowfin tuna and gambero rosso. Served with olive oil, guacamole, lime and salt." },
-  { cat:"Сырые и холодные блюда", name:"Тартар из тунца", name_en:"Tuna Tartare", price:"", img:"",
+  { cat:"Сырые и холодные блюда", name:"Тартар из тунца", name_en:"Tuna Tartare", price:"", img:"Tuna tar-tar.jpg",
     desc:"Тартар из тунца с авокадо, малиной и шнитт-луком. Заправка готовится на основе манго, маракуйи, мёда, понзу и оливкового масла.", desc_en:"Tuna tartare with avocado, raspberries and chives. The dressing is made with mango, passion fruit, honey, ponzu and olive oil." },
   { cat:"Сырые и холодные блюда", name:"Карпаччо из гребешка", name_en:"Scallop Carpaccio", price:"", img:"Scallop carpaccio.jpg",
     desc:"Карпаччо из гребешка с дрессингом из мякоти маракуйи, мёда, понзу и оливкового масла. Дополняется чили и шнитт-луком.", desc_en:"Scallop carpaccio with a dressing of passion fruit pulp, honey, ponzu and olive oil. Finished with chili and chives." },
@@ -1072,9 +1075,9 @@ const kitchenItems = [
   // ─── ИЗ МОРЯ ───
   { cat:"Из моря", name:"Целая дорада", name_en:"Whole Sea Bream", price:"", img:"Whole sea bream.jpg",
     desc:"Целая дорадо с лимонным beurre blanc на основе лимона, рыбного бульона и сливочного масла. Подаётся с гремолатой из петрушки, лука, кинзы, укропа, мяты, тархуна, лимона, апельсиновой цедры и оливкового масла.", desc_en:"Whole sea bream with lemon beurre blanc made from lemon, fish stock and butter. Served with gremolata of parsley, onion, coriander, dill, mint, tarragon, lemon, orange zest and olive oil." },
-  { cat:"Из моря", name:"Лосось", name_en:"Salmon", price:"", img:"Salmon.jpg",
+  { cat:"Из моря", name:"Лосось", name_en:"Salmon", price:"", img:"Salmos Steak.jpg",
     desc:"Лосось готовится sous-vide, затем запекается с понзу, апельсиновым соком и апельсиновым соусом. Подаётся с брокколини, зелёным маслом и отдельно соусом буябес на основе фенхеля, перца, порея, чеснока, чили, имбиря, шафрана, белого вина, томата, рыбного бульона, креветочных панцирей, цитрусов и специй.", desc_en:"Salmon is cooked sous-vide, then baked with ponzu, orange juice and orange sauce. Served with broccolini, herb oil and bouillabaisse sauce made from fennel, pepper, leek, garlic, chili, ginger, saffron, white wine, tomato, fish stock, shrimp shells, citrus and spices." },
-  { cat:"Из моря", name:"Сибас в соляной корке", name_en:"Salt-Crusted Sea Bass", price:"", img:"",
+  { cat:"Из моря", name:"Сибас в соляной корке", name_en:"Salt-Crusted Sea Bass", price:"", img:"Salt-crust sea bass.jpg",
     desc:"Сибас, запечённый в соляной корке с цедрой лимона и тимьяном.", desc_en:"Sea bass baked in a salt crust with lemon zest and thyme." },
   { cat:"Из моря", name:"Морской гриль на углях", name_en:"Charcoal Seafood Grill", price:"", img:"Charcoal Grill Seafood.jpg",
     desc:"Гриль из морепродуктов: креветка, кальмар, гребешок и осьминог. Подаётся с гремолатой с тархуном и лимоном, брокколини, ферментированным кумкватом и соусом на основе мухаммары, sweet chili, соевого соуса и сухого овощного бульона.", desc_en:"Seafood grill with shrimp, squid, scallop and octopus. Served with gremolata with tarragon and lemon, broccolini, fermented kumquat and a sauce made with muhammara, sweet chili, soy sauce and dry vegetable bouillon." },
@@ -1090,7 +1093,7 @@ const kitchenItems = [
     desc:"Маринованная телячья вырезка с сухой аджикой и специями. Подаётся с беби-картофелем, кукурузой и шашлычным соусом на основе кетчупа, кинзы, лука, петрушки и горчицы.", desc_en:"Marinated veal tenderloin with dry adjika and spices. Served with baby potatoes, corn and shashlik sauce made with ketchup, coriander, onion, parsley and mustard." },
   { cat:"Мясо и огонь", name:"Шашлычки из ягнёнка", name_en:"Lamb Brochettes", price:"", img:"Lamb Brochettes.jpg",
     desc:"Кебаб из баранины с чили, кинзой и петрушкой. Подаётся с шашлычным соусом на основе кетчупа, кинзы, лука, петрушки и горчицы.", desc_en:"Lamb kebab with chili, coriander and parsley. Served with shashlik sauce made with ketchup, coriander, onion, parsley and mustard." },
-  { cat:"Мясо и огонь", name:"Цыплёнок", name_en:"Baby Chicken", price:"", img:"",
+  { cat:"Мясо и огонь", name:"Цыплёнок", name_en:"Baby Chicken", price:"", img:"baby chicken.jpg",
     desc:"Baby-цыплёнок, маринованный в сухой аджике. Сверху покрывается глазурью из мёда, лимона, лайма и понзу. Подаётся с соусом на основе куриного бульона, аджики, перцев, чеснока, тимьяна, лимонной цедры и лимонного фреша.", desc_en:"Baby chicken marinated in dry adjika, then glazed with honey, lemon, lime and ponzu. Served with a sauce based on chicken stock, adjika, mixed peppercorns, garlic, thyme, lemon zest and fresh lemon juice." },
   { cat:"Мясо и огонь", name:"Турнедо Россини", name_en:"Tournedos Rossini", price:"", img:"Turnedos Rossini.jpg",
     desc:"Говяжья вырезка Creekstone: примерно 220 г в сыром виде и 180 г в готовом. Подаётся с картофельным пюре со сливками, сливочным и трюфельным маслом, фуа-гра, соусом демиглас с грибами эринги и свежим трюфелем.", desc_en:"Creekstone beef tenderloin: about 220 g raw and 180 g cooked. Served with mashed potato with cream, butter and truffle oil, foie gras, demi-glace with king oyster mushrooms and fresh truffle." },
@@ -1124,7 +1127,7 @@ const kitchenItems = [
     desc:"Овощи на гриле: красный лук, перец, цукини и маринованные черри. Овощи маринуются в смеси специй, сухой аджики, оливкового масла и шнитт-лука.", desc_en:"Grilled vegetables: red onion, pepper, zucchini and marinated cherry tomatoes. The vegetables are marinated with spices, dry adjika, olive oil and chives." },
   { cat:"Гарниры", name:"Кукуруза гриль", name_en:"Grilled Corn", price:"", img:"",
     desc:"Кукуруза, приготовленная на гриле.", desc_en:"Grilled corn." },
-  { cat:"Гарниры", name:"Набор дипов для компании", name_en:"Dip Platter", price:"", img:"Set of Dips.jpg",
+  { cat:"Гарниры", name:"Набор дипов для компании", name_en:"Dip Platter", price:"", img:"set of dips to share.jpg",
     desc:"Набор дипов для компании: лабне из овечьего йогурта со сметаной, оливками с чесноком и вялеными томатами; баба гануш из запечённых баклажанов, красного лука гриль, чеснока, йогурта, шпината и петрушки; мухаммара из запечённых сладких перцев, грецкого ореха и шрирачи; хумус с тахини, лимоном и специями; дегидрированный дзадзики с йогуртом, огурцом, майонезом, мятой и лимоном.", desc_en:"Dip platter to share: labneh with sheep yogurt, sour cream, olives with garlic and sun-dried tomatoes; baba ganoush with roasted eggplant, grilled red onion, garlic, yogurt, spinach and parsley; muhammara with roasted sweet peppers, walnut and sriracha; hummus with tahini, lemon and spices; dehydrated tzatziki with yogurt, cucumber, mayonnaise, mint and lemon." },
 
   // ─── ДЕСЕРТЫ ───
@@ -1138,7 +1141,7 @@ const kitchenItems = [
     desc:"Апельсиновый бисквит из яиц, муки и сахара, пропитанный апельсиновым сиропом. Подаётся с кремом из взбитых сливок и гелем из лемонграсса.", desc_en:"Orange sponge made with eggs, flour and sugar, soaked in orange syrup. Served with whipped cream and lemongrass gel." },
   { cat:"Десерты", name:"Ассорти мини-канноли", name_en:"Mini Cannoli Selection", price:"", img:"Cannoli.jpg",
     desc:"Мини-канноли с хрустящим тестом и кремом из рикотты, сливок, шоколада, апельсина и фисташки.", desc_en:"Mini cannoli with crisp pastry and a cream of ricotta, cream, chocolate, orange and pistachio." },
-  { cat:"Десерты", name:"Шоколадный тарт", name_en:"Chocolate Tart", price:"", img:"",
+  { cat:"Десерты", name:"Шоколадный тарт", name_en:"Chocolate Tart", price:"", img:"Chocolate tart.jpg",
     desc:"Шоколадная тарталетка из песочного шоколадного теста с зеркальной какао-глазурью и муссом из тёмного шоколада со сливками.", desc_en:"Chocolate tartlet made with chocolate shortcrust pastry, mirror cocoa glaze and dark chocolate mousse with cream." },
 ];
 
