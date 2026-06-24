@@ -103,23 +103,24 @@
   .bottle-card .card-media:after{content:"";position:absolute;left:24%;right:24%;bottom:18px;height:18px;border-radius:50%;background:rgba(31,47,70,.12);filter:blur(12px);}
   .bottle-card .card-media img{position:relative;z-index:2;width:auto;max-width:82%;height:100%;object-fit:contain;filter:drop-shadow(0 18px 18px rgba(31,47,70,.18));}
 
-  #grid-wine{grid-template-columns:repeat(auto-fill,minmax(390px,1fr));gap:56px 34px;padding-top:34px;}
+  #grid-wine{grid-template-columns:repeat(auto-fill,minmax(390px,1fr));gap:34px 28px;padding-top:28px;}
   .wine-card{
-    display:grid;grid-template-rows:auto auto;gap:0;overflow:visible;isolation:isolate;
-    min-height:690px;padding:0 26px 34px;background:transparent;border:0;border-radius:0;box-shadow:none;
+    display:block;overflow:visible;isolation:isolate;
+    min-height:auto;padding:24px 24px 38px;background:transparent;border:0;border-radius:30px;box-shadow:none;
     cursor:pointer;
   }
+  .wine-card-top{display:grid;grid-template-columns:minmax(130px,42fr) minmax(0,58fr);gap:0 22px;align-items:start;}
   .wine-card:before{
-    content:"";position:absolute;z-index:-1;inset:36px 0 0;
+    content:"";position:absolute;z-index:-1;inset:28px 0 0;
     background:
       linear-gradient(180deg,rgba(248,244,236,.96),rgba(242,233,219,.80)),
       linear-gradient(90deg,transparent,rgba(194,168,120,.18),transparent);
-    border-top:1px solid rgba(194,168,120,.24);
-    border-bottom:1px solid rgba(31,47,70,.08);
+    border:1px solid rgba(194,168,120,.24);border-radius:30px;
+    box-shadow:0 14px 34px rgba(31,47,70,.045);
   }
   .wine-card:hover{transform:none;box-shadow:none;border-color:transparent;}
   .wine-card .card-media{
-    height:clamp(440px,48vw,540px);padding:12px 10px 0;display:flex;align-items:flex-end;justify-content:center;
+    height:clamp(360px,44vw,520px);padding:8px 0 0;display:flex;align-items:flex-end;justify-content:center;
     overflow:visible;background:
       linear-gradient(180deg,rgba(248,244,236,.42),rgba(241,232,216,.18)),
       radial-gradient(ellipse at 50% 91%,rgba(90,30,36,.16),transparent 32%),
@@ -134,56 +135,65 @@
     filter:drop-shadow(0 26px 18px rgba(24,38,58,.16));transform-origin:50% 100%;
   }
   .wine-card:hover .card-media img{transform:translateY(-4px) scale(1.025);}
-  .wine-card .card-body{padding:32px 6px 0;text-align:center;}
-  .wine-card .card-body:before{
-    content:"";display:block;width:68px;height:1px;margin:0 auto 24px;
-    background:linear-gradient(90deg,transparent,rgba(90,30,36,.58),transparent);
-  }
+  .wine-card .card-body{display:block;min-width:0;padding:0;text-align:left;}
+  .wine-card .card-body:before{content:none;}
   .wine-card .card-cat{
-    margin-bottom:12px;color:rgba(90,30,36,.72);font-size:.63rem;font-weight:700;letter-spacing:2.7px;text-align:center;
+    margin:18px 0 10px;color:rgba(90,30,36,.72);font-size:.63rem;font-weight:700;letter-spacing:2.7px;text-align:left;
   }
   .wine-card .card-name{
-    max-width:12.5em;margin:0 auto 14px;font-size:clamp(2.15rem,3.4vw,3rem);line-height:.93;font-weight:600;
-    letter-spacing:0;text-align:center;color:#111b2a;
+    max-width:12em;margin:0 0 12px;font-size:clamp(1.72rem,2.7vw,2.55rem);line-height:.96;font-weight:600;
+    letter-spacing:0;text-align:left;color:#111b2a;
   }
   .wine-card .card-meta{
-    margin-bottom:18px;color:#111b2a;font-family:'Cormorant Garamond',serif;font-size:1.28rem;font-weight:700;text-align:center;
+    margin-bottom:14px;color:#111b2a;font-family:'Cormorant Garamond',serif;font-size:1.24rem;font-weight:700;text-align:left;
   }
   .wine-card .card-vol{color:rgba(117,108,96,.78);font-family:'Inter',sans-serif;font-size:.76rem;font-weight:600;letter-spacing:.8px;text-transform:uppercase;}
   .wine-card .card-grapes{
-    display:block;max-width:30em;margin:0 auto 20px;padding:0;background:transparent;border-radius:0;color:rgba(90,30,36,.82);
-    font-size:.68rem;font-weight:700;letter-spacing:1.1px;line-height:1.55;text-align:center;text-transform:uppercase;
+    display:block;max-width:100%;margin:0;padding:0;background:transparent;border-radius:0;color:rgba(90,30,36,.82);
+    font-size:.68rem;font-weight:700;letter-spacing:1.1px;line-height:1.55;text-align:left;text-transform:uppercase;
     overflow-wrap:anywhere;
   }
   .wine-card .card-desc{
-    max-width:34em;margin:0 auto;color:#5d5449;font-family:'Cormorant Garamond',serif;font-size:1.13rem;line-height:1.42;
-    display:block;overflow:visible;text-align:center;-webkit-line-clamp:unset;-webkit-box-orient:initial;overflow-wrap:anywhere;
+    max-width:38em;margin:28px 0 0;color:#5d5449;font-family:'Cormorant Garamond',serif;font-size:1.13rem;line-height:1.42;
+    display:block;overflow:visible;text-align:left;-webkit-line-clamp:unset;-webkit-box-orient:initial;overflow-wrap:anywhere;
   }
   .wine-storage-number{
-    position:absolute;right:20px;bottom:16px;z-index:3;min-width:42px;height:32px;padding:0 10px;
-    display:inline-flex;align-items:center;justify-content:center;border-top:1px solid rgba(194,168,120,.42);
-    color:rgba(90,30,36,.76);font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;line-height:1;
-    letter-spacing:.04em;background:rgba(245,241,232,.52);
+    position:absolute;right:18px;top:30px;z-index:4;padding:0;
+    display:inline-flex;align-items:flex-start;justify-content:flex-end;border:0;background:transparent;backdrop-filter:none;
+    color:rgba(90,30,36,.78);font-family:var(--font-sans);font-size:1.42rem;font-weight:700;line-height:.9;
+    letter-spacing:.01em;
   }
   .wine-storage-number:before{
-    content:"№";margin-right:4px;color:rgba(117,108,96,.62);font-family:'Inter',sans-serif;font-size:.58rem;font-weight:800;
-    letter-spacing:.08em;transform:translateY(-1px);
+    content:"№";margin-right:4px;color:rgba(117,108,96,.58);font-family:var(--font-sans);font-size:.58rem;font-weight:800;
+    letter-spacing:.08em;transform:translateY(-3px);
   }
   .wine-card .card-body{min-width:0;}
   .wine-card .card-name{overflow-wrap:anywhere;hyphens:auto;}
+  .wine-blend-icon{
+    width:22px;height:22px;margin:0 0 8px;display:inline-flex;align-items:center;justify-content:center;
+    color:rgba(90,30,36,.76);font-size:1.02rem;line-height:1;
+  }
+  .wine-blend-icon span{display:block;filter:saturate(.82);}
+  .wine-glass-mark{
+    width:max-content;max-width:100%;margin:0 0 12px;display:inline-flex;align-items:center;gap:6px;
+    color:rgba(109,31,40,.88);font-size:.6rem;font-weight:800;letter-spacing:1.25px;text-transform:uppercase;line-height:1;
+  }
+  .wine-glass-mark svg{width:17px;height:21px;display:block;flex:0 0 auto;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .wine-glass-mark span{min-width:0;overflow-wrap:anywhere;}
   .wine-blend{display:grid;gap:7px;}
   .wine-blend-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:baseline;}
   .wine-blend-name{min-width:0;overflow-wrap:anywhere;}
   .wine-blend-percent{color:#111b2a;font-family:'Cormorant Garamond',serif;font-size:1.02rem;font-weight:700;letter-spacing:0;text-transform:none;}
-  .wine-catalogue-details{max-width:100%;min-width:0;margin-top:28px;display:grid;gap:24px;}
+  .wine-catalogue-details{grid-column:1 / -1;max-width:100%;min-width:0;margin-top:28px;display:grid;gap:24px;}
+  .wine-card > .wine-profile-block,.wine-card .card-body > .wine-profile-block{grid-column:2;min-width:0;margin-top:14px;}
   .wine-detail-title{
     margin-bottom:12px;color:rgba(90,30,36,.72);font-size:.6rem;font-weight:800;letter-spacing:2.3px;
     text-transform:uppercase;overflow-wrap:anywhere;
   }
-  .wine-profile{display:grid;gap:9px;}
-  .wine-profile-row{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center;}
-  .wine-profile-name{color:#7a6f62;font-size:.66rem;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;}
-  .wine-profile-scale{display:flex;gap:8px;}
+  .wine-profile{display:grid;gap:7px;}
+  .wine-profile-row{display:grid;grid-template-columns:minmax(74px,.86fr) 1fr;gap:12px;align-items:center;}
+  .wine-profile-name{color:#7a6f62;font-size:.64rem;font-weight:700;letter-spacing:.85px;text-transform:uppercase;}
+  .wine-profile-scale{display:flex;gap:7px;}
   .wine-profile-dot{width:7px;height:7px;border-radius:999px;background:rgba(24,38,58,.14);}
   .wine-profile-dot.active{background:#6d1f28;}
   .wine-notes-list{min-width:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
@@ -237,10 +247,6 @@
   .wine-modal-pairings{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:14px;}
   .wine-modal-pairing{min-width:0;display:grid;justify-items:center;gap:7px;text-align:center;color:rgba(31,47,70,.76);font-size:.68rem;font-weight:700;line-height:1.18;}
   .wine-modal-pairing-icon{font-size:1.55rem;line-height:1;filter:saturate(.84);}
-  .wine-modal-advice{margin-top:26px;display:grid;grid-template-columns:56px 1fr;gap:16px;align-items:center;padding:18px 18px;border:1px solid rgba(194,168,120,.18);border-radius:20px;background:rgba(255,253,249,.34);box-shadow:0 12px 32px rgba(31,47,70,.04);}
-  .wine-modal-advice-icon{color:rgba(154,106,54,.72);font-family:var(--font-serif);font-size:2.35rem;line-height:1;text-align:center;}
-  .wine-modal-advice-title{margin-bottom:7px;color:#111b2a;font-family:var(--font-serif);font-size:1.18rem;font-weight:600;line-height:1.1;}
-  .wine-modal-advice-text{color:rgba(31,47,70,.68);font-size:.78rem;line-height:1.55;}
   .wine-modal-grape-summary{overflow-wrap:anywhere;}
 
   .card-body{padding:18px 18px 20px;}
@@ -397,21 +403,25 @@
     .section-tab{flex:0 0 auto;padding:9px 12px;font-size:.68rem;}
     #page-content{padding-left:12px;padding-right:12px;}
     .grid{grid-template-columns:1fr;gap:16px;padding-top:16px;}
-    #grid-wine{grid-template-columns:1fr;gap:46px;padding-top:28px;}
+    #grid-wine{grid-template-columns:1fr;gap:28px;padding-top:22px;}
     .kitchen-card .card-media{height:220px;}
     .bottle-card .card-media{height:315px;}
-    .wine-card{min-height:670px;padding:0 14px 32px;}
-    .wine-card:before{inset:30px 0 0;}
-    .wine-card .card-media{height:460px;padding-top:8px;}
-    .wine-card .card-body{padding-top:28px;}
-    .wine-card .card-name{font-size:2.25rem;}
+    .wine-card{min-height:auto;padding:22px 16px 34px;border-radius:28px;}
+    .wine-card-top{grid-template-columns:minmax(136px,40fr) minmax(0,60fr);gap:0 18px;}
+    .wine-card:before{inset:24px 0 0;border-radius:28px;}
+    .wine-card .card-media{height:clamp(320px,82vw,420px);padding-top:6px;}
+    .wine-card .card-cat{margin-top:14px;margin-bottom:9px;font-size:.58rem;letter-spacing:2px;}
+    .wine-card .card-name{max-width:11em;font-size:clamp(1.55rem,5.2vw,2rem);line-height:.98;margin-bottom:10px;}
+    .wine-card .card-meta{font-size:1.12rem;margin-bottom:12px;}
+    .wine-card .card-vol{font-size:.66rem;}
+    .wine-card .card-grapes{font-size:.62rem;letter-spacing:.7px;line-height:1.45;}
     .wine-card .card-desc{font-size:1.08rem;}
     .wine-catalogue-details{gap:22px;margin-top:26px;}
-    .wine-profile-row{grid-template-columns:1fr;justify-items:center;gap:7px;}
-    .wine-profile-scale{justify-content:center;}
+    .wine-profile-row{grid-template-columns:minmax(68px,.8fr) 1fr;justify-items:stretch;gap:8px;}
+    .wine-profile-scale{justify-content:flex-start;}
     .wine-notes-list{grid-template-columns:repeat(4,minmax(60px,1fr));}
     .wine-note{justify-items:center;text-align:center;}
-    .wine-blend-row{grid-template-columns:1fr;gap:2px;justify-items:center;}
+    .wine-blend-row{grid-template-columns:minmax(0,1fr) auto;gap:8px;justify-items:stretch;}
     .wine-pairing-list li{grid-template-columns:1fr;gap:3px;text-align:center;overflow-wrap:anywhere;}
     .card-body{padding:19px 20px 22px;}
     .card-name{font-size:1.78rem;}
@@ -450,26 +460,32 @@
     .bottle-card .card-media{height:292px;padding:18px 18px 12px;}
     .bottle-card .card-name{font-size:1.48rem;}
 
-    #grid-wine{gap:40px;padding-top:24px;}
-    .wine-card{min-height:auto;padding:0 8px 30px;}
-    .wine-card:before{inset:24px 0 0;}
-    .wine-card .card-media{height:clamp(390px,112vw,448px);padding:4px 0 0;}
+    #grid-wine{gap:22px;padding-top:18px;}
+    .wine-card{min-height:auto;padding:20px 12px 32px;border-radius:26px;}
+    .wine-storage-number{right:12px;top:26px;font-size:1.24rem;}
+    .wine-storage-number:before{font-size:.5rem;margin-right:3px;}
+    .wine-card-top{grid-template-columns:minmax(108px,34fr) minmax(0,66fr);gap:0 10px;}
+    .wine-card:before{inset:20px 0 0;border-radius:26px;}
+    .wine-card .card-media{height:clamp(292px,76vw,360px);padding:2px 0 0;}
     .wine-card .card-media:after{left:22%;right:22%;bottom:2px;height:15px;}
-    .wine-card .card-media img{max-width:100%;filter:drop-shadow(0 20px 14px rgba(24,38,58,.14));}
-    .wine-card .card-body{padding:25px 3px 0;}
-    .wine-card .card-body:before{width:58px;margin-bottom:20px;}
-    .wine-card .card-cat{margin-bottom:10px;font-size:.58rem;letter-spacing:2px;}
-    .wine-card .card-name{max-width:11.5em;font-size:2.02rem;line-height:.96;margin-bottom:12px;}
-    .wine-card .card-meta{font-size:1.16rem;margin-bottom:16px;}
-    .wine-card .card-vol{font-size:.68rem;}
-    .wine-card .card-grapes{max-width:100%;margin-bottom:18px;font-size:.64rem;letter-spacing:.8px;}
-    .wine-card .card-desc{font-size:1rem;line-height:1.4;}
-    .wine-catalogue-details{gap:20px;margin-top:24px;}
+    .wine-card .card-media img{max-width:124%;filter:drop-shadow(0 20px 14px rgba(24,38,58,.14));}
+    .wine-card .card-cat{margin:10px 0 8px;font-size:.54rem;letter-spacing:1.65px;line-height:1.32;}
+    .wine-card .card-name{max-width:none;font-size:clamp(1.16rem,4.7vw,1.44rem);line-height:1.02;margin-bottom:9px;}
+    .wine-card .card-meta{font-size:1.02rem;margin-bottom:10px;}
+    .wine-card .card-vol{font-size:.62rem;}
+    .wine-card .card-grapes{max-width:100%;font-size:.58rem;letter-spacing:.55px;line-height:1.38;}
+    .wine-blend-icon{width:19px;height:19px;margin-bottom:6px;font-size:.92rem;}
+    .wine-glass-mark{gap:5px;margin-bottom:10px;font-size:.52rem;letter-spacing:.78px;}
+    .wine-glass-mark svg{width:15px;height:19px;}
+    .wine-card > .wine-profile-block,.wine-card .card-body > .wine-profile-block{margin-top:12px;}
+    .wine-card .card-desc{font-size:1rem;line-height:1.4;margin-top:22px;}
+    .wine-catalogue-details{gap:22px;margin-top:24px;}
     .wine-detail-title{margin-bottom:10px;font-size:.56rem;letter-spacing:1.9px;}
-    .wine-profile{gap:8px;}
-    .wine-profile-name{font-size:.63rem;letter-spacing:.8px;}
-    .wine-profile-scale{gap:7px;}
-    .wine-profile-dot{width:7px;height:7px;}
+    .wine-profile{gap:6px;}
+    .wine-profile-row{grid-template-columns:minmax(58px,.78fr) 1fr;gap:7px;}
+    .wine-profile-name{font-size:.52rem;letter-spacing:.42px;}
+    .wine-profile-scale{gap:5px;}
+    .wine-profile-dot{width:6px;height:6px;}
     .wine-notes-list{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;}
     .wine-note{font-size:.58rem;letter-spacing:.45px;}
     .wine-note-icon{font-size:1.08rem;}
@@ -502,17 +518,17 @@
     .wine-modal-pairings{gap:10px;}
     .wine-modal-pairing{font-size:.6rem;}
     .wine-modal-pairing-icon{font-size:1.32rem;}
-    .wine-modal-advice{grid-template-columns:44px 1fr;gap:12px;padding:15px 14px;border-radius:18px;}
-    .wine-modal-advice-icon{font-size:2rem;}
-    .wine-modal-advice-title{font-size:1.07rem;}
-    .wine-modal-advice-text{font-size:.72rem;}
   }
 
   @media (max-width:360px){
     .app-header h1{font-size:1.24rem;letter-spacing:0;}
     .section-tab{padding:8px 10px;font-size:.6rem;}
-    .wine-card .card-media{height:380px;}
-    .wine-card .card-name{font-size:1.82rem;}
+    .wine-card{padding-left:12px;padding-right:12px;}
+    .wine-card-top{grid-template-columns:minmax(102px,33fr) minmax(0,67fr);gap:0 8px;}
+    .wine-card .card-media{height:clamp(270px,74vw,330px);}
+    .wine-card .card-name{font-size:1.08rem;line-height:1.04;}
+    .wine-card .card-meta{font-size:.96rem;}
+    .wine-card .card-grapes{font-size:.55rem;}
     .wine-notes-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px;}
   }
 
@@ -528,26 +544,26 @@
 
   @media (min-width:900px){
     .grid{grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:22px;}
-    #grid-wine{grid-template-columns:minmax(0,1fr);gap:58px;max-width:1100px;margin:0 auto;}
+    #grid-wine{grid-template-columns:minmax(0,1fr);gap:36px;max-width:1100px;margin:0 auto;}
     .wine-card{
-      grid-template-columns:minmax(0,65fr) minmax(290px,35fr);grid-template-rows:auto;align-items:center;
-      min-height:610px;padding:0 58px 0 34px;
+      min-height:auto;padding:26px 54px 42px 32px;border-radius:34px;
     }
+    .wine-card-top{grid-template-columns:minmax(0,52fr) minmax(420px,48fr);gap:0 22px;align-items:start;}
     .wine-card:before{
-      inset:26px 0;
+      inset:22px 0;
       background:linear-gradient(90deg,rgba(248,244,236,.58),rgba(243,235,222,.90) 52%,rgba(248,244,236,.46));
-      border-top-color:rgba(194,168,120,.22);
-      border-bottom-color:rgba(31,47,70,.07);
+      border-color:rgba(194,168,120,.22);border-radius:34px;
+      box-shadow:0 16px 38px rgba(31,47,70,.05);
     }
     .wine-card .card-media{height:560px;padding:18px 44px 24px;}
     .wine-card .card-media:after{left:32%;right:32%;bottom:22px;}
-    .wine-card .card-body{padding:0 0 0 22px;text-align:left;}
-    .wine-card .card-body:before{margin:0 0 28px;}
+    .wine-card .card-body{display:block;padding:0;text-align:left;}
+    .wine-card .card-body:before{content:none;}
     .wine-card .card-cat,.wine-card .card-name,.wine-card .card-meta,.wine-card .card-grapes,.wine-card .card-desc{text-align:left;margin-left:0;margin-right:0;}
-    .wine-card .card-cat{overflow-wrap:anywhere;}
-    .wine-card .card-name{max-width:9.2em;font-size:clamp(2.5rem,4vw,3.45rem);}
-    .wine-card .card-desc{max-width:27em;}
-    .wine-catalogue-details{max-width:27em;}
+    .wine-card .card-cat{margin-top:38px;overflow-wrap:anywhere;}
+    .wine-card .card-name{max-width:11.5em;font-size:clamp(2.2rem,3.2vw,2.85rem);line-height:.98;}
+    .wine-card .card-desc{grid-column:1 / -1;max-width:48em;margin-top:34px;}
+    .wine-catalogue-details{grid-column:1 / -1;max-width:100%;grid-template-columns:1fr 1.1fr;align-items:start;}
     .kitchen-card .card-media{height:215px;}
     .card.cocktail-card .card-body{padding:26px 26px 28px;}
     .card.cocktail-card .card-name{font-size:28px;}
@@ -568,7 +584,6 @@
     .wine-modal-info{padding-top:0;}
     .wine-modal-title{font-size:clamp(3.1rem,4.8vw,4.25rem);max-width:8.8em;}
     .wine-modal-section{max-width:740px;margin-left:auto;margin-right:auto;}
-    .wine-modal-advice{max-width:740px;margin-left:auto;margin-right:auto;}
   }
 </style>
 </head>
@@ -799,8 +814,6 @@ const WINE_MODAL_TEXT = {
   ru: {
     about:'О вине',
     pairings:'С чем подать',
-    adviceTitle:'Как предложить гостю',
-    adviceText:'Отличный выбор для гостей, которые предпочитают гастрономичное вино с выразительным характером и чистым стилем.',
     grape:'Сорт',
     oak:'Выдержка',
     oakDefault:'Дуб / выдержка в стиле вина',
@@ -810,8 +823,6 @@ const WINE_MODAL_TEXT = {
   en: {
     about:'About the wine',
     pairings:'Pair with',
-    adviceTitle:'How to suggest it',
-    adviceText:'A strong choice for guests who prefer a food-friendly wine with a clear character and polished style.',
     grape:'Grape',
     oak:'Aging',
     oakDefault:'Oak / aging in the wine style',
@@ -1076,6 +1087,50 @@ function wineText(i, desc, grapes) {
 function normalizeWineName(name) {
   return (name || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 }
+const WINE_GLASS_TYPES = {
+  bordeaux: [
+    'Chateau Talbot Grand Cru Classe, St. Julien',
+    'Chateau Citran Haut-Médoc',
+    'R. López de Heredia Viña Tondonia Reserva Rioja',
+    'Silver Oak Cabernet Sauvignon Alexander Valley'
+  ],
+  burgundy: [
+    'Louis Jadot Pouilly Fuisse',
+    'Olivier Leflaive Puligny Montrachet',
+    'Domaine Malandes Chablis',
+    'Denis Carre Bourgogne Hautes Cotes de Beaune Blanc',
+    'Domaine Malandes Chablis Premier Cru Fourchaume',
+    'Domaine Coste Caumartin Saint Romain Le Clos du Chateau Monopole',
+    'Domaine Denis Carre Meursault Les Tillets',
+    'Denis Carre Bourgogne Hautes Cotes de Beaune Rouge',
+    'Domaine Michel Sarrazin Givry Premier Cru La Grande Berge',
+    'Chateau de Chamirey Mercurey Premier Cru Clos Les Ruelles Monopole',
+    'La Crema Sonoma Coast Pinot Noir'
+  ]
+};
+const WINE_GLASS_LOOKUP = Object.fromEntries(
+  Object.entries(WINE_GLASS_TYPES).flatMap(([type, names]) => names.map(name => [normalizeWineName(name), type]))
+);
+const WINE_GLASS_LABELS = {
+  bordeaux: { ru:'Бордо', en:'Bordeaux' },
+  burgundy: { ru:'Бургундия', en:'Burgundy' }
+};
+function wineGlassType(i) {
+  return WINE_GLASS_LOOKUP[normalizeWineName(i && i.name)] || '';
+}
+function wineGlassSvg(type) {
+  if (type === 'burgundy') {
+    return `<svg viewBox="0 0 32 40" aria-hidden="true"><path d="M7.5 5.5c.2 11.2 2.9 18.2 8.5 18.2s8.3-7 8.5-18.2h-17Z"/><path d="M16 23.7v9.3"/><path d="M10.5 36h11"/></svg>`;
+  }
+  return `<svg viewBox="0 0 32 40" aria-hidden="true"><path d="M10.5 5.5h11l-1.4 13.2c-.4 3.5-2.1 5.6-4.1 5.6s-3.7-2.1-4.1-5.6L10.5 5.5Z"/><path d="M16 24.3v8.7"/><path d="M10.5 36h11"/></svg>`;
+}
+function renderWineGlassMark(i) {
+  const type = wineGlassType(i);
+  if (!type) return '';
+  const label = (WINE_GLASS_LABELS[type] && (WINE_GLASS_LABELS[type][LANG] || WINE_GLASS_LABELS[type].ru)) || type;
+  const aria = LANG === 'en' ? `${label} glass` : `Бокал ${label}`;
+  return `<div class="wine-glass-mark wine-glass-mark--${type}" aria-label="${aria}" title="${aria}">${wineGlassSvg(type)}<span>${label}</span></div>`;
+}
 let wineStorageLookupCache = null;
 function wineStorageLookup() {
   if (!wineStorageLookupCache) {
@@ -1134,7 +1189,7 @@ function renderWineBlend(i, grapes) {
   if (!blend.length) return '';
   return `
     <div class="card-grapes">
-      <div class="wine-detail-title">${labels.composition}</div>
+      <div class="wine-blend-icon" aria-label="${labels.composition}" title="${labels.composition}"><span aria-hidden="true">🍇</span></div>
       <div class="wine-blend">
         ${blend.map(g => `
           <div class="wine-blend-row">
@@ -1244,11 +1299,9 @@ function winePairingNames(i, desc, grapes) {
 function renderWineRating(value) {
   return Array.from({length:5}, (_, idx) => `<span class="wine-profile-dot${idx < value ? ' active' : ''}"></span>`).join('');
 }
-function renderWineCatalogue(i, desc, grapes, content) {
+function renderWineProfileBlock(i, desc, grapes, content) {
   const labels = WINE_TEXT[LANG] || WINE_TEXT.ru;
   const profile = wineProfile(i, desc, grapes, content);
-  const notes = wineNotes(i, desc, grapes, content);
-  const pairings = winePairingNames(i, desc, grapes);
   const rows = [
     [labels.body, profile.body],
     [labels.acidity, profile.acidity],
@@ -1260,11 +1313,16 @@ function renderWineCatalogue(i, desc, grapes, content) {
       <div class="wine-profile-scale" aria-label="${label}: ${value}/5">${renderWineRating(value)}</div>
     </div>`).join('');
   return `
+    <div class="wine-profile-block" aria-label="${labels.profile}">
+      <div class="wine-profile">${rows}</div>
+    </div>`;
+}
+function renderWineCatalogue(i, desc, grapes, content) {
+  const labels = WINE_TEXT[LANG] || WINE_TEXT.ru;
+  const notes = wineNotes(i, desc, grapes, content);
+  const pairings = winePairingNames(i, desc, grapes);
+  return `
     <div class="wine-catalogue-details">
-      <section class="wine-profile-block">
-        <div class="wine-detail-title">${labels.profile}</div>
-        <div class="wine-profile">${rows}</div>
-      </section>
       <section class="wine-notes">
         <div class="wine-detail-title">${labels.notes}</div>
         <div class="wine-notes-list">
@@ -1303,13 +1361,6 @@ function winePairingIcon(dish) {
   if (hasAny(n, ['salad','greens','салат','зелень','tabbouleh','табуле'])) return '🥗';
   if (hasAny(n, ['eggplant','pepper','vegetable','баклажан','перец','овощ'])) return '🌿';
   return '🍽';
-}
-function wineModalAdvice(content) {
-  if (!content) return (WINE_MODAL_TEXT[LANG] || WINE_MODAL_TEXT.ru).adviceText;
-  if (LANG === 'en') {
-    return content.en ? `Suggest it as: ${content.en}` : WINE_MODAL_TEXT.en.adviceText;
-  }
-  return content.ru ? `Предложите как: ${content.ru}` : WINE_MODAL_TEXT.ru.adviceText;
 }
 function renderWineModal(index) {
   const i = wineItems[index];
@@ -1363,13 +1414,6 @@ function renderWineModal(index) {
       <h3 class="wine-modal-section-title">${modalLabels.pairings}</h3>
       <div class="wine-modal-pairings">
         ${pairings.map(dish => `<div class="wine-modal-pairing"><span class="wine-modal-pairing-icon">${winePairingIcon(dish)}</span><span>${itemName(dish)}</span></div>`).join('')}
-      </div>
-    </section>
-    <section class="wine-modal-advice">
-      <div class="wine-modal-advice-icon">♧</div>
-      <div>
-        <div class="wine-modal-advice-title">${modalLabels.adviceTitle}</div>
-        <div class="wine-modal-advice-text">${wineModalAdvice(content)}</div>
       </div>
     </section>`;
 }
@@ -1517,7 +1561,7 @@ const kitchenItems = [
     desc:"Набор дипов для компании: лабне из овечьего йогурта со сметаной, оливками с чесноком и вялеными томатами; баба гануш из запечённых баклажанов, красного лука гриль, чеснока, йогурта, шпината и петрушки; мухаммара из запечённых сладких перцев, грецкого ореха и шрирачи; хумус с тахини, лимоном и специями; дегидрированный дзадзики с йогуртом, огурцом, майонезом, мятой и лимоном.", desc_en:"Dip platter to share: labneh with sheep yogurt, sour cream, olives with garlic and sun-dried tomatoes; baba ganoush with roasted eggplant, grilled red onion, garlic, yogurt, spinach and parsley; muhammara with roasted sweet peppers, walnut and sriracha; hummus with tahini, lemon and spices; dehydrated tzatziki with yogurt, cucumber, mayonnaise, mint and lemon." },
 
   // ─── ДЕСЕРТЫ ───
-  { cat:"Десерты", name:"Павлова", name_en:"Pavlova", price:"", img:"Pavlova.jpg",
+  { cat:"Десерты", name:"Павлова", name_en:"Pavlova", price:"", img:"Pavlova.jpg?v=20260624",
     desc:"Десерт с безе, клубничным соусом, свежей клубникой, ванильным заварным кремом и дегидрированной малиной.", desc_en:"Dessert with meringue, strawberry sauce, fresh strawberries, vanilla custard and dehydrated raspberry." },
   { cat:"Десерты", name:"Чизкейк Azura", name_en:"Azura Cheesecake", price:"", img:"Cheescake.jpg",
     desc:"Чизкейк на фисташковой основе с вафлей. Крем готовится из Philadelphia, сливок, желатина и ванили. Подаётся с клубничным соусом, малиной и фисташкой.", desc_en:"Cheesecake on a pistachio base with wafer. The cream is made with Philadelphia, cream, gelatin and vanilla. Served with strawberry sauce, raspberry and pistachio." },
@@ -2155,41 +2199,41 @@ const cocktailItems = [
     desc:'mango yoghurt wash rum, cookie, peach liqueur, citrus cordial, lemon-calamansi foam', desc_ru:'ром, промытый манговым йогуртом, печенье, персиковый ликёр, цитрусовый кордиал, пена лимон-каламанси' },
   { cat:'Авторские коктейли', name:'Passion Fizz', name_ru:'Пэшн Физз', price:'14€', vol:'', img:'cocktail-passion-fizz.jpg',
     desc:'kaffir lime infused rum, passion fruit, vanilla, clarified with banana milk, acid', desc_ru:'ром, настоянный на кафрском лайме, маракуйя, ваниль, осветлённый банановым молоком, кислотный компонент' },
-  { cat:'Мировая классика', name:'Bellini', name_ru:'Беллини', price:'12€', vol:'', img:'',
+  { cat:'Мировая классика', name:'Bellini', name_ru:'Беллини', price:'12€', vol:'', img:'cocktail-classic-bellini.jpg?v=bellini-flute',
     desc:'peach puree, prosecco, simple syrup', desc_ru:'персиковое пюре, просекко, сахарный сироп' },
-  { cat:'Мировая классика', name:'Mimosa', name_ru:'Мимоза', price:'12€', vol:'', img:'',
+  { cat:'Мировая классика', name:'Mimosa', name_ru:'Мимоза', price:'12€', vol:'', img:'cocktail-classic-mimosa.jpg',
     desc:'tangerine puree, prosecco, campari', desc_ru:'мандариновое пюре, просекко, Campari' },
-  { cat:'Мировая классика', name:'French 75', name_ru:'Френч 75', price:'12€', vol:'', img:'',
+  { cat:'Мировая классика', name:'French 75', name_ru:'Френч 75', price:'12€', vol:'', img:'cocktail-classic-french-75.jpg',
     desc:'gin, sour mix, simple syrup, prosecco', desc_ru:'джин, сауэр-микс, сахарный сироп, просекко' },
-  { cat:'Мировая классика', name:'Negroni', name_ru:'Негрони', price:'12€', vol:'', img:'',
+  { cat:'Мировая классика', name:'Negroni', name_ru:'Негрони', price:'12€', vol:'', img:'cocktail-classic-negroni.png',
     desc:'gin, campari, Azura vermouth mix', desc_ru:'джин, Campari, вермут-микс Azura' },
-  { cat:'Мировая классика', name:'Amaretto Sour', name_ru:'Амаретто Сауэр', price:'12€', vol:'', img:'',
+  { cat:'Мировая классика', name:'Amaretto Sour', name_ru:'Амаретто Сауэр', price:'12€', vol:'', img:'cocktail-classic-amaretto-sour.jpg',
     desc:'bourbon, amaretto, apricot liqueur, simple syrup, sour mix, foam', desc_ru:'бурбон, амаретто, абрикосовый ликёр, сахарный сироп, сауэр-микс, пена' },
-  { cat:'Мировая классика', name:'Basil Smash', name_ru:'Базил Смэш', price:'12€', vol:'', img:'',
+  { cat:'Мировая классика', name:'Basil Smash', name_ru:'Базил Смэш', price:'12€', vol:'', img:'cocktail-classic-basil-smash.jpg',
     desc:'gin, sour mix, simple syrup, fresh green basil', desc_ru:'джин, сауэр-микс, сахарный сироп, свежий зелёный базилик' },
-  { cat:'Мировая классика', name:'Penicillin', name_ru:'Пенициллин', price:'12€', vol:'', img:'',
+  { cat:'Мировая классика', name:'Penicillin', name_ru:'Пенициллин', price:'12€', vol:'', img:'cocktail-classic-penicillin.png',
     desc:'scotch whisky, ginger syrup, honey syrup, sour mix, islay whisky', desc_ru:'шотландский виски, имбирный сироп, медовый сироп, сауэр-микс, айла-виски' },
-  { cat:'Мировая классика', name:'Dry Martini', name_ru:'Сухой Мартини', price:'12€', vol:'', img:'',
+  { cat:'Мировая классика', name:'Dry Martini', name_ru:'Сухой Мартини', price:'12€', vol:'', img:'cocktail-classic-dry-martini.jpg',
     desc:'gin or vodka, dry vermouth, orange bitter', desc_ru:'джин или водка, сухой вермут, апельсиновый биттер' },
-  { cat:'Мировая классика', name:'Bloody Mary', name_ru:'Кровавая Мэри', price:'12€', vol:'', img:'',
+  { cat:'Мировая классика', name:'Bloody Mary', name_ru:'Кровавая Мэри', price:'12€', vol:'', img:'cocktail-classic-bloody-mary.jpg',
     desc:'vodka, Azura mary mix, honey, sour mix, celery', desc_ru:'водка, микс Azura Mary, мёд, сауэр-микс, сельдерей' },
-  { cat:'Мировая классика', name:'Grasshopper', name_ru:'Грассхоппер', price:'12€', vol:'', img:'',
+  { cat:'Мировая классика', name:'Grasshopper', name_ru:'Грассхоппер', price:'12€', vol:'', img:'cocktail-classic-grasshopper.jpg',
     desc:'cocoa liquor, mint liquor, cream', desc_ru:'какао-ликёр, мятный ликёр, сливки' },
-  { cat:'Мировая классика', name:'Whiskey Sour', name_ru:'Виски Сауэр', price:'12€', vol:'', img:'',
+  { cat:'Мировая классика', name:'Whiskey Sour', name_ru:'Виски Сауэр', price:'12€', vol:'', img:'cocktail-classic-whiskey-sour.jpg',
     desc:'bourbon, sour mix, simple syrup, angostura bitter, foam', desc_ru:'бурбон, сауэр-микс, сахарный сироп, биттер Angostura, пена' },
-  { cat:'Мировая классика', name:'Aperol', name_ru:'Апероль', price:'12€', vol:'', img:'',
+  { cat:'Мировая классика', name:'Aperol', name_ru:'Апероль', price:'12€', vol:'', img:'cocktail-classic-aperol.jpg',
     desc:'Aperol, prosecco, sparkling water', desc_ru:'Aperol, просекко, газированная вода' },
-  { cat:'Безалкогольные коктейли', name:'Mango & Citrus Mocktail', name_ru:'Манго-цитрус моктейль', price:'8€', vol:'', img:'',
+  { cat:'Безалкогольные коктейли', name:'Mango & Citrus Mocktail', name_ru:'Манго-цитрус моктейль', price:'8€', vol:'', img:'cocktail-mocktail-mango-citrus.jpg',
     desc:'passion fruit, citrus cordial, mango water, lemon-calamansi foam', desc_ru:'маракуйя, цитрусовый кордиал, манговая вода, пена лимон-каламанси' },
-  { cat:'Безалкогольные коктейли', name:'Almond Mocktail', name_ru:'Миндальный моктейль', price:'8€', vol:'', img:'',
+  { cat:'Безалкогольные коктейли', name:'Almond Mocktail', name_ru:'Миндальный моктейль', price:'8€', vol:'', img:'cocktail-mocktail-almond.jpg?v=smokey-almond',
     desc:'almond cordial, almond, croissant foam', desc_ru:'миндальный кордиал, миндаль, пена круассан' },
-  { cat:'Безалкогольные коктейли', name:'Clear Penicillin', name_ru:'Прозрачный Пенициллин', price:'8€', vol:'', img:'',
+  { cat:'Безалкогольные коктейли', name:'Clear Penicillin', name_ru:'Прозрачный Пенициллин', price:'8€', vol:'', img:'cocktail-mocktail-clear-penicillin.png',
     desc:'ginger syrup, honey syrup, almond whey, acid', desc_ru:'имбирный сироп, медовый сироп, миндальная сыворотка, кислотный компонент' },
-  { cat:'Безалкогольные коктейли', name:'Gin & Tonic N/A', name_ru:'Джин-тоник б/а', price:'8€', vol:'', img:'',
+  { cat:'Безалкогольные коктейли', name:'Gin & Tonic N/A', name_ru:'Джин-тоник б/а', price:'8€', vol:'', img:'cocktail-mocktail-gin-tonic.jpg',
     desc:'Tanqueray gin 0% (three cents aegean tonic / dry tonic / pink soda)', desc_ru:'Tanqueray 0%, тоник Three Cents Aegean / Dry Tonic / Pink Soda' },
-  { cat:'Безалкогольные коктейли', name:'Bloody Mary N/A', name_ru:'Кровавая Мэри б/а', price:'8€', vol:'', img:'',
+  { cat:'Безалкогольные коктейли', name:'Bloody Mary N/A', name_ru:'Кровавая Мэри б/а', price:'8€', vol:'', img:'cocktail-classic-bloody-mary.jpg',
     desc:'Azura mary mix, honey, sour mix, celery', desc_ru:'микс Azura Mary, мёд, сауэр-микс, сельдерей' },
-  { cat:'Безалкогольные коктейли', name:'Gin Basil N/A', name_ru:'Джин Базилик б/а', price:'8€', vol:'', img:'',
+  { cat:'Безалкогольные коктейли', name:'Gin Basil N/A', name_ru:'Джин Базилик б/а', price:'8€', vol:'', img:'cocktail-mocktail-gin-basil.jpg',
     desc:'Tanqueray 0%, basil, simple syrup, sour mix', desc_ru:'Tanqueray 0%, базилик, сахарный сироп, сауэр-микс' },
 ];
 
@@ -2204,6 +2248,7 @@ let activeSection = "kitchen";
 let wineModalIndex = null;
 const DEFAULT_SECTION = "kitchen";
 const START_ROUTE = { azuraGuideRoute: true, section: DEFAULT_SECTION, cat: "all", search: "" };
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 
 function validSection(sec) {
   return DATA[sec] ? sec : DEFAULT_SECTION;
@@ -2225,6 +2270,13 @@ function pushRoute(sec = activeSection) {
   history.pushState(routeState(sec), "", location.href);
 }
 
+function scrollToListStart(options = {}) {
+  const behavior = options.smooth ? "smooth" : "auto";
+  requestAnimationFrame(() => {
+    window.scrollTo({ top: 0, behavior });
+  });
+}
+
 function setActiveSection(sec, options = {}) {
   const section = validSection(sec);
   activeSection = section;
@@ -2240,7 +2292,7 @@ function setActiveSection(sec, options = {}) {
   renderSection(section, inp ? inp.value : "");
   fixOffsets();
   if (options.scroll !== false) {
-    window.scrollTo({ top: 0, behavior: options.smooth ? "smooth" : "auto" });
+    scrollToListStart({ smooth: options.smooth });
   }
 }
 
@@ -2299,6 +2351,8 @@ function setcat(sec, c) {
   buildCats(sec);
   const inp = document.getElementById('search-' + sec);
   renderSection(sec, inp ? inp.value : "");
+  fixOffsets();
+  scrollToListStart({ smooth: true });
   pushRoute(sec);
 }
 
@@ -2362,6 +2416,25 @@ function renderSection(sec, filter = "") {
     const articleAttrs = sec === 'wine'
       ? ` role="button" tabindex="0" onclick="openWineModal(${wineIndex})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWineModal(${wineIndex})}"`
       : '';
+    if (sec === 'wine') {
+      return `
+        <article class="card ${cls}${hasMedia ? '' : ' card--no-media'}"${articleAttrs}>
+          <div class="wine-card-top">
+            ${media}
+            <div class="${bodyClass}">
+              <div class="${catClass}">${catLabel(i.cat)}</div>
+              <div class="${nameClass}">${name}</div>
+              ${i.price || i.vol ? `<div class="card-meta">${i.price || ''}${i.vol ? `<span class="card-vol"> · ${i.vol}</span>` : ""}</div>` : ""}
+              ${renderWineGlassMark(i)}
+              ${renderWineBlend(i, grapes)}
+              ${renderWineProfileBlock(i, desc, grapes, wineContent)}
+            </div>
+          </div>
+          ${cleanDesc ? `<div class="${descClass}">${cleanDesc}</div>` : ''}
+          ${renderWineCatalogue(i, desc, grapes, wineContent)}
+          ${storageNumber ? `<div class="wine-storage-number" aria-label="${LANG === 'en' ? 'Wine fridge number' : 'Номер в холодильнике'} ${storageNumber}">${storageNumber}</div>` : ''}
+        </article>`;
+    }
     return `
       <article class="card ${cls}${hasMedia ? '' : ' card--no-media'}"${articleAttrs}>
         ${media}
@@ -2369,12 +2442,10 @@ function renderSection(sec, filter = "") {
           <div class="${catClass}">${catLabel(i.cat)}</div>
           <div class="${nameClass}">${name}</div>
           ${i.price || i.vol ? `<div class="card-meta">${i.price || ''}${i.vol ? `<span class="card-vol"> · ${i.vol}</span>` : ""}</div>` : ""}
-          ${sec === 'wine' ? renderWineBlend(i, grapes) : (grapes ? `<div class="card-grapes">${grapes}</div>` : '')}
+          ${grapes ? `<div class="card-grapes">${grapes}</div>` : ''}
           ${cleanDesc ? `<div class="${descClass}">${cleanDesc}</div>` : ''}
           ${sec === 'kitchen' ? renderKitchenAllergens(i) : ''}
-          ${sec === 'wine' ? renderWineCatalogue(i, desc, grapes, wineContent) : ''}
         </div>
-        ${storageNumber ? `<div class="wine-storage-number" aria-label="${LANG === 'en' ? 'Wine fridge number' : 'Номер в холодильнике'} ${storageNumber}">${storageNumber}</div>` : ''}
       </article>`;
   }).join("");
 
@@ -2444,6 +2515,7 @@ const initCtrl = document.getElementById("ctrl-kitchen");
 if (initCtrl) initCtrl.style.display = "block";
 fixOffsets();
 initNavigationHistory();
+scrollToListStart();
 </script>
 <div id="wine-modal" class="wine-modal" aria-hidden="true">
   <div class="wine-modal-shell">
