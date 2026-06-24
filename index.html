@@ -159,6 +159,16 @@
     max-width:34em;margin:0 auto;color:#5d5449;font-family:'Cormorant Garamond',serif;font-size:1.13rem;line-height:1.42;
     display:block;overflow:visible;text-align:center;-webkit-line-clamp:unset;-webkit-box-orient:initial;overflow-wrap:anywhere;
   }
+  .wine-storage-number{
+    position:absolute;right:20px;bottom:16px;z-index:3;min-width:42px;height:32px;padding:0 10px;
+    display:inline-flex;align-items:center;justify-content:center;border-top:1px solid rgba(194,168,120,.42);
+    color:rgba(90,30,36,.76);font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;line-height:1;
+    letter-spacing:.04em;background:rgba(245,241,232,.52);
+  }
+  .wine-storage-number:before{
+    content:"№";margin-right:4px;color:rgba(117,108,96,.62);font-family:'Inter',sans-serif;font-size:.58rem;font-weight:800;
+    letter-spacing:.08em;transform:translateY(-1px);
+  }
   .wine-card .card-body{min-width:0;}
   .wine-card .card-name{overflow-wrap:anywhere;hyphens:auto;}
   .wine-blend{display:grid;gap:7px;}
@@ -809,6 +819,115 @@ const WINE_MODAL_TEXT = {
     close:'Close'
   }
 };
+const WINE_STORAGE_NUMBERS = [
+  ['Merotto Bareta Valdobbiadene Prosecco Superiore Brut', '', '01'],
+  ['Vlassides Eddial Brut Traditional Method', '', '02'],
+  ['Vlassides Oroman', '', '03'],
+  ['Bogle Cabernet Sauvignon', '', '04'],
+  ['Tenute Ugolini Valpolicella Magna Mora', '', '05'],
+  ['Apostolos Thymiopoulos Earth and Sky', '', '06'],
+  ['Vlassides Alates', '', '07'],
+  ['Domaine Zafeirakis Malagouzia', '', '08'],
+  ['St. Michael-Eppan Pinot Grigio', '', '09'],
+  ['Bogle Chardonnay', '', '10'],
+  ['Montes Outer Limits Sauvignon Blanc', '', '11'],
+  ['Champagne Billecart Salmon Brut Reserve N.V.', '', '12'],
+  ['Champagne Billecart Salmon Brut Rose N.V.', '', '13'],
+  ['Champagne Ruinart Blanc de Blancs Brut N.V.', '', '14'],
+  ['Zenato Amarone della Valpolicella Classico', '', '15'],
+  ['Casanova di Neri Brunello di Montalcino', '375', '16'],
+  ['Chateau Talbot Grand Cru Classe, St. Julien', '', '17'],
+  ['Louis Jadot Pouilly Fuisse', '', '18'],
+  ['Henri Bourgeois Sancerre Les Baronnes', '', '19'],
+  ['Gaja Rossi Bass', '375', '20'],
+  ['Olivier Leflaive Puligny Montrachet', '', '21'],
+  ['Merotto La Primavera di Barbara Valdobbiadene Prosecco Superiore', '', '22'],
+  ['Merotto Graziano Merotto Cuvée del Fondatore Brut', '', '23'],
+  ['Merotto Grani di Nero Rosé Brut', '', '24'],
+  ['Meinklang Epic Pet Nat', '', '25'],
+  ['Matías Riccitelli Kungfu Pet Nat Rosé', '', '26'],
+  ['Antica Fratta Franciacorta Essence Saten Brut', '', '27'],
+  ['Ca del Bosco Franciacorta Brut', '', '28'],
+  ['Ca del Bosco Franciacorta Brut Rosé', '', '29'],
+  ['Champagne Ruinart Brut N.V.', '', '30'],
+  ['Champagne Ruinart Rosé N.V.', '', '31'],
+  ['Champagne Ruinart Blanc de Blancs N.V.', '', '32'],
+  ['Billecart Salmon Brut Reserve N.V.', '', '33'],
+  ['Billecart Salmon Rosé N.V.', '', '34'],
+  ['Aes Ambelis Morokanella', '', '35'],
+  ['Tsiakkas Promara', '', '36'],
+  ['Wine Art Estate Malagouzia Plano Techni Oinou', '', '37'],
+  ['Domaine Sergiou Atypon 2', '', '38'],
+  ['Novus Leonidas Nassiakos Optimum', '', '39'],
+  ['Wine Art Estate Sauvignon Blanc Techni Alipias', '', '40'],
+  ['Arktos Elavation Vineyards Pnoe', '', '41'],
+  ['Alpha Estate Chardonnay Tramonto', '', '42'],
+  ['Estate Argyros Santorini Cuvée Palatia', '', '43'],
+  ['Gritsch Grüner Veltliner Kirchpoint', '', '44'],
+  ['Gritsch Riesling Steinterrassen', '', '45'],
+  ['Grassl Chardonnay Hoeflein', '', '46'],
+  ['Joh. Jos. Prüm Riesling Bernkasteler Badstube Kabinett', '', '47'],
+  ['Villa Maria Sauvignon Blanc Reserve Wairau Valley', '', '48'],
+  ['El Enemigo Chardonnay Mendoza', '', '49'],
+  ['La Crema Chardonnay Russian River Valley', '', '50'],
+  ['Colterenzio Pfefferer', '', '51'],
+  ['Pieropan Soave Classico', '', '52'],
+  ['St. Michael-Eppan Chardonnay', '', '53'],
+  ['Broglia La Meirana Gavi di Gavi', '', '54'],
+  ['Ca dei Fratti Lugana Brolettino', '', '55'],
+  ['Antinori Guado al Tasso Vermentino', '', '56'],
+  ['Jermann Vintage Tunina', '', '57'],
+  ['Gaja Rossj Bass', '750', '58'],
+  ['Antinori Cervaro della Sala', '', '59'],
+  ['Domaine Malandes Chablis', '', '60'],
+  ['Domaine Serge Laloue Sancerre Silex', '', '61'],
+  ['Denis Carre Bourgogne Hautes Cotes de Beaune Blanc', '', '62'],
+  ['Domaine Malandes Chablis Premier Cru Fourchaume', '', '63'],
+  ["Henri Bourgeois Sancerre Blanc d'Antan", '', '64'],
+  ['Domaine Coste Caumartin Saint Romain Le Clos du Chateau Monopole', '', '65'],
+  ['Michel Redde Barre à Mine Blanc Fumé de Pouilly', '', '66'],
+  ['Michel & Stéphane Ogier La Combe de Malleval Condrieu', '', '67'],
+  ['Domaine Denis Carre Meursault Les Tillets', '', '68'],
+  ['Colterenzio Pfefferer Pink', '', '69'],
+  ['Torre Mora Scalunera Etna Rosato', '', '70'],
+  ['Milan Nestarec OKR Orange', '', '71'],
+  ['Minuty Prestige Rosé', '', '72'],
+  ['Clos Cibonne Tibouren Tradition Rosé', '', '73'],
+  ['Macarounas Minthy Rosé', '', '74'],
+  ['Novus Leonidas Nassiakos Acquarella', '', '75'],
+  ['Ieropoulos Family Winery Rose Saint Georges Agiorgitiko', '', '76'],
+  ['Panagiotopoulos Cube Rosé', '', '77'],
+  ['Macarounas Maratheftiko', '', '78'],
+  ['Ktima Zafeirakis Limniona Young Vineyards', '', '79'],
+  ['Estate Papaioannou Nemea', '', '80'],
+  ["Novus Leonidas Nassiakos The Vintner's Unique Blend Climax", '', '81'],
+  ['Vlassides Artion', '', '82'],
+  ['Anatolikos M Fine Mavroudi', '', '83'],
+  ['Papargyriou Le Roi des Montagnes Syrah', '', '84'],
+  ['Castellare di Castellina Chianti Classico', '', '85'],
+  ['Castellare di Castellina Chianti Classico Riserva', '', '86'],
+  ['Avignonesi Vino Nobile di Montepulciano', '', '87'],
+  ['José Gil Viñedos en San Vicente de la Sonsierra', '', '88'],
+  ["Rivetto Barbera d'Alba Zio Nando", '', '89'],
+  ['Domenico Clerico Barolo', '', '90'],
+  ['R. López de Heredia Viña Tondonia Reserva Rioja', '', '91'],
+  ['Marchesi di Gresy Barbaresco Martinenga', '', '92'],
+  ['Casanova di Neri Brunello di Montalcino', '750', '93'],
+  ['Domaine St. Patrice Cotes du Rhone', '', '94'],
+  ['Chateau Citran Haut-Médoc', '', '95'],
+  ['Jean Paul Dubost Moulin à Vent Les Burdelines', '', '96'],
+  ['Vincent Paris Granit 30 Cornas', '', '97'],
+  ['Denis Carre Bourgogne Hautes Cotes de Beaune Rouge', '', '98'],
+  ['Domaine Michel Sarrazin Givry Premier Cru La Grande Berge', '', '99'],
+  ['Chateau de Chamirey Mercurey Premier Cru Clos Les Ruelles Monopole', '', '100'],
+  ['Domaine du Pegau Chateauneuf du Pape Cuvée Réservée', '', '101'],
+  ['Lapis Luna Zinfandel', '', '102'],
+  ['El Enemigo Bonarda', '', '103'],
+  ['El Enemigo Malbec', '', '104'],
+  ['La Crema Sonoma Coast Pinot Noir', '', '105'],
+  ['Catena Zapata Nicasia Vineyard Malbec', '', '106'],
+  ['Silver Oak Cabernet Sauvignon Alexander Valley', '', '107']
+];
 const WINE_BLEND_DATA = {
   'antica fratta franciacorta essence saten brut': [{ name:'Chardonnay', percent:100 }],
   'arktos elavation vineyards pnoe': [{ name:'Assyrtiko', percent:80 }, { name:'Sauvignon Blanc', percent:10 }, { name:'Xinomavro', percent:10 }],
@@ -956,6 +1075,19 @@ function wineText(i, desc, grapes) {
 }
 function normalizeWineName(name) {
   return (name || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+let wineStorageLookupCache = null;
+function wineStorageLookup() {
+  if (!wineStorageLookupCache) {
+    wineStorageLookupCache = new Map(WINE_STORAGE_NUMBERS.map(([name, volume, number]) => [`${normalizeWineName(name)}|${volume || ''}`, number]));
+  }
+  return wineStorageLookupCache;
+}
+function wineStorageNumber(i) {
+  const lookup = wineStorageLookup();
+  const nameKey = normalizeWineName(i.name);
+  const volumeKey = ((i.vol || '').match(/\d+/) || [''])[0];
+  return lookup.get(`${nameKey}|${volumeKey}`) || lookup.get(`${nameKey}|`) || '';
 }
 function hasAny(text, terms) {
   return terms.some(term => text.includes(term));
@@ -2220,6 +2352,7 @@ function renderSection(sec, filter = "") {
     const grapes = sec === 'wine' ? extractGrapes(desc) : '';
     const wineContent = sec === 'wine' ? resolveWineContent(i, desc, grapes) : null;
     const cleanDesc = sec === 'wine' ? wineContentDescription(wineContent, desc) : desc;
+    const storageNumber = sec === 'wine' ? wineStorageNumber(i) : '';
     const imageClick = sec === 'wine'
       ? `onclick="event.stopPropagation();openWineModal(${wineIndex})"`
       : `onclick='openLightbox(${JSON.stringify(lightboxSrc)})'`;
@@ -2241,6 +2374,7 @@ function renderSection(sec, filter = "") {
           ${sec === 'kitchen' ? renderKitchenAllergens(i) : ''}
           ${sec === 'wine' ? renderWineCatalogue(i, desc, grapes, wineContent) : ''}
         </div>
+        ${storageNumber ? `<div class="wine-storage-number" aria-label="${LANG === 'en' ? 'Wine fridge number' : 'Номер в холодильнике'} ${storageNumber}">${storageNumber}</div>` : ''}
       </article>`;
   }).join("");
 
