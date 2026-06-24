@@ -107,6 +107,7 @@
   .wine-card{
     display:grid;grid-template-rows:auto auto;gap:0;overflow:visible;isolation:isolate;
     min-height:690px;padding:0 26px 34px;background:transparent;border:0;border-radius:0;box-shadow:none;
+    cursor:pointer;
   }
   .wine-card:before{
     content:"";position:absolute;z-index:-1;inset:36px 0 0;
@@ -185,6 +186,52 @@
     font-family:'Cormorant Garamond',serif;font-size:1.06rem;line-height:1.15;font-weight:600;
   }
   .wine-pairing-list span{color:rgba(90,30,36,.64);font-family:'Inter',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:1.4px;}
+
+  .wine-modal{display:none;position:fixed;inset:0;z-index:8000;background:
+    radial-gradient(circle at 18% 4%,rgba(194,168,120,.18),transparent 30%),
+    linear-gradient(180deg,var(--paper),#eee5d6);
+    color:var(--ink);overflow:auto;-webkit-overflow-scrolling:touch;
+  }
+  .wine-modal.open{display:block;}
+  body.wine-modal-open{overflow:hidden;}
+  .wine-modal-shell{position:relative;max-width:560px;min-height:100dvh;margin:0 auto;padding:14px 22px 34px;}
+  .wine-modal-nav{position:sticky;top:0;z-index:4;display:flex;justify-content:space-between;align-items:center;
+    margin:0 -10px 4px;padding:max(8px,env(safe-area-inset-top)) 2px 8px;background:linear-gradient(180deg,rgba(245,241,232,.96),rgba(245,241,232,.74));backdrop-filter:blur(14px);
+  }
+  .wine-modal-btn{width:42px;height:42px;border:0;background:transparent;color:rgba(31,47,70,.88);font-size:1.72rem;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .wine-modal-btn span{transform:translateY(-1px);}
+  .wine-modal-hero{position:relative;display:grid;grid-template-columns:minmax(132px,42fr) minmax(0,58fr);gap:18px;align-items:start;padding-top:4px;}
+  .wine-modal-hero:before{content:"";position:absolute;left:-34px;right:36%;bottom:18px;height:150px;opacity:.18;pointer-events:none;background-repeat:no-repeat;background-position:left bottom;background-size:100% auto;
+    background-image:url("data:image/svg+xml,%3Csvg width='390' height='170' viewBox='0 0 390 170' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%239a6a36' stroke-width='1.2' opacity='.74'%3E%3Cpath d='M2 151C69 116 139 98 212 98C271 98 326 111 386 136'/%3E%3Cpath d='M12 166C94 124 174 108 252 116C306 121 349 138 386 160'/%3E%3Cpath d='M20 136C77 101 131 80 181 72C228 65 273 72 319 94'/%3E%3Cpath d='M50 154C91 126 130 108 168 101'/%3E%3Cpath d='M82 166C127 133 170 113 214 104'/%3E%3Cpath d='M130 168C173 137 214 119 252 114'/%3E%3Cpath d='M5 128C43 91 83 66 125 54C168 41 211 42 256 55'/%3E%3Cpath d='M46 98L82 62L115 93L153 49L207 91'/%3E%3Cpath d='M0 158C52 145 101 138 148 137C207 136 264 146 322 168'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  .wine-modal-bottle{position:relative;z-index:2;height:clamp(330px,58vh,490px);display:flex;align-items:flex-end;justify-content:center;padding:0 0 14px;}
+  .wine-modal-bottle:after{content:"";position:absolute;left:18%;right:18%;bottom:7px;height:18px;border-radius:50%;background:rgba(31,47,70,.13);filter:blur(13px);}
+  .wine-modal-bottle img{position:relative;z-index:2;width:auto;max-width:132%;height:100%;object-fit:contain;filter:drop-shadow(0 22px 18px rgba(24,38,58,.17));}
+  .wine-modal-info{position:relative;z-index:2;min-width:0;padding-top:10px;}
+  .wine-modal-category{margin-bottom:10px;color:rgba(90,30,36,.76);font-size:.62rem;font-weight:800;letter-spacing:2.1px;text-transform:uppercase;line-height:1.35;}
+  .wine-modal-title{margin:0 0 12px;color:#111b2a;font-family:var(--font-serif);font-size:clamp(2rem,8.2vw,3.15rem);font-weight:600;line-height:.94;letter-spacing:0;overflow-wrap:anywhere;}
+  .wine-modal-meta{margin-bottom:15px;color:#111b2a;font-family:var(--font-serif);font-size:1.28rem;font-weight:700;}
+  .wine-modal-meta span{color:rgba(117,108,96,.82);font-family:var(--font-sans);font-size:.72rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;}
+  .wine-modal-facts{display:grid;gap:9px;margin-bottom:16px;}
+  .wine-modal-fact{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;color:rgba(90,30,36,.82);font-size:.75rem;font-weight:700;line-height:1.35;}
+  .wine-modal-fact span:first-child{font-size:1rem;line-height:1;filter:saturate(.85);}
+  .wine-modal-profile{display:grid;gap:9px;margin:18px 0 18px;}
+  .wine-modal-profile-row{display:grid;grid-template-columns:minmax(86px,.86fr) 1fr;gap:12px;align-items:center;}
+  .wine-modal-profile-name{color:#756c60;font-size:.66rem;font-weight:700;letter-spacing:.8px;}
+  .wine-modal-notes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0 2px;}
+  .wine-modal-note{min-width:0;display:grid;justify-items:center;gap:5px;text-align:center;color:#6a6055;font-size:.66rem;font-weight:700;line-height:1.12;}
+  .wine-modal-note-icon{font-size:1.52rem;line-height:1;filter:saturate(.82);}
+  .wine-modal-section{margin-top:26px;}
+  .wine-modal-section-title{margin-bottom:12px;color:#111b2a;font-family:var(--font-serif);font-size:1.58rem;font-weight:600;line-height:1;}
+  .wine-modal-description{color:rgba(31,47,70,.78);font-family:var(--font-sans);font-size:.94rem;line-height:1.66;overflow-wrap:anywhere;}
+  .wine-modal-pairings{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:14px;}
+  .wine-modal-pairing{min-width:0;display:grid;justify-items:center;gap:7px;text-align:center;color:rgba(31,47,70,.76);font-size:.68rem;font-weight:700;line-height:1.18;}
+  .wine-modal-pairing-icon{font-size:1.55rem;line-height:1;filter:saturate(.84);}
+  .wine-modal-advice{margin-top:26px;display:grid;grid-template-columns:56px 1fr;gap:16px;align-items:center;padding:18px 18px;border:1px solid rgba(194,168,120,.18);border-radius:20px;background:rgba(255,253,249,.34);box-shadow:0 12px 32px rgba(31,47,70,.04);}
+  .wine-modal-advice-icon{color:rgba(154,106,54,.72);font-family:var(--font-serif);font-size:2.35rem;line-height:1;text-align:center;}
+  .wine-modal-advice-title{margin-bottom:7px;color:#111b2a;font-family:var(--font-serif);font-size:1.18rem;font-weight:600;line-height:1.1;}
+  .wine-modal-advice-text{color:rgba(31,47,70,.68);font-size:.78rem;line-height:1.55;}
+  .wine-modal-grape-summary{overflow-wrap:anywhere;}
 
   .card-body{padding:18px 18px 20px;}
   .card-cat{font-size:.66rem;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
@@ -420,6 +467,35 @@
     #lightbox{padding:14px;}
     #lightbox-img{max-width:96vw;max-height:86dvh;border-radius:18px;}
     #lightbox-close{right:12px;top:max(12px,env(safe-area-inset-top));}
+    .wine-modal-shell{max-width:none;padding:8px 18px 28px;}
+    .wine-modal-nav{margin:0 -8px 2px;}
+    .wine-modal-btn{width:40px;height:40px;font-size:1.6rem;}
+    .wine-modal-hero{grid-template-columns:minmax(122px,41fr) minmax(0,59fr);gap:14px;}
+    .wine-modal-hero:before{left:-42px;right:33%;bottom:14px;height:130px;}
+    .wine-modal-bottle{height:clamp(308px,56vh,438px);padding-bottom:10px;}
+    .wine-modal-bottle img{max-width:142%;}
+    .wine-modal-info{padding-top:8px;}
+    .wine-modal-category{margin-bottom:9px;font-size:.58rem;letter-spacing:1.7px;}
+    .wine-modal-title{font-size:clamp(1.84rem,7.6vw,2.48rem);line-height:.97;margin-bottom:10px;}
+    .wine-modal-meta{font-size:1.14rem;margin-bottom:12px;}
+    .wine-modal-facts{gap:8px;margin-bottom:13px;}
+    .wine-modal-fact{grid-template-columns:20px 1fr;gap:8px;font-size:.7rem;}
+    .wine-modal-profile{gap:8px;margin:14px 0 15px;}
+    .wine-modal-profile-row{grid-template-columns:78px 1fr;gap:9px;}
+    .wine-modal-profile-name{font-size:.62rem;letter-spacing:.5px;}
+    .wine-modal-notes{gap:7px;margin-top:10px;}
+    .wine-modal-note{font-size:.59rem;}
+    .wine-modal-note-icon{font-size:1.28rem;}
+    .wine-modal-section{margin-top:24px;}
+    .wine-modal-section-title{font-size:1.42rem;}
+    .wine-modal-description{font-size:.88rem;line-height:1.62;}
+    .wine-modal-pairings{gap:10px;}
+    .wine-modal-pairing{font-size:.6rem;}
+    .wine-modal-pairing-icon{font-size:1.32rem;}
+    .wine-modal-advice{grid-template-columns:44px 1fr;gap:12px;padding:15px 14px;border-radius:18px;}
+    .wine-modal-advice-icon{font-size:2rem;}
+    .wine-modal-advice-title{font-size:1.07rem;}
+    .wine-modal-advice-text{font-size:.72rem;}
   }
 
   @media (max-width:360px){
@@ -473,6 +549,16 @@
     .card.dish-card .dish-card__title{font-size:28px;}
     .card.dish-card .dish-card__description{font-size:15px;}
     .bottle-card .card-media{height:320px;}
+    .wine-modal-shell{max-width:1040px;padding:18px 42px 46px;}
+    .wine-modal-nav{margin:0 -18px 8px;padding-top:12px;}
+    .wine-modal-hero{grid-template-columns:minmax(380px,58fr) minmax(360px,42fr);gap:34px;align-items:center;}
+    .wine-modal-hero:before{left:-72px;right:48%;bottom:42px;height:210px;}
+    .wine-modal-bottle{height:min(72vh,660px);padding-bottom:24px;}
+    .wine-modal-bottle img{max-width:112%;}
+    .wine-modal-info{padding-top:0;}
+    .wine-modal-title{font-size:clamp(3.1rem,4.8vw,4.25rem);max-width:8.8em;}
+    .wine-modal-section{max-width:740px;margin-left:auto;margin-right:auto;}
+    .wine-modal-advice{max-width:740px;margin-left:auto;margin-right:auto;}
   }
 </style>
 </head>
@@ -698,6 +784,30 @@ function itemSearchText(sec, i) {
 const WINE_TEXT = {
   ru: { profile:'Профиль', notes:'Ноты', pairings:'С чем подать', composition:'Состав', body:'Тело', acidity:'Кислотность', tannins:'Танины', sweetness:'Сладость' },
   en: { profile:'Profile', notes:'Notes', pairings:'Pair with', composition:'Composition', body:'Body', acidity:'Acidity', tannins:'Tannins', sweetness:'Sweetness' }
+};
+const WINE_MODAL_TEXT = {
+  ru: {
+    about:'О вине',
+    pairings:'С чем подать',
+    adviceTitle:'Как предложить гостю',
+    adviceText:'Отличный выбор для гостей, которые предпочитают гастрономичное вино с выразительным характером и чистым стилем.',
+    grape:'Сорт',
+    oak:'Выдержка',
+    oakDefault:'Дуб / выдержка в стиле вина',
+    back:'Назад',
+    close:'Закрыть'
+  },
+  en: {
+    about:'About the wine',
+    pairings:'Pair with',
+    adviceTitle:'How to suggest it',
+    adviceText:'A strong choice for guests who prefer a food-friendly wine with a clear character and polished style.',
+    grape:'Grape',
+    oak:'Aging',
+    oakDefault:'Oak / aging in the wine style',
+    back:'Back',
+    close:'Close'
+  }
 };
 const WINE_BLEND_DATA = {
   'antica fratta franciacorta essence saten brut': [{ name:'Chardonnay', percent:100 }],
@@ -1037,6 +1147,100 @@ function renderWineCatalogue(i, desc, grapes, content) {
       </section>
     </div>`;
 }
+function wineBlendSummary(i, grapes) {
+  const blend = wineBlend(i, grapes);
+  if (!blend.length) return grapes || '';
+  return blend.map(g => `${g.name}${g.percent != null ? ` ${g.percent}%` : ''}`).join(' · ');
+}
+function wineOakSummary(desc) {
+  const t = (desc || '').toLowerCase();
+  if (hasAny(t, ['французский дуб', 'french oak'])) return LANG === 'en' ? 'French oak' : 'Французский дуб';
+  if (hasAny(t, ['словенский дуб', 'slavonian oak'])) return LANG === 'en' ? 'Slavonian oak' : 'Словенский дуб';
+  if (hasAny(t, ['американский дуб', 'american oak'])) return LANG === 'en' ? 'American oak' : 'Американский дуб';
+  if (hasAny(t, ['oak', 'дуб'])) return LANG === 'en' ? 'Oak aging' : 'Выдержка в дубе';
+  return '';
+}
+function winePairingIcon(dish) {
+  const n = ((dish && (dish.name + ' ' + (dish.name_en || ''))) || '').toLowerCase();
+  if (hasAny(n, ['beef','говяд','ribeye','стейк','телятина','veal','tournedos'])) return '🥩';
+  if (hasAny(n, ['lamb','ягн','баранина'])) return '🍖';
+  if (hasAny(n, ['pasta','spaghetti','fettuccine','linguini','паста','спагетти','феттучине','лингвини','gnocchi','ньокки'])) return '🍝';
+  if (hasAny(n, ['cheese','сыр','feta','фета','burrata','буррата'])) return '🧀';
+  if (hasAny(n, ['fish','sea','рыба','дорада','лосось','seafood','shrimp','octopus','scallop','кревет','осьминог','гребеш','crudo'])) return '🦐';
+  if (hasAny(n, ['chicken','цып','куриц'])) return '🍗';
+  if (hasAny(n, ['salad','greens','салат','зелень','tabbouleh','табуле'])) return '🥗';
+  if (hasAny(n, ['eggplant','pepper','vegetable','баклажан','перец','овощ'])) return '🌿';
+  return '🍽';
+}
+function wineModalAdvice(content) {
+  if (!content) return (WINE_MODAL_TEXT[LANG] || WINE_MODAL_TEXT.ru).adviceText;
+  if (LANG === 'en') {
+    return content.en ? `Suggest it as: ${content.en}` : WINE_MODAL_TEXT.en.adviceText;
+  }
+  return content.ru ? `Предложите как: ${content.ru}` : WINE_MODAL_TEXT.ru.adviceText;
+}
+function renderWineModal(index) {
+  const i = wineItems[index];
+  if (!i) return '';
+  const labels = WINE_TEXT[LANG] || WINE_TEXT.ru;
+  const modalLabels = WINE_MODAL_TEXT[LANG] || WINE_MODAL_TEXT.ru;
+  const name = itemName(i);
+  const desc = itemDesc(i);
+  const grapes = extractGrapes(desc);
+  const content = resolveWineContent(i, desc, grapes);
+  const cleanDesc = wineContentDescription(content, desc);
+  const profile = wineProfile(i, desc, grapes, content);
+  const notes = wineNotes(i, desc, grapes, content);
+  const pairings = winePairingNames(i, desc, grapes);
+  const blendText = wineBlendSummary(i, grapes);
+  const oakText = wineOakSummary(desc);
+  const profileRows = [
+    [labels.body, profile.body],
+    [labels.acidity, profile.acidity],
+    [labels.tannins, profile.tannins],
+    [labels.sweetness, profile.sweetness]
+  ].map(([label, value]) => `
+    <div class="wine-modal-profile-row">
+      <div class="wine-modal-profile-name">${label}</div>
+      <div class="wine-profile-scale" aria-label="${label}: ${value}/5">${renderWineRating(value)}</div>
+    </div>`).join('');
+  return `
+    <div class="wine-modal-hero">
+      <div class="wine-modal-bottle">
+        <img src="${i.img || FALLBACK}" alt="${name}" onerror="this.onerror=null;this.src='${FALLBACK}'">
+      </div>
+      <div class="wine-modal-info">
+        <div class="wine-modal-category">${catLabel(i.cat)}</div>
+        <h2 class="wine-modal-title">${name}</h2>
+        ${i.price || i.vol ? `<div class="wine-modal-meta">${i.price || ''}${i.vol ? `<span> · ${i.vol}</span>` : ''}</div>` : ''}
+        <div class="wine-modal-facts">
+          ${blendText ? `<div class="wine-modal-fact"><span>🍇</span><div><strong>${modalLabels.grape}</strong><br><span class="wine-modal-grape-summary">${blendText}</span></div></div>` : ''}
+          ${oakText ? `<div class="wine-modal-fact"><span>▣</span><div><strong>${modalLabels.oak}</strong><br>${oakText || modalLabels.oakDefault}</div></div>` : ''}
+        </div>
+        <div class="wine-modal-profile">${profileRows}</div>
+        <div class="wine-modal-notes">
+          ${notes.map(note => `<div class="wine-modal-note"><span class="wine-modal-note-icon">${note.icon}</span><span>${note[LANG] || note.ru}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <section class="wine-modal-section">
+      <h3 class="wine-modal-section-title">${modalLabels.about}</h3>
+      <div class="wine-modal-description">${cleanDesc}</div>
+    </section>
+    <section class="wine-modal-section">
+      <h3 class="wine-modal-section-title">${modalLabels.pairings}</h3>
+      <div class="wine-modal-pairings">
+        ${pairings.map(dish => `<div class="wine-modal-pairing"><span class="wine-modal-pairing-icon">${winePairingIcon(dish)}</span><span>${itemName(dish)}</span></div>`).join('')}
+      </div>
+    </section>
+    <section class="wine-modal-advice">
+      <div class="wine-modal-advice-icon">♧</div>
+      <div>
+        <div class="wine-modal-advice-title">${modalLabels.adviceTitle}</div>
+        <div class="wine-modal-advice-text">${wineModalAdvice(content)}</div>
+      </div>
+    </section>`;
+}
 
 const TAB_LABELS = {
   kitchen:   { ru: '🍽 Кухня',    en: '🍽 Kitchen' },
@@ -1067,6 +1271,9 @@ function setLang(lang) {
   updateTabLabels();
   // re-render ALL sections so switching tabs always shows correct language
   ['kitchen', 'bar', 'wine', 'cocktails'].forEach(sec => renderSection(sec));
+  if (wineModalIndex != null && document.getElementById('wine-modal')?.classList.contains('open')) {
+    document.getElementById('wine-modal-content').innerHTML = renderWineModal(wineModalIndex);
+  }
 }
 
 // ── CDN helpers ──
@@ -1862,6 +2069,7 @@ const state = {
   cocktails: { cat: "all" },
 };
 let activeSection = "kitchen";
+let wineModalIndex = null;
 const DEFAULT_SECTION = "kitchen";
 const START_ROUTE = { azuraGuideRoute: true, section: DEFAULT_SECTION, cat: "all", search: "" };
 
@@ -1921,12 +2129,18 @@ function initNavigationHistory() {
     const route = event.state;
     if (route && route.azuraGuideRoute) {
       applyRoute(route);
+      if (route.modal === "wine") {
+        openWineModal(route.wineIndex, { push: false });
+      } else {
+        closeWineModal({ skipHistory: true });
+      }
       if (route.lockedStart) {
         history.pushState(start, "", location.href);
       }
       return;
     }
     applyRoute(start);
+    closeWineModal({ skipHistory: true });
     history.pushState(start, "", location.href);
   });
 }
@@ -1991,6 +2205,7 @@ function renderSection(sec, filter = "") {
   grid.innerHTML = visible.map(i => {
     const isBottle = sec === 'wine' || sec === 'bar';
     const isKitchen = sec === 'kitchen';
+    const wineIndex = sec === 'wine' ? wineItems.indexOf(i) : -1;
     const cls = sec === 'wine' ? 'wine-card' : (sec === 'bar' ? 'bottle-card' : (sec === 'cocktails' ? 'cocktail-card' : 'kitchen-card dish-card'));
     const mediaClass = isKitchen ? 'card-media dish-card__image' : 'card-media';
     const bodyClass = isKitchen ? 'card-body dish-card__content' : 'card-body';
@@ -2005,11 +2220,17 @@ function renderSection(sec, filter = "") {
     const grapes = sec === 'wine' ? extractGrapes(desc) : '';
     const wineContent = sec === 'wine' ? resolveWineContent(i, desc, grapes) : null;
     const cleanDesc = sec === 'wine' ? wineContentDescription(wineContent, desc) : desc;
+    const imageClick = sec === 'wine'
+      ? `onclick="event.stopPropagation();openWineModal(${wineIndex})"`
+      : `onclick='openLightbox(${JSON.stringify(lightboxSrc)})'`;
     const media = hasMedia
-      ? `<div class="${mediaClass}"><img src="${displaySrc}" alt="${name}" loading="lazy" onerror="this.onerror=null;this.src='${FALLBACK}'" onclick='openLightbox(${JSON.stringify(lightboxSrc)})' style="cursor:zoom-in"></div>`
+      ? `<div class="${mediaClass}"><img src="${displaySrc}" alt="${name}" loading="lazy" onerror="this.onerror=null;this.src='${FALLBACK}'" ${imageClick} style="cursor:${sec === 'wine' ? 'pointer' : 'zoom-in'}"></div>`
       : (sec === 'cocktails' ? '' : `<div class="${mediaClass}" style="display:flex;align-items:center;justify-content:center;color:#c2a878;font-size:2rem;">${isBottle ? '🍾' : '📷'}</div>`);
+    const articleAttrs = sec === 'wine'
+      ? ` role="button" tabindex="0" onclick="openWineModal(${wineIndex})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWineModal(${wineIndex})}"`
+      : '';
     return `
-      <article class="card ${cls}${hasMedia ? '' : ' card--no-media'}">
+      <article class="card ${cls}${hasMedia ? '' : ' card--no-media'}"${articleAttrs}>
         ${media}
         <div class="${bodyClass}">
           <div class="${catClass}">${catLabel(i.cat)}</div>
@@ -2037,6 +2258,40 @@ window.addEventListener('resize', fixOffsets);
 window.addEventListener('orientationchange', () => setTimeout(fixOffsets, 250));
 if (window.visualViewport) window.visualViewport.addEventListener('resize', fixOffsets);
 
+// ── Wine detail modal ──
+function openWineModal(index, options = {}) {
+  const item = wineItems[index];
+  const modal = document.getElementById('wine-modal');
+  const content = document.getElementById('wine-modal-content');
+  if (!item || !modal || !content) return;
+  wineModalIndex = index;
+  content.innerHTML = renderWineModal(index);
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('wine-modal-open');
+  modal.scrollTo({ top: 0, behavior: 'auto' });
+  if (options.push !== false && history && history.pushState) {
+    history.pushState({ ...routeState('wine'), modal: 'wine', wineIndex: index }, '', location.href);
+  }
+}
+function closeWineModal(options = {}) {
+  if (!options.skipHistory && history && history.state && history.state.modal === 'wine') {
+    history.back();
+    return;
+  }
+  const modal = document.getElementById('wine-modal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('wine-modal-open');
+  wineModalIndex = null;
+}
+window.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && document.getElementById('wine-modal')?.classList.contains('open')) {
+    closeWineModal();
+  }
+});
+
 // ── Lightbox ──
 function openLightbox(src) {
   const lb = document.getElementById('lightbox');
@@ -2056,6 +2311,15 @@ if (initCtrl) initCtrl.style.display = "block";
 fixOffsets();
 initNavigationHistory();
 </script>
+<div id="wine-modal" class="wine-modal" aria-hidden="true">
+  <div class="wine-modal-shell">
+    <div class="wine-modal-nav">
+      <button type="button" class="wine-modal-btn" onclick="closeWineModal()" aria-label="Назад"><span>‹</span></button>
+      <button type="button" class="wine-modal-btn" onclick="closeWineModal()" aria-label="Закрыть"><span>×</span></button>
+    </div>
+    <div id="wine-modal-content"></div>
+  </div>
+</div>
 <div id="lightbox" onclick="closeLightbox()">
   <span id="lightbox-close" onclick="closeLightbox()">✕</span>
   <img id="lightbox-img" src="" alt="">

@@ -1,0 +1,49 @@
+{
+  "inputPath": "/Users/dmitro/Downloads/ГРАФИК НОВЫЙ1.xlsx",
+  "outputPath": "/Users/dmitro/Downloads/azura_guide_v2/outputs/vacation_weekends_off/grafik_novyi1_weekend_vacation_off.xlsx",
+  "changes": [
+    {
+      "sheet": "FEBRUARY",
+      "cell": "Q38",
+      "date": "14.02",
+      "row": 38,
+      "employee": "Butov Oleksii"
+    },
+    {
+      "sheet": "FEBRUARY",
+      "cell": "R38",
+      "date": "15.02",
+      "row": 38,
+      "employee": "Butov Oleksii"
+    },
+    {
+      "sheet": "FEBRUARY",
+      "cell": "AE47",
+      "date": "28.02",
+      "row": 47,
+      "employee": "Michele Derario"
+    },
+    {
+      "sheet": "FEBRUARY",
+      "cell": "AE50",
+      "date": "28.02",
+      "row": 50,
+      "employee": "Daniele Nistico"
+    },
+    {
+      "sheet": "MAY",
+      "cell": "AG37",
+      "date": "30.05",
+      "row": 37,
+      "employee": "Klochko Valeria"
+    },
+    {
+      "sheet": "MAY",
+      "cell": "AH37",
+      "date": "31.05",
+      "row": 37,
+      "employee": "Klochko Valeria"
+    }
+  ],
+  "recalculated": []
+}

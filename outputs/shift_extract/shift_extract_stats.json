@@ -1,0 +1,23 @@
+{
+  "inputPath": "/Users/dmitro/Downloads/azura_guide_v2/outputs/schedule_break_fix/grafik_novyi_break_fixed.xlsx",
+  "records": 4964,
+  "uniqueShiftsBySection": 42,
+  "uniqueTimes": 20,
+  "sections": [
+    "Bar",
+    "Chief",
+    "Cleaner",
+    "Cold",
+    "Cook asisstant",
+    "Cook assistant",
+    "Dessert",
+    "Driver",
+    "Hostess",
+    "Hot",
+    "Pasta",
+    "Pizza",
+    "Runner",
+    "Somellier",
+    "Waiter"
+  ]
+}
