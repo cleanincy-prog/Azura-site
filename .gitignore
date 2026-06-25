@@ -1,4 +1,6 @@
 node_modules/
-spreadsheet_work/node_modules
+outputs/
+spreadsheet_work/
 .DS_Store
 **/.DS_Store
+*.inspect.ndjson
